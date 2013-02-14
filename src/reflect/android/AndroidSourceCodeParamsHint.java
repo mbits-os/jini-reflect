@@ -19,6 +19,6 @@ public class AndroidSourceCodeParamsHint extends SourceCodeParamsHint {
 		m_api = new File(SDK, "sources" + File.separator + "android_" + api);
 	}
 
-	@Override protected File getSourceRoot() { return m_api; }
+	@Override protected File getSourceRoot(String className) { return m_api; }
 
 }
