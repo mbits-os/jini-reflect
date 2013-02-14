@@ -1,9 +1,11 @@
 package reflect.android;
 
 import java.io.File;
+import java.io.IOException;
 
 import reflect.ParamsHint;
 import reflect.SourceCodeParamsHint;
+import reflect.utils.ClassPathHack;
 
 public class AndroidParamsHint extends SourceCodeParamsHint {
 
@@ -11,16 +13,18 @@ public class AndroidParamsHint extends SourceCodeParamsHint {
 
 		private File m_sdk;
 
-		HintCreator(String api) {
+		public HintCreator(String api) throws IOException {
 			final String androidSDK = System.getenv("ANDROID_SDK");
 			if (androidSDK == null)
 			{
-				System.out.println("Environment variable ANDROID_SDK is missing.");
-				return;
+				throw new RuntimeException("Environment variable ANDROID_SDK is missing.");
 			}
 			final File SDK = new File(androidSDK);
-			m_sdk = new File(SDK, "sources" + File.separator + "android_" + api);
+			m_sdk    = new File(SDK, "sources" + File.separator + "android-" + api);
+			File jar = new File(SDK, "platforms" + File.separator + "android-" + api + File.separator + "android.jar");
+			ClassPathHack.addFile(jar);
 		}
+
 		@Override public ParamsHint createHint() {
 			return new AndroidParamsHint(m_sdk);
 		}
