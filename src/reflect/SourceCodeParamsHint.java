@@ -30,6 +30,7 @@ class Tokenizer {
 
 	    //m_st.parseNumbers();
 	    m_st.wordChars('_', '_');
+	    m_st.ordinaryChar('/');
 	    m_st.ordinaryChars(0, ' ');
 	    m_st.slashSlashComments(true);
 	    m_st.slashStarComments(true);
@@ -109,8 +110,19 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private class Code extends Tokenizer {
 
-		Code(FileReader rd) throws IOException { super(rd); }
-		
+		private String m_file;
+
+		Code(FileReader rd, String fileName) throws IOException
+		{
+			super(rd);
+			m_file = fileName;
+		}
+
+		public void onError(String message) throws IOException
+		{
+			throw new TokenException(message, m_file, 1);
+		}
+
 		private void skipTo(String tok) throws IOException {
 			String t = nextToken();
 			while (t != null && !t.equals(tok))
@@ -121,8 +133,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			String t = nextToken();
 			while (t != null && !t.equals(tok))
 			{
-				if (t.equals("{") && skipBlock()) return;
-				if (t.equals("<") && skipGenerics()) return;
+				if (t.equals("{") && !skipBlock()) return;
+				if (t.equals("<") && !skipGenerics()) return;
 				t = nextToken();
 			}
 		}
@@ -219,28 +231,54 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return null;
 		}
 
-		private String tryImport(String typeName) {
-			typeName = "." + typeName;
-			//System.out.println("Trying " + typeName + " with imports");
+		private String tryInheritance(String className, String subClass) {
+			try {
+				Class<?> cand = Class.forName(className);
+				if (cand != null)
+				{
+					String _cand = null;
+					Class<?> supah = cand.getSuperclass();
+					if (supah != null)
+					{
+						final String superClass = supah.getName();
+						_cand = tryClassName(superClass + "$" + subClass);
+						if (_cand == null) _cand = tryInheritance(superClass, subClass);
+						if (_cand != null) return _cand;
+					}
+					Class<?>[] ifaces = cand.getInterfaces();
+					for (Class<?> c: ifaces)
+					{
+						final String superClass = c.getName();
+						_cand = tryClassName(superClass + "$" + subClass);
+						if (_cand == null) _cand = tryInheritance(superClass, subClass);
+						if (_cand != null) return _cand;
+					}
+				}
+			} catch (ClassNotFoundException e) {
+			}
+			return null;
+		}
+
+		private String tryImport(String typeName) throws IOException {
+			String shortName = typeName.split("\\.")[0];
+			typeName = typeName.substring(shortName.length()).replace(".", "$");
+			shortName = "." + shortName;
 			for (String imp: m_imports)
 			{
-				//System.out.println("  > Trying " + imp);
-				if (imp.endsWith(typeName)) // TODO: "import pa.cka.ge.Class;" and "Class.Subclass" case missing
+				if (imp.endsWith(shortName))
 				{
-					String quick = tryClassName(imp);
+					String quick = tryClassName(imp + typeName);
 					if (quick != null)
-					{
-						//System.out.println("  ! Found " + quick);
 						return quick;
-					}
+
 					//now, where is the package, and where are the classes...
-					//System.out.println("  ? Found " + imp);
-					return "L" + imp + ";"; // TODO: temp;
+					return "L" + imp + typeName + ";"; // TODO: temporary
+					//m_tok.onError(typeName + " is not accessible from " + imp);
 				}
 				
 				if (imp.endsWith(".*"))
 				{
-					String cand = tryClassName(imp.substring(0, imp.length()-2) + typeName);
+					String cand = tryClassName(imp.substring(0, imp.length()-2) + shortName);
 					if (cand != null)
 						return cand;
 				}
@@ -248,7 +286,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return null;
 		}
 
-		protected String resolve(String typeName) {
+		protected String resolve(String typeName) throws IOException {
 			if (s_builtins.containsKey(typeName))
 				return s_builtins.get(typeName);
 			
@@ -259,15 +297,25 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			if (typeName.equals(m_ctor))
 				cand = m_type;
 
-			if (cand == null) cand = tryClassName(typeName);
-			if (cand == null) cand = tryClassName(m_package + "." + typeName);
-			if (cand == null) cand = tryClassName("java.lang." + typeName);
-			if (cand == null) cand = tryImport(typeName);
-
 			if (cand == null)
 			{
-				System.err.println("Could not resolve " + typeName);
+				String[] parts = typeName.split("\\.");
+				int i = 1;
+				while (cand == null && i < parts.length)
+				{
+					cand = tryClassName(typeName);
+					++i;
+				}
 			}
+			if (cand == null) cand = tryClassName(m_type + "$" + typeName.replace(".", "$"));
+			if (cand == null) cand = tryInheritance(m_type, typeName.replace(".", "$"));
+			if (cand == null) cand = tryClassName(m_package + "." + typeName.replace(".", "$"));
+			if (cand == null) cand = tryClassName("java.lang." + typeName.replace(".", "$"));
+			if (cand == null) cand = tryImport(typeName);
+			if (cand == null) cand = CodeExceptions.get(m_type, typeName);
+
+			if (cand == null)
+				m_tok.onError("Could not resolve " + typeName);
 
 			return cand;
 		}
@@ -491,6 +539,12 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 		while (t != null)
 		{
+			if (t.equals(";"))
+			{
+				t = tok.nextToken();
+				continue;
+			}
+
 			if (t.equals("}"))
 			{
 				m_hints.add(_class);
@@ -537,7 +591,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	public boolean read(File java) throws IOException
 	{
 	    FileReader rd = new FileReader(java);
-	    Code tok = new Code(rd);
+	    Code tok = new Code(rd, java.toString());
 	    try {
 	    	String t = tok.nextToken();
 	    	while (t != null) {
