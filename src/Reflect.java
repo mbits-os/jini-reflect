@@ -1,7 +1,15 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import reflect.ClassHint;
 import reflect.ParamsHint;
@@ -85,19 +93,25 @@ public class Reflect {
 		return m_hinter.createHint().getHints(klazz);
 	}
 
+	private static final String spaces = "                                                            ";
 	private void printClass(Class klazz) throws IOException
 	{
 		Class supah = klazz.getSuperclass();
-		System.out.println("\nClass: " + klazz.getName());
+		System.out.print("class " + klazz.getName());
 		if (supah != null)
-			System.out.println("    Extends: " + supah.getName() + "\n");
+		{
+			if (klazz.getName().length() < spaces.length());
+				System.out.print(spaces.substring(klazz.getName().length()));
+			System.out.print(" extends " + supah.getName());
+		}
+		System.out.println();
 
 		ClassHint[] hints = getHints(klazz.getName());
 	}
 
 	private static void usage(String err)
 	{
-		System.out.println("usage: Reflect --android # <class> [<class>...]");
+		System.out.println("usage: Reflect --android # <class> [<class>...]\n       Reflect --android # --test");
 		System.out.println();
 		if (err != null) System.err.println(err);
 		else System.out.println("i.e.: Reflect --android 17 android.graphics.Canvas");
@@ -109,6 +123,7 @@ public class Reflect {
 		String sdk = null;
 
 		boolean nextIsSdk = false;
+		boolean performTests = false;
 		for (String arg: args)
 		{
 			if (arg.startsWith("--"))
@@ -121,6 +136,8 @@ public class Reflect {
 				final String var = arg.substring(2);
 				if (var.equalsIgnoreCase("android"))
 					nextIsSdk = true;
+				else if (var.equalsIgnoreCase("test"))
+					performTests = true;
 				else
 				{
 					usage("Unknown param: " + arg);
@@ -139,7 +156,7 @@ public class Reflect {
 			}
 		}
 
-		if (nextIsSdk || sdk == null || classes.size() == 0)
+		if (nextIsSdk || sdk == null || (classes.size() == 0 && !performTests))
 		{
 			usage(null);
 			return;
@@ -149,13 +166,36 @@ public class Reflect {
 			final Reflect reflect = new Reflect(new AndroidParamsHint.HintCreator(sdk));
 
 			Map<String, ClassInfo> additional = new HashMap<String, ClassInfo>();
-			for (Map.Entry<String, ClassInfo> e: classes.entrySet())
+			if (performTests)
 			{
-				e.getValue().Start();
-				if (e.getValue().m_super != null)
+				classes.clear();
+				final String androidSDK = System.getenv("ANDROID_SDK");
+				if (androidSDK == null)
 				{
-					String _superName = e.getValue().m_super;
-					Class _super = Class.forName(_superName);
+					throw new RuntimeException("Environment variable ANDROID_SDK is missing.");
+				}
+				final File SDK = new File(androidSDK);
+				final File api = new File(SDK, "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml");
+
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document doc = dBuilder.parse(api);
+				doc.getDocumentElement().normalize();
+
+				NodeList nodes = doc.getElementsByTagName("class");
+				int len = nodes.getLength();
+				for (int i = 0; i < len; ++i)
+				{
+					final Element node = (Element)nodes.item(i);
+					final String name = node.getAttribute("name");
+					if (name.contains("$")) continue;
+					String _superName = name.replace("/", ".");
+					Class _super;
+					try{
+						_super = Class.forName(_superName);
+					} catch(ClassNotFoundException e) {
+						continue;
+					}
 					while (_super != null)
 					{
 						ClassInfo nfo = new ClassInfo(_superName);
@@ -163,6 +203,26 @@ public class Reflect {
 						additional.put(_superName, nfo);
 						_superName = nfo.m_super;
 						_super = _superName == null ? null : Class.forName(_superName);
+					}
+				}
+			}
+			else
+			{
+				for (Map.Entry<String, ClassInfo> e: classes.entrySet())
+				{
+					e.getValue().Start();
+					if (e.getValue().m_super != null)
+					{
+						String _superName = e.getValue().m_super;
+						Class _super = Class.forName(_superName);
+						while (_super != null)
+						{
+							ClassInfo nfo = new ClassInfo(_superName);
+							nfo.Start();
+							additional.put(_superName, nfo);
+							_superName = nfo.m_super;
+							_super = _superName == null ? null : Class.forName(_superName);
+						}
 					}
 				}
 			}
