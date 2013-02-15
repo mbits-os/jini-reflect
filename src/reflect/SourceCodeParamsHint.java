@@ -8,6 +8,84 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+class Tokenizer {
+	private StreamTokenizer m_st;
+	private static Map<String, Integer> s_ignore = new HashMap<String, Integer>();
+	static {
+		s_ignore.put("native", 0);
+		s_ignore.put("private", 0);
+		s_ignore.put("protected", 0);
+		s_ignore.put("public", 0);
+		s_ignore.put("static", 0);
+		s_ignore.put("final", 0);
+		s_ignore.put("abstract", 0);
+		s_ignore.put("transient", 0);
+		s_ignore.put("volatile", 0);
+		s_ignore.put("synchronized", 0);
+	};
+
+	Tokenizer(FileReader rd) throws IOException
+	{
+	    m_st = new StreamTokenizer(rd);
+
+	    //m_st.parseNumbers();
+	    m_st.wordChars('_', '_');
+	    m_st.ordinaryChars(0, ' ');
+	    m_st.slashSlashComments(true);
+	    m_st.slashStarComments(true);
+	}
+	String nextToken() throws IOException
+	{
+		int token = m_st.nextToken();
+		switch (token) {
+		case StreamTokenizer.TT_NUMBER:
+			double num = m_st.nval;
+			if (num > -0.01 && num < 0.01)
+				return ".";
+			return String.valueOf(num);
+		case StreamTokenizer.TT_WORD:
+			String word = m_st.sval;
+			if (word.trim().length() == 0)
+				return nextToken();
+			if (s_ignore.containsKey(word))
+				return nextToken();
+			return word;
+		case '"':
+			String dquoteVal = m_st.sval;
+			return "\"" + dquoteVal + "\"";
+		case '\'':
+			String squoteVal = m_st.sval;
+			return "\'" + squoteVal + "\'";
+		case StreamTokenizer.TT_EOF:
+			return null;
+		default:
+			char ch = (char) m_st.ttype;
+			if (Character.isWhitespace(ch))
+				return nextToken();
+			return String.valueOf(ch);
+		}
+	}
+	void pushBack() { m_st.pushBack(); }
+}
+
+class StringPair {
+	String value;
+	String nextToken;
+	StringPair(String val, String t)
+	{
+		value = val;
+		nextToken = t;
+	}
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(value);
+		sb.append(" ");
+		sb.append(nextToken);
+		return sb.toString();
+	}
+}
+
 public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private String m_package;
@@ -29,176 +107,104 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	protected abstract File getSourceRoot(String className);
 
-	static class Tokenizer {
-		private StreamTokenizer m_st;
-		private static Map<String, Integer> s_ignore = new HashMap<String, Integer>();
-		static {
-			s_ignore.put("native", 0);
-			s_ignore.put("private", 0);
-			s_ignore.put("protected", 0);
-			s_ignore.put("public", 0);
-			s_ignore.put("static", 0);
-			s_ignore.put("final", 0);
-			s_ignore.put("abstract", 0);
-			s_ignore.put("transient", 0);
-			s_ignore.put("volatile", 0);
-			s_ignore.put("synchronized", 0);
-		};
+	private class Code extends Tokenizer {
 
-		Tokenizer(FileReader rd) throws IOException
-		{
-		    m_st = new StreamTokenizer(rd);
-
-		    //m_st.parseNumbers();
-		    m_st.wordChars('_', '_');
-		    m_st.ordinaryChars(0, ' ');
-		    m_st.slashSlashComments(true);
-		    m_st.slashStarComments(true);
+		Code(FileReader rd) throws IOException { super(rd); }
+		
+		private void skipTo(String tok) throws IOException {
+			String t = nextToken();
+			while (t != null && !t.equals(tok))
+				t = nextToken();
 		}
-		String nextToken() throws IOException
-		{
-			int token = m_st.nextToken();
-			switch (token) {
-			case StreamTokenizer.TT_NUMBER:
-				double num = m_st.nval;
-				if (num > -0.01 && num < 0.01)
-					return ".";
-				return String.valueOf(num);
-			case StreamTokenizer.TT_WORD:
-				String word = m_st.sval;
-				if (word.trim().length() == 0)
-					return nextToken();
-				if (s_ignore.containsKey(word))
-					return nextToken();
-				return word;
-			case '"':
-				String dquoteVal = m_st.sval;
-				return "\"" + dquoteVal + "\"";
-			case '\'':
-				String squoteVal = m_st.sval;
-				return "\'" + squoteVal + "\'";
-			case StreamTokenizer.TT_EOF:
-				return null;
-			default:
-				char ch = (char) m_st.ttype;
-				if (Character.isWhitespace(ch))
-					return nextToken();
-				return String.valueOf(ch);
+
+		private void skipBlocksTo(String tok) throws IOException {
+			String t = nextToken();
+			while (t != null && !t.equals(tok))
+			{
+				if (t.equals("{") && skipBlock()) return;
+				if (t.equals("<") && skipGenerics()) return;
+				t = nextToken();
 			}
 		}
-		void pushBack() { m_st.pushBack(); }
-	}
 
-	static class StringPair {
-		String value;
-		String nextToken;
-		StringPair(String val, String t)
-		{
-			value = val;
-			nextToken = t;
-		}
-		public String toString()
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.append(value);
-			sb.append(" ");
-			sb.append(nextToken);
-			return sb.toString();
-		}
-	}
-
-	private static void skipTo(Tokenizer tokenizer, String tok) throws IOException {
-		String t = tokenizer.nextToken();
-		while (t != null && !t.equals(tok))
-			t = tokenizer.nextToken();
-	}
-
-	private static void skipBlocksTo(Tokenizer tokenizer, String tok) throws IOException {
-		String t = tokenizer.nextToken();
-		while (t != null && !t.equals(tok))
-		{
-			if (t.equals("{") && skipBlock(tokenizer)) return;
-			if (t.equals("<") && skipGenerics(tokenizer)) return;
-			t = tokenizer.nextToken();
-		}
-	}
-
-	static String ignoreAnnotation(Tokenizer tok) throws IOException
-	{
-		tok.nextToken();
-		String t = tok.nextToken();
-		if (t.equals("("))
-		{
-			skipTo(tok, ")");
-			if (t != null) t = tok.nextToken();
-		}
-		return t;
-	}
-
-	private boolean readPackage(Tokenizer tok) throws IOException
-	{
-		m_package = tok.nextToken();
-		if (m_package == null || m_package.equals(";"))
-		{
-			m_package = null;
+		private boolean skipBlock(String open, String close) throws IOException {
+			int depth = 1;
+			String t = nextToken();
+			while (t != null)
+			{
+				if (t.equals(open)) ++depth;
+				if (t.equals(close))
+				{
+					if (--depth == 0)
+						return true;
+				}
+				t = nextToken();
+			}
 			return false;
 		}
-		skipTo(tok, ";");
-		return true;
+
+		private boolean skipBlock() throws IOException {
+			return skipBlock("{", "}");
+		}
+
+		private boolean skipGenerics() throws IOException {
+			return skipBlock("<", ">");
+		}
+
+		private boolean skipIndex() throws IOException {
+			return skipBlock("[", "]");
+		}
+
+		String ignoreAnnotation() throws IOException
+		{
+			nextToken();
+			String t = nextToken();
+			if (t.equals("("))
+			{
+				skipTo(")");
+				if (t != null) t = nextToken();
+			}
+			return t;
+		}
+
+		private boolean readPackage() throws IOException
+		{
+			m_package = nextToken();
+			if (m_package == null || m_package.equals(";"))
+			{
+				m_package = null;
+				return false;
+			}
+			skipTo(";");
+			return true;
+		}
+
+		private boolean readImport() throws IOException
+		{
+			final String imp = nextToken();
+			if (imp == null || imp.equals(";"))
+				return false;
+
+			addImport(imp);
+
+			skipTo(";");
+			return true;
+		}
+
 	}
 
-	public void addImport(String imp)
+	private void addImport(String imp)
 	{
 		if (imp == null) return;
 		m_imports.add(imp);
 	}
 
-	private boolean readImport(Tokenizer tok) throws IOException
-	{
-		final String imp = tok.nextToken();
-		if (imp == null || imp.equals(";"))
-			return false;
-
-		addImport(imp);
-
-		skipTo(tok, ";");
-		return true;
-	}
-
-	private static boolean skipBlock(Tokenizer tok, String open, String close) throws IOException {
-		int depth = 1;
-		String t = tok.nextToken();
-		while (t != null)
-		{
-			if (t.equals(open)) ++depth;
-			if (t.equals(close))
-			{
-				if (--depth == 0)
-					return true;
-			}
-			t = tok.nextToken();
-		}
-		return false;
-	}
-
-	private static boolean skipBlock(Tokenizer tok) throws IOException {
-		return skipBlock(tok, "{", "}");
-	}
-
-	private static boolean skipGenerics(Tokenizer tok) throws IOException {
-		return skipBlock(tok, "<", ">");
-	}
-
-	private static boolean skipIndex(Tokenizer tok) throws IOException {
-		return skipBlock(tok, "[", "]");
-	}
-
 	private class GenericsReader {
-		protected Tokenizer m_tok;
+		protected Code m_tok;
 		protected String m_ctor;
 		protected String m_type;
 		protected Map<String, String> m_aliases = null;
-		GenericsReader(Tokenizer tok, String ctor, String type) {
+		GenericsReader(Code tok, String ctor, String type) {
 			m_tok = tok;
 			m_ctor = ctor;
 			m_type = type;
@@ -304,7 +310,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	private class MethodReader extends GenericsReader {
 		private ClassHint m_parent;
 
-		MethodReader(Tokenizer tok, ClassHint parent, String ctor, String type, GenericsReader parent_reader) {
+		MethodReader(Code tok, ClassHint parent, String ctor, String type, GenericsReader parent_reader) {
 			super(tok, ctor, type);
 			m_parent = parent;
 			if (parent_reader.m_aliases != null) {
@@ -316,7 +322,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		private StringPair readType(String firstToken, String nextToken) throws IOException {
 			if (nextToken.equals("<"))
 			{
-				if (!skipGenerics(m_tok))
+				if (!m_tok.skipGenerics())
 					return new StringPair(null, null);
 				nextToken = m_tok.nextToken();
 			}
@@ -331,7 +337,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			while (nextToken != null && nextToken.equals("["))
 			{
 				sb.append("[");
-				if (!skipIndex(m_tok))
+				if (!m_tok.skipIndex())
 					return new StringPair(null, null);
 				nextToken = m_tok.nextToken();
 			}
@@ -398,7 +404,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 						t = m_tok.nextToken();
 					if (t == null)
 						return false;
-					if (t.equals("{") && !skipBlock(m_tok))
+					if (t.equals("{") && !m_tok.skipBlock())
 						return false;
 					m_parent.add(_meth);
 					return true;
@@ -458,14 +464,14 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     			return m_tok.nextToken();
     		}
 
-    		if (!currentToken.equals(";")) skipBlocksTo(m_tok, ";");
+    		if (!currentToken.equals(";")) m_tok.skipBlocksTo(";");
     		
     		return m_tok.nextToken();
 			
 		}
 	}
 
-	private boolean readClass(Tokenizer tok, String ctor, String typeName) throws IOException {
+	private boolean readClass(Code tok, String ctor, String typeName) throws IOException {
 
 		final String type;
 		if (m_package != null)
@@ -478,7 +484,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		if (t.equals("<"))
 			class_generics.readGenerics();
 
-		if (!t.equals("{")) skipTo(tok, "{");
+		if (!t.equals("{")) tok.skipTo("{");
 		t = tok.nextToken();
 
 		ClassHint _class = new ClassHint(type);
@@ -492,7 +498,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			}
 
     		if (t.equals("@")) {
-    			t = ignoreAnnotation(tok);
+    			t = tok.ignoreAnnotation();
     			if (t == null) return false;
     		}
 
@@ -512,7 +518,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
     		if (t.equals("{")) // static { ... }
     		{
-    			if (!skipBlock(tok))
+    			if (!tok.skipBlock())
     				return false;
     			t = tok.nextToken();
     			continue;
@@ -531,24 +537,24 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	public boolean read(File java) throws IOException
 	{
 	    FileReader rd = new FileReader(java);
-	    Tokenizer tok = new Tokenizer(rd);
+	    Code tok = new Code(rd);
 	    try {
 	    	String t = tok.nextToken();
 	    	while (t != null) {
 	    		if (t.equals("@")) {
-	    			t = ignoreAnnotation(tok);
+	    			t = tok.ignoreAnnotation();
 	    			if (t == null) return false;
 	    		}
 
 	    		if (t.equals("package")) {
-	    			if (!readPackage(tok))
+	    			if (!tok.readPackage())
 	    				return false;
 	    			t = tok.nextToken();
 	    			continue;
 	    		}
 
 	    		if (t.equals("import")) {
-	    			if (!readImport(tok))
+	    			if (!tok.readImport())
 	    				return false;
 	    			t = tok.nextToken();
 	    			continue;
