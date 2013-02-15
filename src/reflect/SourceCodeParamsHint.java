@@ -192,24 +192,63 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		return skipBlock(tok, "[", "]");
 	}
 
-	class MethodReader {
+	private class MethodReader {
 		private Tokenizer m_tok;
 		private ClassHint m_parent;
 		private String m_ctor;
-		MethodReader(Tokenizer tok, ClassHint parent, String ctor) {
+		private String m_type;
+		private Map<String, String> m_aliases = null;
+		MethodReader(Tokenizer tok, ClassHint parent, String ctor, String type) {
 			m_tok = tok;
 			m_parent = parent;
 			m_ctor = ctor;
+			m_type = type;
 		}
 
 		private String resolve(String typeName) {
-			String resolved = null;
 			if (s_builtins.containsKey(typeName))
-				resolved = s_builtins.get(typeName);
-			return resolved;
+				return s_builtins.get(typeName);
+
+			if (m_aliases != null && m_aliases.containsKey(typeName))
+				return m_aliases.get(typeName);
+
+			return null;
 		}
 
-		private StringPair readType(String firstToken, String nextToken) throws IOException {
+		private void setAlias(String generic, String resolved) {
+			if (m_aliases == null)
+				m_aliases = new HashMap<String, String>();
+			m_aliases.put(generic, resolved);
+		}
+
+		public boolean readGenerics() throws IOException {
+			String t = m_tok.nextToken();
+			while (t != null) {
+				if (t.equals(">"))
+					return true;
+
+				String alias = t;
+				
+				t = m_tok.nextToken(); // ">" "," "extends"
+				if (t.equals("extends")) {
+					t = m_tok.nextToken();
+					final String resolved = resolve(t);
+					setAlias(alias, resolved == null ? "?" + t : resolved);
+					t = m_tok.nextToken();
+				} else {
+					setAlias(alias, "Ljava/lang/Object;");
+				}
+
+				if (t.equals(","))
+					t = m_tok.nextToken();
+				if (t.equals(">"))
+					return true;
+
+				t = m_tok.nextToken();
+			}
+			return false;
+		}
+		public StringPair readType(String firstToken, String nextToken) throws IOException {
 			if (nextToken.equals("<"))
 			{
 				if (!skipGenerics(m_tok))
@@ -244,6 +283,18 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			if (resolved == null)
 				resolved = "?"+firstToken;
 			return new StringPair(resolved, t);
+		}
+		
+		public StringPair readCtorOrSelfType() throws IOException {
+			StringPair _type = new StringPair("V", "<init>"); //assume it's a constructor
+			String t = m_tok.nextToken();
+			if (t.equals("<") || t.equals("[")) // definitely not a ctor
+				_type = readType(m_ctor, t);
+			else if (t.equals("(")) // ctor would now have a open parenthesis
+				m_tok.pushBack();
+			else
+				_type = new StringPair("L" + m_type + ";", t);
+			return _type;
 		}
 
 		public boolean readMethod(String retType, String name, String indent) throws IOException {
@@ -324,24 +375,19 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     		// method:   <type> <name> "(" [<type> <name> ["," <type> <name>]*] ")" <block>
     		// property: <type> <name> [";" | "="]
 
-    		MethodReader m_reader = new MethodReader(tok, _class, ctor);
+    		MethodReader m_reader = new MethodReader(tok, _class, ctor, type);
     		StringPair _type;
 
     		if (t.equals("<")) // it's the <? extends Xyz> ? function(? _x);
     		{
-    			System.out.flush();
-    			throw new RuntimeException("Kaboom! " + type);
+    			if (!m_reader.readGenerics())
+    				return false;
+    			t = tok.nextToken();
     		}
+
     		if (t.equals(ctor)) //might be Type(...) or Type prop; or Type meth(...);
     		{
-    			_type = new StringPair("V", "<init>"); //assume it's a constructor
-    			t = tok.nextToken();
-    			if (t.equals("<") || t.equals("[")) // definitely not a ctor
-    				_type = m_reader.readType(ctor, t);
-    			else if (t.equals("(")) // ctor would now have a open parenthesis
-    				tok.pushBack();
-    			else
-    				_type = new StringPair("L" + type + ";", t);
+    			_type = m_reader.readCtorOrSelfType();
     		}
     		else
     			_type = m_reader.readType(t);
