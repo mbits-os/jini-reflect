@@ -307,13 +307,15 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private class MethodReader extends GenericsReader {
 		private ClassHint m_parent;
-		MethodReader(Tokenizer tok, ClassHint parent, String ctor, String type, GenericsReader parent_reader) {
+		private String m_indent;
+		MethodReader(Tokenizer tok, ClassHint parent, String ctor, String type, String indent, GenericsReader parent_reader) {
 			super(tok, ctor, type);
 			m_parent = parent;
 			if (parent_reader.m_aliases != null) {
 				for (Map.Entry<String, String> e: parent_reader.m_aliases.entrySet())
 					setAlias(e.getKey(), e.getValue());
 			}
+			m_indent = indent;
 		}
 
 		public StringPair readType(String firstToken, String nextToken) throws IOException {
@@ -389,7 +391,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return _type;
 		}
 
-		public boolean readMethod(String retType, String name, String indent) throws IOException {
+		public boolean readMethod(String retType, String name) throws IOException {
 			MethodHint _meth = new MethodHint(retType, name);
 			String t = m_tok.nextToken();
 			while (t != null)
@@ -404,7 +406,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 					if (t.equals("{") && !skipBlock(m_tok))
 						return false;
 					m_parent.add(_meth);
-					System.out.println(indent + _meth.toString());
+					System.out.println(m_indent + _meth.toString());
 					return true;
 				}
 
@@ -427,6 +429,45 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 				_meth.addParam(param.value, param.nextToken);
 			}
 			return false;
+		}
+
+		public String read() throws IOException {
+			String currentToken = m_tok.nextToken();
+    		StringPair _type;
+
+    		if (currentToken.equals("<")) // it's the <? extends Xyz> ? function(? _x);
+    		{
+    			if (!readGenerics())
+    				return null;
+    			currentToken = m_tok.nextToken();
+    		}
+
+    		if (currentToken.equals(m_ctor)) //might be Type(...) or Type prop; or Type meth(...);
+    		{
+    			_type = readCtorOrSelfType();
+    		}
+    		else
+    			_type = readType(currentToken);
+
+    		if (_type.nextToken == null) return null;
+
+   			currentToken = m_tok.nextToken();
+
+    		if (currentToken == null)
+    			return null;
+
+    		if (currentToken.equals("("))
+    		{
+    			if (!readMethod(_type.value, _type.nextToken))
+    				return null;
+
+    			return m_tok.nextToken();
+    		}
+
+    		if (!currentToken.equals(";")) skipBlocksTo(m_tok, ";");
+    		
+    		return m_tok.nextToken();
+			
 		}
 	}
 
@@ -492,43 +533,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     		// method:   <type> <name> "(" [<type> <name> ["," <type> <name>]*] ")" <block>
     		// property: <type> <name> [";" | "="]
 
-    		MethodReader m_reader = new MethodReader(tok, _class, ctor, type, class_generics);
-    		StringPair _type;
-
-    		if (t.equals("<")) // it's the <? extends Xyz> ? function(? _x);
-    		{
-    			if (!m_reader.readGenerics())
-    				return false;
-    			t = tok.nextToken();
-    		}
-
-    		if (t.equals(ctor)) //might be Type(...) or Type prop; or Type meth(...);
-    		{
-    			_type = m_reader.readCtorOrSelfType();
-    		}
-    		else
-    			_type = m_reader.readType(t);
-
-    		if (_type.nextToken == null) break;
-
-   			t = tok.nextToken();
-
-    		if (t == null)
-    			return false;
-
-    		if (t.equals("("))
-    		{
-    			if (!m_reader.readMethod(_type.value, _type.nextToken, indent))
-    			{
-    				return false;
-    			}
-    			t = tok.nextToken();
-    			continue;
-    		}
-
-    		if (!t.equals(";")) skipBlocksTo(tok, ";");
-    		
-    		t = tok.nextToken();
+    		tok.pushBack();
+    		t = new MethodReader(tok, _class, ctor, type, indent, class_generics).read();
 		}
 		return false;
 	}
