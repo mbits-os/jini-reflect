@@ -88,7 +88,7 @@ public class Reflect {
 	private void printClass(Class klazz) throws IOException
 	{
 		Class supah = klazz.getSuperclass();
-		System.out.println("Class: " + klazz.getName());
+		System.out.println("\nClass: " + klazz.getName());
 		if (supah != null)
 			System.out.println("    Extends: " + supah.getName() + "\n");
 

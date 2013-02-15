@@ -35,4 +35,6 @@ public class MethodHint {
 		sb.append(m_return);
 		return sb.toString();
 	}
+	
+	public String toString() { return signature(); }
 }

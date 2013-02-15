@@ -12,6 +12,19 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private String m_package;
 	private Vector<ClassHint> m_hints;
+	private static Map<String, String> s_builtins = new HashMap<String, String>();
+	
+	static {
+		s_builtins.put("boolean", "Z");
+		s_builtins.put("byte", "B");
+		s_builtins.put("char", "C");
+		s_builtins.put("short", "S");
+		s_builtins.put("int", "I");
+		s_builtins.put("long", "J");
+		s_builtins.put("float", "F");
+		s_builtins.put("double", "D");
+		s_builtins.put("void", "V");
+	}
 
 	protected abstract File getSourceRoot(String className);
 
@@ -97,6 +110,16 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			t = tokenizer.nextToken();
 	}
 
+	private static void skipBlocksTo(Tokenizer tokenizer, String tok) throws IOException {
+		String t = tokenizer.nextToken();
+		while (t != null && !t.equals(tok))
+		{
+			if (t.equals("{") && skipBlock(tokenizer)) return;
+			if (t.equals("<") && skipGenerics(tokenizer)) return;
+			t = tokenizer.nextToken();
+		}
+	}
+
 	static String ignoreAnnotation(Tokenizer tok) throws IOException
 	{
 		tok.nextToken();
@@ -125,7 +148,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	public void addImport(String imp)
 	{
 		if (imp == null) return;
-		//System.out.println("Import: " + imp);
+		System.out.println("Import: " + imp);
 	}
 
 	private boolean readImport(Tokenizer tok) throws IOException
@@ -151,6 +174,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 				if (--depth == 0)
 					return true;
 			}
+			t = tok.nextToken();
 		}
 		return false;
 	}
@@ -167,6 +191,12 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		return skipBlock(tok, "[", "]");
 	}
 
+	private String resolve(String typeName) {
+		String resolved = null;
+		if (s_builtins.containsKey(typeName))
+			resolved = s_builtins.get(typeName);
+		return resolved;
+	}
 	private StringPair readType(Tokenizer tok, String firstToken, String nextToken) throws IOException {
 		if (nextToken.equals("<"))
 		{
@@ -174,16 +204,23 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 				return new StringPair(null, null);
 			nextToken = tok.nextToken();
 		}
+
+		String resolved = resolve(firstToken);
+
 		StringBuilder sb = new StringBuilder();
-		sb.append("?");
+
+		if (resolved == null)
+			sb.append("?");
+
 		while (nextToken != null && nextToken.equals("["))
 		{
 			sb.append("[");
 			if (!skipIndex(tok))
 				return new StringPair(null, null);
+			nextToken = tok.nextToken();
 		}
 		//array
-		sb.append(firstToken);
+		sb.append(resolved == null ? firstToken : resolved);
 		return new StringPair(sb.toString(), nextToken);
 	}
 
@@ -191,7 +228,10 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		String t = tok.nextToken();
 		if (t.equals("<") || t.equals("["))
 			return readType(tok, firstToken, t);
-		return new StringPair("?"+firstToken, t);
+		String resolved = resolve(firstToken);
+		if (resolved == null)
+			resolved = "?"+firstToken;
+		return new StringPair(resolved, t);
 	}
 
 	private boolean readMethod(Tokenizer tok, ClassHint _class, String retType, String name, String indent) throws IOException {
@@ -209,8 +249,10 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 				if (t.equals("{") && !skipBlock(tok))
 					return false;
 				_class.add(_meth);
+				System.out.println(indent + _meth.toString());
 				return true;
 			}
+			t = tok.nextToken();
 		}
 		return false;
 	}
@@ -238,17 +280,22 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     			if (t == null) return false;
     		}
 
-    		if (t.equals("class") || t.equals("interface"))
+    		if (t.equals("class") || t.equals("interface") || t.equals("enum"))
     		{
     			t = tok.nextToken();
     			if (t == null)
     				return false;
-    			System.out.println(indent + "Class: " + typeName + "$" + t);
+    			System.out.println(indent + "Class: " + typeName + "$" + t + " {");
 
-    			if (!readClass(tok, t, typeName + "$" + t, indent + "    "))
-    				return false;
+    			try { 
+	    			if (!readClass(tok, t, typeName + "$" + t, indent + "    "))
+	    				return false;
+    			} finally {
+    				System.out.println(indent + "}");
+    			}
 
     			t = tok.nextToken();
+    			if (t != null && t.equals(";")) t = tok.nextToken();
     			continue;
     		}
 
@@ -265,13 +312,21 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     		// property: <type> <name> [";" | "="]
 
     		StringPair _type;
-    		if (t.equals(ctor)) //might bew Type(...) or Type prop; or Type meth(...);
+    		boolean nextTokenTaken = false;
+    		if (t.equals("<")) // it's the <? extends Xyz> ? function(? _x);
+    		{
+    			System.out.flush();
+    			throw new RuntimeException("Kaboom! " + type);
+    		}
+    		if (t.equals(ctor)) //might be Type(...) or Type prop; or Type meth(...);
     		{
     			_type = new StringPair("V", "<init>"); //assume it's a constructor
     			t = tok.nextToken();
     			if (t.equals("<") || t.equals("[")) // definitely not a ctor
     				_type = readType(tok, ctor, t);
-    			else if (!t.equals("(")) // ctor would now have a open parenthesis
+    			else if (t.equals("(")) // ctor would now have a open parenthesis
+    				nextTokenTaken = true;
+    			else
     				_type = new StringPair("L" + type + ";", t);
     		}
     		else
@@ -279,22 +334,25 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
     		if (_type.nextToken == null) break;
 
-    		System.err.print(indent + _type.toString());
+    		//System.err.print(indent + _type.toString());
 
-    		t = tok.nextToken();
+    		if (!nextTokenTaken)
+    			t = tok.nextToken();
+
     		if (t == null)
     			return false;
+
     		if (t.equals("("))
     		{
-    			if (!readMethod(tok, _class, _type.value, _type.nextToken, indent + "    "))
+    			if (!readMethod(tok, _class, _type.value, _type.nextToken, indent))
     			{
-    				System.err.println();
     				return false;
     			}
+    			t = tok.nextToken();
+    			continue;
     		}
 
-    		if (!t.equals(";")) skipTo(tok, ";");
-			System.err.println();
+    		if (!t.equals(";")) skipBlocksTo(tok, ";");
     		
     		t = tok.nextToken();
 		}
@@ -329,19 +387,24 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	    			continue;
 	    		}
 	    		
-	    		if (t.equals("class") || t.equals("interface"))
+	    		if (t.equals("class") || t.equals("interface") || t.equals("enum"))
 	    		{
 	    			t = tok.nextToken();
 	    			if (t == null)
 	    				return false;
-	    			System.out.println("Class: " + t);
+	    			System.out.println("Class: " + t + " {");
 
-	    			if (!readClass(tok, t, t, "    "))
-	    				return false;
+	    			try {
+		    			if (!readClass(tok, t, t, "    "))
+		    				return false;
+		    		} finally {
+	    				System.out.println("}");
+	    			}
 
 	    			++currentBracket;
 
 	    			t = tok.nextToken();
+	    			if (t != null && t.equals(";")) t = tok.nextToken();
 	    			continue;
 	    		}
 
