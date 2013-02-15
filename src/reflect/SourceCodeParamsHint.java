@@ -195,15 +195,13 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		return skipBlock(tok, "[", "]");
 	}
 
-	private class MethodReader {
-		private Tokenizer m_tok;
-		private ClassHint m_parent;
-		private String m_ctor;
-		private String m_type;
-		private Map<String, String> m_aliases = null;
-		MethodReader(Tokenizer tok, ClassHint parent, String ctor, String type) {
+	class GenericsReader {
+		protected Tokenizer m_tok;
+		protected String m_ctor;
+		protected String m_type;
+		protected Map<String, String> m_aliases = null;
+		GenericsReader(Tokenizer tok, String ctor, String type) {
 			m_tok = tok;
-			m_parent = parent;
 			m_ctor = ctor;
 			m_type = type;
 		}
@@ -245,7 +243,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			}
 			return null;
 		}
-		private String resolve(String typeName) {
+
+		protected String resolve(String typeName) {
 			if (s_builtins.containsKey(typeName))
 				return s_builtins.get(typeName);
 			
@@ -271,7 +270,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return cand;
 		}
 
-		private void setAlias(String generic, String resolved) {
+		protected void setAlias(String generic, String resolved) {
 			if (m_aliases == null)
 				m_aliases = new HashMap<String, String>();
 			m_aliases.put(generic, resolved);
@@ -304,6 +303,19 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			}
 			return false;
 		}
+	}
+
+	private class MethodReader extends GenericsReader {
+		private ClassHint m_parent;
+		MethodReader(Tokenizer tok, ClassHint parent, String ctor, String type, GenericsReader parent_reader) {
+			super(tok, ctor, type);
+			m_parent = parent;
+			if (parent_reader.m_aliases != null) {
+				for (Map.Entry<String, String> e: parent_reader.m_aliases.entrySet())
+					setAlias(e.getKey(), e.getValue());
+			}
+		}
+
 		public StringPair readType(String firstToken, String nextToken) throws IOException {
 			if (nextToken.equals("<"))
 			{
@@ -419,13 +431,21 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	}
 
 	private boolean readClass(Tokenizer tok, String ctor, String typeName, String indent) throws IOException {
-		skipTo(tok, "{");
-		String t = tok.nextToken();
+
 		final String type;
 		if (m_package != null)
 			type = m_package + "." + typeName;
 		else
 			type = typeName;
+
+		GenericsReader class_generics = new GenericsReader(tok, ctor, type);
+		String t = tok.nextToken();
+		if (t.equals("<"))
+			class_generics.readGenerics();
+
+		if (!t.equals("{")) skipTo(tok, "{");
+		t = tok.nextToken();
+
 		ClassHint _class = new ClassHint(type);
 
 		while (t != null)
@@ -472,7 +492,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     		// method:   <type> <name> "(" [<type> <name> ["," <type> <name>]*] ")" <block>
     		// property: <type> <name> [";" | "="]
 
-    		MethodReader m_reader = new MethodReader(tok, _class, ctor, type);
+    		MethodReader m_reader = new MethodReader(tok, _class, ctor, type, class_generics);
     		StringPair _type;
 
     		if (t.equals("<")) // it's the <? extends Xyz> ? function(? _x);
