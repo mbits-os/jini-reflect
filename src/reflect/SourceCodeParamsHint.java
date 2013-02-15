@@ -84,6 +84,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 				return String.valueOf(ch);
 			}
 		}
+		void pushBack() { m_st.pushBack(); }
 	}
 
 	static class StringPair {
@@ -191,70 +192,82 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		return skipBlock(tok, "[", "]");
 	}
 
-	private String resolve(String typeName) {
-		String resolved = null;
-		if (s_builtins.containsKey(typeName))
-			resolved = s_builtins.get(typeName);
-		return resolved;
-	}
-	private StringPair readType(Tokenizer tok, String firstToken, String nextToken) throws IOException {
-		if (nextToken.equals("<"))
-		{
-			if (!skipGenerics(tok))
-				return new StringPair(null, null);
-			nextToken = tok.nextToken();
+	class MethodReader {
+		private Tokenizer m_tok;
+		private ClassHint m_parent;
+		private String m_ctor;
+		MethodReader(Tokenizer tok, ClassHint parent, String ctor) {
+			m_tok = tok;
+			m_parent = parent;
+			m_ctor = ctor;
 		}
 
-		String resolved = resolve(firstToken);
-
-		StringBuilder sb = new StringBuilder();
-
-		if (resolved == null)
-			sb.append("?");
-
-		while (nextToken != null && nextToken.equals("["))
-		{
-			sb.append("[");
-			if (!skipIndex(tok))
-				return new StringPair(null, null);
-			nextToken = tok.nextToken();
+		private String resolve(String typeName) {
+			String resolved = null;
+			if (s_builtins.containsKey(typeName))
+				resolved = s_builtins.get(typeName);
+			return resolved;
 		}
-		//array
-		sb.append(resolved == null ? firstToken : resolved);
-		return new StringPair(sb.toString(), nextToken);
-	}
 
-	private StringPair readType(Tokenizer tok, String firstToken) throws IOException {
-		String t = tok.nextToken();
-		if (t.equals("<") || t.equals("["))
-			return readType(tok, firstToken, t);
-		String resolved = resolve(firstToken);
-		if (resolved == null)
-			resolved = "?"+firstToken;
-		return new StringPair(resolved, t);
-	}
-
-	private boolean readMethod(Tokenizer tok, ClassHint _class, String retType, String name, String indent) throws IOException {
-		MethodHint _meth = new MethodHint(retType, name);
-		String t = tok.nextToken();
-		while (t != null)
-		{
-			if (t.equals(")"))
+		private StringPair readType(String firstToken, String nextToken) throws IOException {
+			if (nextToken.equals("<"))
 			{
-				t = tok.nextToken();
-				while (t != null && !t.equals(";") && !t.equals("{"))
-					t = tok.nextToken();
-				if (t == null)
-					return false;
-				if (t.equals("{") && !skipBlock(tok))
-					return false;
-				_class.add(_meth);
-				System.out.println(indent + _meth.toString());
-				return true;
+				if (!skipGenerics(m_tok))
+					return new StringPair(null, null);
+				nextToken = m_tok.nextToken();
 			}
-			t = tok.nextToken();
+
+			String resolved = resolve(firstToken);
+
+			StringBuilder sb = new StringBuilder();
+
+			if (resolved == null)
+				sb.append("?");
+
+			while (nextToken != null && nextToken.equals("["))
+			{
+				sb.append("[");
+				if (!skipIndex(m_tok))
+					return new StringPair(null, null);
+				nextToken = m_tok.nextToken();
+			}
+			//array
+			sb.append(resolved == null ? firstToken : resolved);
+			return new StringPair(sb.toString(), nextToken);
 		}
-		return false;
+
+		public StringPair readType(String firstToken) throws IOException {
+			String t = m_tok.nextToken();
+			if (t.equals("<") || t.equals("["))
+				return readType(firstToken, t);
+			String resolved = resolve(firstToken);
+			if (resolved == null)
+				resolved = "?"+firstToken;
+			return new StringPair(resolved, t);
+		}
+
+		public boolean readMethod(String retType, String name, String indent) throws IOException {
+			MethodHint _meth = new MethodHint(retType, name);
+			String t = m_tok.nextToken();
+			while (t != null)
+			{
+				if (t.equals(")"))
+				{
+					t = m_tok.nextToken();
+					while (t != null && !t.equals(";") && !t.equals("{"))
+						t = m_tok.nextToken();
+					if (t == null)
+						return false;
+					if (t.equals("{") && !skipBlock(m_tok))
+						return false;
+					m_parent.add(_meth);
+					System.out.println(indent + _meth.toString());
+					return true;
+				}
+				t = m_tok.nextToken();
+			}
+			return false;
+		}
 	}
 
 	private boolean readClass(Tokenizer tok, String ctor, String typeName, String indent) throws IOException {
@@ -311,8 +324,9 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     		// method:   <type> <name> "(" [<type> <name> ["," <type> <name>]*] ")" <block>
     		// property: <type> <name> [";" | "="]
 
+    		MethodReader m_reader = new MethodReader(tok, _class, ctor);
     		StringPair _type;
-    		boolean nextTokenTaken = false;
+
     		if (t.equals("<")) // it's the <? extends Xyz> ? function(? _x);
     		{
     			System.out.flush();
@@ -323,28 +337,25 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     			_type = new StringPair("V", "<init>"); //assume it's a constructor
     			t = tok.nextToken();
     			if (t.equals("<") || t.equals("[")) // definitely not a ctor
-    				_type = readType(tok, ctor, t);
+    				_type = m_reader.readType(ctor, t);
     			else if (t.equals("(")) // ctor would now have a open parenthesis
-    				nextTokenTaken = true;
+    				tok.pushBack();
     			else
     				_type = new StringPair("L" + type + ";", t);
     		}
     		else
-    			_type = readType(tok, t);
+    			_type = m_reader.readType(t);
 
     		if (_type.nextToken == null) break;
 
-    		//System.err.print(indent + _type.toString());
-
-    		if (!nextTokenTaken)
-    			t = tok.nextToken();
+   			t = tok.nextToken();
 
     		if (t == null)
     			return false;
 
     		if (t.equals("("))
     		{
-    			if (!readMethod(tok, _class, _type.value, _type.nextToken, indent))
+    			if (!m_reader.readMethod(_type.value, _type.nextToken, indent))
     			{
     				return false;
     			}
