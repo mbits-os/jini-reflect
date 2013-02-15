@@ -12,6 +12,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import reflect.ClassHint;
+import reflect.CodeExceptions;
 import reflect.ParamsHint;
 import reflect.android.AndroidParamsHint;
 
@@ -100,7 +101,7 @@ public class Reflect {
 		System.out.print("class " + klazz.getName());
 		if (supah != null)
 		{
-			if (klazz.getName().length() < spaces.length());
+			if (klazz.getName().length() < spaces.length())
 				System.out.print(spaces.substring(klazz.getName().length()));
 			System.out.print(" extends " + supah.getName());
 		}
@@ -119,6 +120,9 @@ public class Reflect {
 
 	public static void main(String[] args)
 	{
+
+		CodeExceptions.readExceptions();
+
 		Map<String, ClassInfo> classes = new HashMap<String, ClassInfo>();
 		String sdk = null;
 

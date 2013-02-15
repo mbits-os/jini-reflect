@@ -1,0 +1,11 @@
+android.test.suitebuilder.TestSuiteBuilder:TestGrouping:android.test.suitebuilder.TestGrouping
+*:IInputManager:<unk>.IInputManager
+*:InputDevicesChangedListener:<unk>.InputDevicesChangedListener
+*:KeyboardLayout:<unk>.KeyboardLayout
+*:InputDeviceListener:<unk>.InputDeviceListener
+*::<unk>.
+*::<unk>.
+*::<unk>.
+*::<unk>.
+*::<unk>.
+*::<unk>.
