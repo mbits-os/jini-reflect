@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Vector;
 
 class Tokenizer {
+	private long m_line;
 	private StreamTokenizer m_st;
 	private static Map<String, Integer> s_ignore = new HashMap<String, Integer>();
 	static {
@@ -26,6 +27,7 @@ class Tokenizer {
 
 	Tokenizer(FileReader rd) throws IOException
 	{
+		m_line = 1;
 	    m_st = new StreamTokenizer(rd);
 
 	    //m_st.parseNumbers();
@@ -33,6 +35,7 @@ class Tokenizer {
 	    m_st.ordinaryChars(0, ' ');
 	    m_st.slashSlashComments(true);
 	    m_st.slashStarComments(true);
+	    m_st.eolIsSignificant(true);
 	}
 	String nextToken() throws IOException
 	{
@@ -56,6 +59,16 @@ class Tokenizer {
 		case '\'':
 			String squoteVal = m_st.sval;
 			return "\'" + squoteVal + "\'";
+		case StreamTokenizer.TT_EOL:
+			m_line++;
+			token = m_st.nextToken();
+			while (token == StreamTokenizer.TT_EOL)
+			{
+				m_line++;
+				token = m_st.nextToken();
+			}
+			pushBack();
+			return nextToken();
 		case StreamTokenizer.TT_EOF:
 			return null;
 		default:
@@ -66,6 +79,7 @@ class Tokenizer {
 		}
 	}
 	void pushBack() { m_st.pushBack(); }
+	long getLine() { return m_line; }
 }
 
 class StringPair {
@@ -109,8 +123,19 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private class Code extends Tokenizer {
 
-		Code(FileReader rd) throws IOException { super(rd); }
-		
+		private String m_file;
+
+		Code(FileReader rd, String fileName) throws IOException
+		{
+			super(rd);
+			m_file = fileName;
+		}
+
+		public void onError(String message) throws IOException
+		{
+			throw new TokenException(message, m_file, getLine());
+		}
+
 		private void skipTo(String tok) throws IOException {
 			String t = nextToken();
 			while (t != null && !t.equals(tok))
@@ -219,23 +244,19 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return null;
 		}
 
-		private String tryImport(String typeName) {
+		private String tryImport(String typeName) throws IOException {
 			typeName = "." + typeName;
-			//System.out.println("Trying " + typeName + " with imports");
 			for (String imp: m_imports)
 			{
-				//System.out.println("  > Trying " + imp);
 				if (imp.endsWith(typeName)) // TODO: "import pa.cka.ge.Class;" and "Class.Subclass" case missing
 				{
 					String quick = tryClassName(imp);
 					if (quick != null)
-					{
-						//System.out.println("  ! Found " + quick);
 						return quick;
-					}
+
 					//now, where is the package, and where are the classes...
-					//System.out.println("  ? Found " + imp);
-					return "L" + imp + ";"; // TODO: temp;
+					return "L" + imp + ";"; // TODO: temporary
+					//m_tok.onError(typeName + " is not accessible from " + imp);
 				}
 				
 				if (imp.endsWith(".*"))
@@ -248,7 +269,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return null;
 		}
 
-		protected String resolve(String typeName) {
+		protected String resolve(String typeName) throws IOException {
 			if (s_builtins.containsKey(typeName))
 				return s_builtins.get(typeName);
 			
@@ -265,9 +286,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			if (cand == null) cand = tryImport(typeName);
 
 			if (cand == null)
-			{
-				System.err.println("Could not resolve " + typeName);
-			}
+				m_tok.onError("Could not resolve " + typeName);
 
 			return cand;
 		}
@@ -537,7 +556,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	public boolean read(File java) throws IOException
 	{
 	    FileReader rd = new FileReader(java);
-	    Code tok = new Code(rd);
+	    Code tok = new Code(rd, java.toString());
 	    try {
 	    	String t = tok.nextToken();
 	    	while (t != null) {
