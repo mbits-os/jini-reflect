@@ -12,6 +12,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private String m_package;
 	private Vector<ClassHint> m_hints;
+	private Vector<String> m_imports = new Vector<String>();
 	private static Map<String, String> s_builtins = new HashMap<String, String>();
 	
 	static {
@@ -41,6 +42,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			s_ignore.put("abstract", 0);
 			s_ignore.put("transient", 0);
 			s_ignore.put("volatile", 0);
+			s_ignore.put("synchronized", 0);
 		};
 
 		Tokenizer(FileReader rd) throws IOException
@@ -149,6 +151,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	public void addImport(String imp)
 	{
 		if (imp == null) return;
+		m_imports.add(imp);
 		System.out.println("Import: " + imp);
 	}
 
@@ -205,14 +208,67 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			m_type = type;
 		}
 
+		private String tryClassName(String className) {
+			try {
+				Class<?> cand = Class.forName(className);
+				if (cand != null) return "L" + cand.getName() + ";";
+			} catch (ClassNotFoundException e) {
+			}
+			return null;
+		}
+
+		private String tryImport(String typeName) {
+			typeName = "." + typeName;
+			//System.out.println("Trying " + typeName + " with imports");
+			for (String imp: m_imports)
+			{
+				//System.out.println("  > Trying " + imp);
+				if (imp.endsWith(typeName)) // TODO: "import pa.cka.ge.Class;" and "Class.Subclass" case missing
+				{
+					String quick = tryClassName(imp);
+					if (quick != null)
+					{
+						//System.out.println("  ! Found " + quick);
+						return quick;
+					}
+					//now, where is the package, and where are the classes...
+					//System.out.println("  ? Found " + imp);
+					return "L" + imp + ";"; // TODO: temp;
+				}
+				
+				if (imp.endsWith(".*"))
+				{
+					String cand = tryClassName(imp.substring(0, imp.length()-2) + typeName);
+					if (cand != null)
+						return cand;
+				}
+			}
+			return null;
+		}
 		private String resolve(String typeName) {
 			if (s_builtins.containsKey(typeName))
 				return s_builtins.get(typeName);
-
+			
 			if (m_aliases != null && m_aliases.containsKey(typeName))
 				return m_aliases.get(typeName);
 
-			return null;
+			String cand = null;
+			if (typeName.equals(m_ctor))
+				cand = m_type;
+
+			if (cand == null) cand = tryClassName(typeName);
+			if (cand == null) cand = tryClassName(m_package + "." + typeName);
+			if (cand == null) cand = tryClassName("java.lang." + typeName);
+			if (cand == null) cand = tryImport(typeName);
+
+			if (cand == null)
+			{
+				System.err.flush();
+				System.out.flush();
+				System.err.println("Could not resolve " + typeName);
+			}
+
+			return cand;
 		}
 
 		private void setAlias(String generic, String resolved) {
@@ -270,7 +326,20 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 					return new StringPair(null, null);
 				nextToken = m_tok.nextToken();
 			}
-			//array
+
+			int dots = 0;
+			// the StreamTokenizer will convert a "lone" dot into a 0.0 number
+			while (nextToken != null && (nextToken.equals(".") || nextToken.equals("0.0")))
+			{
+				++dots;
+				nextToken = m_tok.nextToken();
+			}
+
+			if (dots != 0 && dots != 3)
+				return new StringPair(null, null);
+			if (dots == 3) // the "T... param" becomes "[T"
+				sb.append("[");
+
 			sb.append(resolved == null ? firstToken : resolved);
 			return new StringPair(sb.toString(), nextToken);
 		}
@@ -279,9 +348,20 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			String t = m_tok.nextToken();
 			if (t.equals("<") || t.equals("["))
 				return readType(firstToken, t);
+			int dots = 0;
+			if (firstToken.endsWith("..."))
+			{
+				if (firstToken.endsWith("...."))
+					return new StringPair(null, null);
+
+				dots = 3;
+				firstToken = firstToken.substring(0, firstToken.length()-3);
+			}
 			String resolved = resolve(firstToken);
 			if (resolved == null)
-				resolved = "?"+firstToken;
+				resolved = "?"+(dots == 3 ? "[" + firstToken : firstToken);
+			else if (dots == 3)
+				resolved = "[" + resolved;
 			return new StringPair(resolved, t);
 		}
 		
@@ -315,7 +395,24 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 					System.out.println(indent + _meth.toString());
 					return true;
 				}
-				t = m_tok.nextToken();
+
+				StringPair param = readType(t);
+				if (param.nextToken == null)
+					break;
+				
+				if (param.nextToken.equals(",") || param.nextToken.equals(")"))
+				{
+					t = param.nextToken;
+					param.nextToken = null;
+				}
+				else
+				{
+					t = m_tok.nextToken();
+					if (t.equals(","))
+						t = m_tok.nextToken();
+				}
+
+				_meth.addParam(param.value, param.nextToken);
 			}
 			return false;
 		}
