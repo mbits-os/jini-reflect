@@ -140,10 +140,13 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		}
 
 		private boolean skipBlock(String open, String close) throws IOException {
+			boolean print = false;
 			int depth = 1;
 			String t = nextToken();
 			while (t != null)
 			{
+				if (print)
+					System.out.println(t);
 				if (t.equals(open)) ++depth;
 				if (t.equals(close))
 				{
@@ -501,6 +504,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
    			currentToken = m_tok.nextToken();
 
+    		System.out.println("    " + _type.toString() + " " + currentToken);
+
     		if (currentToken == null)
     			return null;
 
@@ -519,8 +524,54 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		}
 	}
 
-	private boolean readClass(Code tok, String ctor, String typeName) throws IOException {
+	private boolean readEnum(Code tok, String ctor, String typeName) throws IOException {
+		System.out.println("    >>> Reading an enum " + ctor + " (" + typeName +")");
+		final String type;
+		if (m_package != null)
+			type = m_package + "." + typeName;
+		else
+			type = typeName;
 
+		GenericsReader class_generics = new GenericsReader(tok, ctor, type);
+		String t = tok.nextToken();
+		if (t.equals("<"))
+			class_generics.readGenerics();
+
+		if (!t.equals("{")) tok.skipTo("{");
+
+		//skip EnumConstants, if any
+		final String name = tok.nextToken();
+		if (name == null) return false;
+		if (name.equals("}")) return true;
+
+		t = tok.nextToken();
+		if (t == null) return false;
+		if (t.equals(";")) //only one enum, nothing fancy
+			return readClass(tok, ctor, typeName);
+
+		if (t.equals(",") || t.equals("(")) // skip to EnumBodyDeclarations, if any
+		{
+			if (!name.equals(ctor))
+			{
+				t = tok.nextToken();
+				while (t != null && !t.equals(";") && !t.equals("}"))
+				{
+					if (t.equals("{") && !tok.skipBlock()) return false;
+					if (t.equals("<") && !tok.skipGenerics()) return false;
+					t = tok.nextToken();
+				}
+				if (t.equals("}")) return true;
+				return readClassBody(tok, ctor, typeName, type, class_generics, tok.nextToken());
+			} // else we are already two tokens down the EnumBodyDeclarations.
+		}
+
+		// We are already two tokens down the EnumBodyDeclarations. restart?
+
+		tok.pushBack();
+		return readClassBody(tok, ctor, typeName, type, class_generics, name);
+	}
+
+	private boolean readClass(Code tok, String ctor, String typeName) throws IOException {
 		final String type;
 		if (m_package != null)
 			type = m_package + "." + typeName;
@@ -535,7 +586,12 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		if (!t.equals("{")) tok.skipTo("{");
 		t = tok.nextToken();
 
+		return readClassBody(tok, ctor, typeName, type, class_generics, t);
+	}
+	private boolean readClassBody(Code tok, String ctor, String typeName, String type, GenericsReader class_generics, String firstToken) throws IOException {
+
 		ClassHint _class = new ClassHint(type);
+		String t = firstToken;
 
 		while (t != null)
 		{
@@ -556,7 +612,21 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
     			if (t == null) return false;
     		}
 
-    		if (t.equals("class") || t.equals("interface") || t.equals("enum"))
+    		if (t.equals("enum"))
+    		{
+    			t = tok.nextToken();
+    			if (t == null)
+    				return false;
+
+    			if (!readEnum(tok, t, typeName + "$" + t))
+    				return false;
+
+    			t = tok.nextToken();
+    			if (t != null && t.equals(";")) t = tok.nextToken();
+    			continue;
+    		}
+
+    		if (t.equals("class") || t.equals("interface"))
     		{
     			t = tok.nextToken();
     			if (t == null)
@@ -614,7 +684,21 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	    			continue;
 	    		}
 	    		
-	    		if (t.equals("class") || t.equals("interface") || t.equals("enum"))
+	    		if (t.equals("enum"))
+	    		{
+	    			t = tok.nextToken();
+	    			if (t == null)
+	    				return false;
+
+	    			if (!readEnum(tok, t, t))
+	    				return false;
+
+	    			t = tok.nextToken();
+	    			if (t != null && t.equals(";")) t = tok.nextToken();
+	    			continue;
+	    		}
+
+	    		if (t.equals("class") || t.equals("interface"))
 	    		{
 	    			t = tok.nextToken();
 	    			if (t == null)
