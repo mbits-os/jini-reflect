@@ -167,47 +167,22 @@ public class Reflect {
 		}
 
 		try {
-			final Reflect reflect = new Reflect(new AndroidParamsHint.HintCreator(sdk));
+			final AndroidParamsHint.HintCreator hintCreator = new AndroidParamsHint.HintCreator(sdk);
+			final Reflect reflect = new Reflect(hintCreator);
+
+			if (!hintCreator.read())
+				return;
 
 			Map<String, ClassInfo> additional = new HashMap<String, ClassInfo>();
 			if (performTests)
 			{
 				classes.clear();
-				final String androidSDK = System.getenv("ANDROID_SDK");
-				if (androidSDK == null)
+				String[] api_classes = hintCreator.classes();
+				for (String clazz: api_classes)
 				{
-					throw new RuntimeException("Environment variable ANDROID_SDK is missing.");
-				}
-				final File SDK = new File(androidSDK);
-				final File api = new File(SDK, "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml");
-
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.parse(api);
-				doc.getDocumentElement().normalize();
-
-				NodeList nodes = doc.getElementsByTagName("class");
-				int len = nodes.getLength();
-				for (int i = 0; i < len; ++i)
-				{
-					final Element node = (Element)nodes.item(i);
-					final String name = node.getAttribute("name");
-					if (name.contains("$")) continue;
-					String _superName = name.replace("/", ".");
-					Class _super;
-					try{
-						_super = Class.forName(_superName);
-					} catch(ClassNotFoundException e) {
-						continue;
-					}
-					while (_super != null)
-					{
-						ClassInfo nfo = new ClassInfo(_superName);
-						nfo.Start();
-						additional.put(_superName, nfo);
-						_superName = nfo.m_super;
-						_super = _superName == null ? null : Class.forName(_superName);
-					}
+					ClassInfo nfo = new ClassInfo(clazz);
+					nfo.Start();
+					additional.put(clazz, nfo);
 				}
 			}
 			else

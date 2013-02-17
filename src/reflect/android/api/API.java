@@ -3,6 +3,7 @@ package reflect.android.api;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,6 +14,7 @@ import org.w3c.dom.NodeList;
 
 public class API {
 	private Map<String, Class> m_classes = new HashMap<String, Class>();
+	private static final String API_VERSIONS = "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml";
 
 	public boolean read() throws RuntimeException {
 		final String androidSDK = System.getenv("ANDROID_SDK");
@@ -24,7 +26,7 @@ public class API {
 	}
 
 	public boolean read(File android_sdk) {
-		final File api = new File(android_sdk, "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml");
+		final File api = new File(android_sdk, API_VERSIONS);
 
 		Document doc = null;
 		try {
@@ -54,7 +56,7 @@ public class API {
 		if (since == null) iSince = 1;
 		else iSince = Integer.valueOf(since);
 		
-		Class _class = new Class(iSince, name);
+		Class _class = new Class(iSince, name.replace("/", "."));
 
 		NodeList nodes = clazz.getElementsByTagName("method");
 		int len = nodes.getLength();
@@ -74,15 +76,15 @@ public class API {
 		final String since = method.getAttribute("since");
 		
 		if (name == null) return false;
-		final String[] names = name.split("(", 2);
+		final String[] names = name.split("\\(", 2);
 		if (names == null || names.length != 2)
 			return false;
 
 		final int iSince;
-		if (since == null) iSince = 1;
+		if (since == null || since.isEmpty()) iSince = 1;
 		else iSince = Integer.valueOf(since);
 		
-		_class.add(new Method(iSince, names[0], "(" + names[1]));
+		_class.add(new Method(iSince, names[0], "(" + names[1].replace("/", ".")));
 		return true;
 	}
 
@@ -102,5 +104,29 @@ public class API {
 		if (result.availableSince() > targetAPI)
 			return null;
 		return result;
+	}
+
+	public String[] getClasses()
+	{
+		String[] classes = new String[m_classes.size()];
+		int i = 0;
+		for (Map.Entry<String, Class> e: m_classes.entrySet())
+		{
+			classes[i++] = e.getKey();
+		}
+		return classes;
+	}
+
+	public String[] getClasses(int targetAPI)
+	{
+		Vector<String> classes = new Vector<String>();
+		for (Map.Entry<String, Class> e: m_classes.entrySet())
+		{
+			if (e.getValue().availableSince() > targetAPI)
+				continue;
+			classes.add(e.getKey());
+		}
+		String [] items = new String[classes.size()];
+		return classes.toArray(items);
 	}
 }
