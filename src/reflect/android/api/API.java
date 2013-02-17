@@ -106,17 +106,6 @@ public class API {
 		return result;
 	}
 
-	public String[] getClasses()
-	{
-		String[] classes = new String[m_classes.size()];
-		int i = 0;
-		for (Map.Entry<String, Class> e: m_classes.entrySet())
-		{
-			classes[i++] = e.getKey();
-		}
-		return classes;
-	}
-
 	public String[] getClasses(int targetAPI)
 	{
 		Vector<String> classes = new Vector<String>();
@@ -128,5 +117,14 @@ public class API {
 		}
 		String [] items = new String[classes.size()];
 		return classes.toArray(items);
+	}
+
+	public Class get(String clazz, int targetAPI) {
+		if (!m_classes.containsKey(clazz))
+			return null;
+		Class klazz = m_classes.get(clazz);
+		if (klazz.availableSince() > targetAPI)
+			return null;
+		return klazz;
 	}
 }

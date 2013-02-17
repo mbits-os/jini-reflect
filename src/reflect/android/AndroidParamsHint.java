@@ -6,6 +6,7 @@ import java.io.IOException;
 import reflect.ParamsHint;
 import reflect.SourceCodeParamsHint;
 import reflect.android.api.API;
+import reflect.android.api.Class;
 import reflect.utils.ClassPathHack;
 
 public class AndroidParamsHint extends SourceCodeParamsHint {
@@ -37,6 +38,10 @@ public class AndroidParamsHint extends SourceCodeParamsHint {
 
 		public boolean read() { return m_api.read(m_sdk_root); }
 		public String[] classes() { return m_api.getClasses(m_targetAPI); }
+
+		public Class get(String clazz) {
+			return m_api.get(clazz, m_targetAPI);
+		}
 		
 	}
 
