@@ -123,6 +123,28 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			throw new TokenException(message, m_file, 1);
 		}
 
+		String getMessage(String message, String file, long line) {
+			if (file == null) return message;
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(file);
+			sb.append(":");
+			sb.append(String.valueOf(line));
+			sb.append(":");
+			if (message != null)
+			{
+				sb.append(" ");
+				sb.append(message);
+			}
+
+			return sb.toString();
+		}
+
+		public void print(String message)
+		{
+			System.err.println(getMessage(message, m_file, 1));
+		}
+
 		private void skipTo(String tok) throws IOException {
 			String t = nextToken();
 			while (t != null && !t.equals(tok))
@@ -289,6 +311,12 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			return null;
 		}
 
+		private String tryInterface(String typeName) {
+			if (typeName.length() > 2 && typeName.charAt(0) == 'I' && Character.isUpperCase(typeName.charAt(1)))
+				return "!<iface>." + typeName.replace(".", "$");
+			return null;
+		}
+
 		protected String resolve(String typeName) throws IOException {
 			if (s_builtins.containsKey(typeName))
 				return s_builtins.get(typeName);
@@ -316,9 +344,13 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			if (cand == null) cand = tryClassName("java.lang." + typeName.replace(".", "$"));
 			if (cand == null) cand = tryImport(typeName);
 			if (cand == null) cand = CodeExceptions.get(m_type, typeName);
+			if (cand == null) cand = tryInterface(typeName);
 
 			if (cand == null)
-				m_tok.onError("Could not resolve " + typeName);
+			{
+				m_tok.print("Could not resolve " + typeName);
+				return "!<unk>." + typeName.replace(".", "$");
+			}
 
 			return cand;
 		}
@@ -339,10 +371,16 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 				
 				t = m_tok.nextToken(); // ">" "," "extends"
 				if (t.equals("extends")) {
+					String name = m_tok.nextToken();
+					final String resolved = resolve(name);
+					setAlias(alias, resolved == null ? "?" + name : resolved);
 					t = m_tok.nextToken();
-					final String resolved = resolve(t);
-					setAlias(alias, resolved == null ? "?" + t : resolved);
-					t = m_tok.nextToken();
+					if (t.equals("<"))
+					{
+						if (!m_tok.skipGenerics())
+							return false;
+						t = m_tok.nextToken();
+					}
 				} else {
 					setAlias(alias, "Ljava/lang/Object;");
 				}
@@ -584,9 +622,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 			class_generics.readGenerics();
 
 		if (!t.equals("{")) tok.skipTo("{");
-		t = tok.nextToken();
 
-		return readClassBody(tok, ctor, typeName, type, class_generics, t);
+		return readClassBody(tok, ctor, typeName, type, class_generics, tok.nextToken());
 	}
 	private boolean readClassBody(Code tok, String ctor, String typeName, String type, GenericsReader class_generics, String firstToken) throws IOException {
 

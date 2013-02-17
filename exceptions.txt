@@ -3,7 +3,11 @@ android.test.suitebuilder.TestSuiteBuilder:TestGrouping:android.test.suitebuilde
 *:InputDevicesChangedListener:<unk>.InputDevicesChangedListener
 *:KeyboardLayout:<unk>.KeyboardLayout
 *:InputDeviceListener:<unk>.InputDeviceListener
-*::<unk>.
+*:CodecProfileLevel:<unk>.CodecProfileLevel
+*:DnsSdTxtRecord:<unk>.DnsSdTxtRecord
+*:WifiP2pWfdInfo:<unk>.WifiP2pWfdInfo
+*:ActivityResult:<unk>.ActivityResult
+*:ActivityWaiter:<unk>.ActivityWaiter
 *::<unk>.
 *::<unk>.
 *::<unk>.
