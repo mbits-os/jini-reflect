@@ -95,7 +95,7 @@ public class Reflect {
 	}
 
 	private static final String spaces = "                                                            ";
-	private void printClass(Class klazz) throws IOException
+	private void printClass(Class klazz, int curr, int max) throws IOException
 	{
 		Class supah = klazz.getSuperclass();
 		System.out.print("class " + klazz.getName());
@@ -105,7 +105,7 @@ public class Reflect {
 				System.out.print(spaces.substring(klazz.getName().length()));
 			System.out.print(" extends " + supah.getName());
 		}
-		System.out.println();
+		System.out.println(" (" + curr + "/" + max + ")");
 
 		ClassHint[] hints = getHints(klazz.getName());
 	}
@@ -236,8 +236,11 @@ public class Reflect {
 			}
 			Vector<Class> _classes = new Vector<Class>();
 			ClassInfo.sort(_classes, classes);
+			int curr = 0;
 			for (Class c: _classes)
-				reflect.printClass(c);
+			{
+				reflect.printClass(c, ++curr, _classes.size());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
