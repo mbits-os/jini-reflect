@@ -4,12 +4,12 @@ public class Property extends NamedArtifact {
 	
 	private boolean m_static;
 
-	public Property(String signature, String name) {
-		this(1, signature, name);
+	public Property(String name) {
+		this(1, name);
 	}
 
-	public Property(int since, String signature, String name) {
-		super(since, signature, name);
+	public Property(int since, String name) {
+		super(since, "Ljava.lang.Object;", name);
 		m_static = false;
 	}
 

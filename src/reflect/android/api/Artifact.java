@@ -18,5 +18,6 @@ public class Artifact {
 	}
 
 	public String getSignature() { return m_signature; }
+	public void setSignature(String sig) { m_signature = sig; }
 	public final int availableSince() { return m_since; }
 }

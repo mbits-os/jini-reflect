@@ -81,4 +81,49 @@ public class Class extends Artifact {
 	void add(Property prop) {
 		m_props.put(prop.getName(), prop);
 	}
+
+	public boolean fixDeclarationsFromVM() {
+		java.lang.Class<?> _this = null;
+		try {
+			_this = java.lang.Class.forName(getName());
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+		for (java.lang.reflect.Field fld: _this.getFields())
+		{
+			if (!m_props.containsKey(fld.getName()))
+				continue;
+
+			final Property prop = m_props.get(fld.getName());
+			prop.setSignature(fld.getType().getName());
+			prop.setIsStatic(java.lang.reflect.Modifier.isStatic(fld.getModifiers()));
+		}
+		for (java.lang.reflect.Method meth: _this.getMethods())
+		{
+			if (!java.lang.reflect.Modifier.isStatic(meth.getModifiers()))
+				continue;
+			
+			if (!m_groups.containsKey(meth.getName()))
+				return false;
+
+			final StringBuilder sb = new StringBuilder();
+			sb.append("(");
+			for (java.lang.Class<?> par: meth.getParameterTypes())
+				sb.append(par.getName());
+			sb.append(")");
+			sb.append(meth.getReturnType().getName());
+			final String sig = sb.toString();
+
+			final MethodGroup group = m_groups.get(meth.getName());
+			for (Method m: group.m_methods)
+			{
+				if (m.getType() == Method.Type.METHOD && m.getSignature().equals(sig))
+				{
+					m.setType(Method.Type.STATIC_METHOD);
+					break;
+				}
+			}
+		}
+		return true;
+	}
 }
