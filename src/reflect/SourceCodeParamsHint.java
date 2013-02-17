@@ -107,6 +107,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	}
 
 	protected abstract File getSourceRoot(String className);
+	protected abstract boolean hasClass(String className);
+
 
 	private class Code extends Tokenizer {
 
@@ -218,12 +220,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		}
 
 		private String tryClassName(String className) {
-			try {
-				Class<?> cand = Class.forName(className);
-				if (cand != null) return "L" + cand.getName() + ";";
-			} catch (ClassNotFoundException e) {
-			}
-			return null;
+			return hasClass(className) ? "L" + className + ";" : null;
 		}
 
 		private String tryInheritance(String className, String subClass) {

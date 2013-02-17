@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import reflect.ParamsHint;
+
 public class Class extends Artifact {
 
 	static class MethodGroup {
@@ -28,6 +30,7 @@ public class Class extends Artifact {
 	private Map<String, Property> m_props = new HashMap<String, Property>();
 	private String m_super;
 	private String[] m_interfaces;
+	private boolean m_hinted;
 
 	public Class() {}
 
@@ -128,4 +131,11 @@ public class Class extends Artifact {
 		}
 		return true;
 	}
+
+	public void getHints(ParamsHint hint) {
+		if (!m_hinted)
+			hint.getHints(getName());
+	}
+	
+	void setHinted(boolean hinted) { m_hinted = hinted; }
 }

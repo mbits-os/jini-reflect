@@ -127,4 +127,11 @@ public class API {
 			return null;
 		return klazz;
 	}
+
+	void setHinted(String clazz, int targetAPI, boolean hinted)
+	{
+		Class klazz = get(clazz, targetAPI);
+		if (klazz != null)
+			klazz.setHinted(hinted);
+	}
 }

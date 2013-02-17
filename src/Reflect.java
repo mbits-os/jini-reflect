@@ -36,6 +36,7 @@ public class Reflect {
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
 
+		klazz.getHints(m_android_api.createHint());
 		ClassHint[] hints = getHints(clazz);
 	}
 
@@ -109,10 +110,8 @@ public class Reflect {
 				for (String clazz: api_classes)
 				{
 					Class klazz = androidAPI.get(clazz);
-					if (klazz != null && klazz.fixDeclarationsFromVM())
-						System.out.println(klazz.getName());
-					else
-						System.err.println(klazz.getName());
+					if (klazz != null)
+						klazz.fixDeclarationsFromVM();
 
 					classes.put(clazz, 0);
 				}
@@ -122,10 +121,8 @@ public class Reflect {
 				for (Map.Entry<String, Integer> e: classes.entrySet())
 				{
 					Class klazz = androidAPI.get(e.getKey());
-					if (klazz != null && klazz.fixDeclarationsFromVM())
-						System.out.println(klazz.getName());
-					else
-						System.err.println(klazz.getName());
+					if (klazz != null)
+						klazz.fixDeclarationsFromVM();
 				}
 			}
 
