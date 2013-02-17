@@ -1,50 +1,42 @@
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import reflect.ClassHint;
 import reflect.CodeExceptions;
-import reflect.ParamsHint;
 import reflect.android.AndroidParamsHint;
 import reflect.android.api.Class;
 
-@SuppressWarnings("rawtypes")
 public class Reflect {
 
-	private ParamsHint.HintCreator m_hinter;
+	private AndroidParamsHint.HintCreator m_android_api;
 
-	public Reflect(ParamsHint.HintCreator hinter) {
-		m_hinter = hinter;
+	public Reflect(AndroidParamsHint.HintCreator hinter) {
+		m_android_api = hinter;
 	}
 
 	private ClassHint[] getHints(String klazz)
 	{
-		return m_hinter.createHint().getHints(klazz);
+		return m_android_api.createHint().getHints(klazz);
 	}
 
 	private static final String spaces = "                                                            ";
-	private void printClass(java.lang.Class klazz, int curr, int max) throws IOException
+	private void printClass(String clazz, int curr, int max) throws IOException
 	{
-		java.lang.Class supah = klazz.getSuperclass();
-		System.out.print("class " + klazz.getName());
+		Class klazz = m_android_api.get(clazz);
+		if (klazz == null) return;
+
+		String supah = klazz.getSuper();
+		System.out.print("class " + clazz);
 		if (supah != null)
 		{
-			if (klazz.getName().length() < spaces.length())
-				System.out.print(spaces.substring(klazz.getName().length()));
-			System.out.print(" extends " + supah.getName());
+			if (clazz.length() < spaces.length())
+				System.out.print(spaces.substring(clazz.length()));
+			System.out.print(" extends " + supah);
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
 
-		ClassHint[] hints = getHints(klazz.getName());
+		ClassHint[] hints = getHints(clazz);
 	}
 
 	private static void usage(String err)
@@ -117,10 +109,12 @@ public class Reflect {
 				for (String clazz: api_classes)
 				{
 					Class klazz = androidAPI.get(clazz);
-					if (klazz.fixDeclarationsFromVM())
+					if (klazz != null && klazz.fixDeclarationsFromVM())
 						System.out.println(klazz.getName());
 					else
 						System.err.println(klazz.getName());
+
+					classes.put(clazz, 0);
 				}
 			}
 			else
@@ -128,26 +122,18 @@ public class Reflect {
 				for (Map.Entry<String, Integer> e: classes.entrySet())
 				{
 					Class klazz = androidAPI.get(e.getKey());
-					if (klazz != null)
-					{
-						if (klazz.fixDeclarationsFromVM())
-							System.out.println(klazz.getName());
-						else
-							System.err.println(klazz.getName());
-					}
+					if (klazz != null && klazz.fixDeclarationsFromVM())
+						System.out.println(klazz.getName());
+					else
+						System.err.println(klazz.getName());
 				}
 			}
-			/*for (Map.Entry<String, ClassInfo> e: additional.entrySet())
-			{
-				classes.put(e.getKey(), e.getValue());
-			}
-			Vector<java.lang.Class> _classes = new Vector<java.lang.Class>();
-			ClassInfo.sort(_classes, classes);
+
 			int curr = 0;
-			for (java.lang.Class c: _classes)
+			for (Map.Entry<String, Integer> e: classes.entrySet())
 			{
-				reflect.printClass(c, ++curr, _classes.size());
-			}*/
+				reflect.printClass(e.getKey(), ++curr, classes.size());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

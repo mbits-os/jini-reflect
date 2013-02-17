@@ -20,6 +20,8 @@ public class Class extends Artifact {
 		public void add(Method meth) {
 			m_methods.add(meth);
 		}
+
+		public String toString() { return m_methods.toString(); }
 	}
 
 	private Map<String, MethodGroup> m_groups = new HashMap<String, MethodGroup>();
@@ -104,7 +106,7 @@ public class Class extends Artifact {
 				continue;
 			
 			if (!m_groups.containsKey(meth.getName()))
-				return false;
+				continue;
 
 			final StringBuilder sb = new StringBuilder();
 			sb.append("(");

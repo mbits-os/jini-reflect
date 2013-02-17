@@ -110,39 +110,9 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private class Code extends Tokenizer {
 
-		private String m_file;
-
-		Code(FileReader rd, String fileName) throws IOException
+		Code(FileReader rd) throws IOException
 		{
 			super(rd);
-			m_file = fileName;
-		}
-
-		public void onError(String message) throws IOException
-		{
-			throw new TokenException(message, m_file, 1);
-		}
-
-		String getMessage(String message, String file, long line) {
-			if (file == null) return message;
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(file);
-			sb.append(":");
-			sb.append(String.valueOf(line));
-			sb.append(":");
-			if (message != null)
-			{
-				sb.append(" ");
-				sb.append(message);
-			}
-
-			return sb.toString();
-		}
-
-		public void print(String message)
-		{
-			System.err.println(getMessage(message, m_file, 1));
 		}
 
 		private void skipTo(String tok) throws IOException {
@@ -348,7 +318,6 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 			if (cand == null)
 			{
-				m_tok.print("Could not resolve " + typeName);
 				return "!<unk>." + typeName.replace(".", "$");
 			}
 
@@ -698,7 +667,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	public boolean read(File java) throws IOException
 	{
 	    FileReader rd = new FileReader(java);
-	    Code tok = new Code(rd, java.toString());
+	    Code tok = new Code(rd);
 	    try {
 	    	String t = tok.nextToken();
 	    	while (t != null) {

@@ -33,6 +33,8 @@ public class Method extends Artifact {
 				getSignature().equals(m.getSignature());
 	}
 
+	public String toString() { return getSignature(); }
+
 	private void breakSignature() {
 		final String sig = getSignature();
 		final char[] signature = new char[sig.length()-1];
