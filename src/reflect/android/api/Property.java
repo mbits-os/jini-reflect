@@ -13,6 +13,14 @@ public class Property extends NamedArtifact {
 		m_static = false;
 	}
 
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof Property))
+			return false;
+		Property p = (Property)o;
+		return getName().equals(p.getName()) &&
+				getSignature().equals(p.getSignature());
+	}
+
 	public boolean isStatic() { return m_static; }
 	public void setIsStatic(boolean is_static) { m_static = is_static; }
 }

@@ -25,6 +25,14 @@ public class Method extends Artifact {
 		breakSignature();
 	}
 
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof Method))
+			return false;
+		Method m = (Method)o;
+		return m_name.equals(m.m_name) &&
+				getSignature().equals(m.getSignature());
+	}
+
 	private void breakSignature() {
 		final String sig = getSignature();
 		final char[] signature = new char[sig.length()-1];
