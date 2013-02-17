@@ -3,10 +3,12 @@ package reflect.android.api;
 import java.util.Vector;
 
 public class Method extends Artifact {
+	public enum Type { CONSTRUCTOR, METHOD, STATIC_METHOD };
 
 	private String m_name;
 	private Param[] m_params = null;
 	private String m_return = null;
+	private Type m_type;
 
 	public Method() {
 		this(1, "<init>", "()V");
@@ -19,6 +21,7 @@ public class Method extends Artifact {
 	public Method(int since, String name, String signature) {
 		super(since, signature);
 		m_name = name;
+		m_type = name.equals("<init>") ? Type.CONSTRUCTOR : Type.METHOD;
 		breakSignature();
 	}
 
@@ -63,4 +66,6 @@ public class Method extends Artifact {
 	public String getName() { return m_name; }
 	public Param[] getParameterTypes() { return m_params; }
 	public String getReturnType() { return m_return; }
+	public Type getType() { return m_type; }
+	public void setType(Type type) { m_type = type; }
 }
