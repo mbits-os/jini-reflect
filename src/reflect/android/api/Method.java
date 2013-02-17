@@ -58,11 +58,15 @@ public class Method extends Artifact {
 			case 'L':
 				while (paramEnd < signature.length && signature[paramEnd] != ';')
 					++paramEnd;
+				if (paramEnd == signature.length)
+					throw new RuntimeException("Error in method signature: " + getName() + sig);
 				//fall-through:
 			default:
-				final String type = new String(signature, paramStart, paramEnd - paramStart);
+				final String type = new String(signature, paramStart, paramEnd - paramStart + 1);
 				params.add(new Param(type, position++));
 				paramStart = paramEnd;
+				if (signature[paramEnd] == ';')
+					++paramStart;
 			}
 			paramEnd++;
 		}

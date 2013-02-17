@@ -25,7 +25,7 @@ public class Param extends NamedArtifact {
 			int dot = sig.lastIndexOf('.');
 			if (dot == -1)
 				return "object" + Array + position;
-			String name = sig.substring(dot + 1);
+			String name = sig.substring(dot + 1, sig.length()-1);
 			if (name.isEmpty())
 				return "object" + Array + position;
 			name = name.substring(0, 1).toLowerCase() + name.substring(1);

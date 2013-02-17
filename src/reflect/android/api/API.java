@@ -85,7 +85,7 @@ public class API {
 		else iSince = Integer.valueOf(since);
 		
 		_class.add(new Method(iSince, names[0], "(" + names[1].replace("/", ".")));
-		return false;
+		return true;
 	}
 
 	void add(Class clazz) {
