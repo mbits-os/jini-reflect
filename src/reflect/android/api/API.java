@@ -55,7 +55,7 @@ public class API {
 		final int iSince;
 		if (since == null) iSince = 1;
 		else iSince = Integer.valueOf(since);
-		
+
 		Class _class = new Class(iSince, name.replace("/", "."));
 
 		NodeList nodes = clazz.getElementsByTagName("method");
@@ -85,7 +85,7 @@ public class API {
 		else iSince = Integer.valueOf(since);
 		
 		_class.add(new Method(iSince, names[0], "(" + names[1].replace("/", ".")));
-		return true;
+		return false;
 	}
 
 	void add(Class clazz) {

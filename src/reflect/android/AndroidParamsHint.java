@@ -27,8 +27,8 @@ public class AndroidParamsHint extends SourceCodeParamsHint {
 			m_api = new API();
 			m_targetAPI = Integer.valueOf(api);
 			m_sdk    = new File(m_sdk_root, "sources" + File.separator + "android-" + api);
-			File jar = new File(m_sdk_root, "platforms" + File.separator + "android-" + api + File.separator + "android.jar");
-			ClassPathHack.addFile(jar);
+			ClassPathHack.addFile(new File(m_sdk_root, "platforms" + File.separator + "android-" + api + File.separator + "android.jar"));
+			ClassPathHack.addFile(new File(m_sdk_root, "add-ons" + File.separator + "addon-google_apis-google-" + api + File.separator + "libs" + File.separator + "maps.jar"));
 		}
 
 		@Override public ParamsHint createHint() {
