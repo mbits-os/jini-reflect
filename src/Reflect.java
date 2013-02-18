@@ -3,24 +3,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import reflect.CodeExceptions;
-import reflect.android.AndroidParamsHint;
 import reflect.android.api.Class;
+import reflect.android.api.Classes;
 import reflect.android.api.Method;
 import reflect.android.api.Param;
 import reflect.android.api.Property;
 
 public class Reflect {
 
-	private AndroidParamsHint.HintCreator m_android_api;
-
-	public Reflect(AndroidParamsHint.HintCreator hinter) {
-		m_android_api = hinter;
+	public Reflect() {
 	}
 
 	private static final String spaces = "                                                            ";
 	private void printClass(String clazz, int curr, int max) throws IOException
 	{
-		Class klazz = m_android_api.get(clazz);
+		Class klazz = Classes.forName(clazz);
 		if (klazz == null) return;
 
 		String supah = klazz.getSuper();
@@ -43,9 +40,6 @@ public class Reflect {
 			}
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
-
-		klazz.getHints(m_android_api.createHint());
-		klazz.fixDeclarationsFromVM();
 
 		for (Property prop: klazz.getProperties()) {
 			System.out.print("    ");
@@ -128,33 +122,20 @@ public class Reflect {
 		}
 
 		try {
-			final AndroidParamsHint.HintCreator androidAPI = new AndroidParamsHint.HintCreator(sdk);
-			final Reflect reflect = new Reflect(androidAPI);
-
-			if (!androidAPI.read())
+			if (!Classes.setTargetApi(Integer.valueOf(sdk)))
+			{
+				System.err.println("Could not initiate android-" + sdk + " environment");
 				return;
+			}
+
+			final Reflect reflect = new Reflect();
 
 			if (performTests)
 			{
 				classes.clear();
-				String[] api_classes = androidAPI.classes();
+				String[] api_classes = Classes.classNames();
 				for (String clazz: api_classes)
-				{
-					Class klazz = androidAPI.get(clazz);
-					if (klazz != null)
-						klazz.fixDeclarationsFromVM();
-
 					classes.put(clazz, 0);
-				}
-			}
-			else
-			{
-				for (Map.Entry<String, Integer> e: classes.entrySet())
-				{
-					Class klazz = androidAPI.get(e.getKey());
-					if (klazz != null)
-						klazz.fixDeclarationsFromVM();
-				}
 			}
 
 			int curr = 0;

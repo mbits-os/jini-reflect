@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import reflect.ParamsHint;
-
 public class Class extends Artifact {
 
 	public static class MethodGroup {
@@ -122,7 +120,7 @@ public class Class extends Artifact {
 		m_internals.add(sub);
 	}
 
-	public boolean fixDeclarationsFromVM() {
+	private boolean fixDeclarationsFromVM() {
 		java.lang.Class<?> _this = null;
 		try {
 			_this = java.lang.Class.forName(getName());
@@ -167,12 +165,18 @@ public class Class extends Artifact {
 		return true;
 	}
 
-	public void getHints(ParamsHint hint) {
-		if (!m_hinted)
-			hint.getHints(getName());
+	boolean update() {
+		if (m_hinted) return true;
+
+		if (!fixDeclarationsFromVM())
+			return false;
+
+		Classes.getHints(getName());
+		return true;
 	}
-	
+
 	public void setHinted(boolean hinted) { m_hinted = hinted; }
 
 	public String toString() { return getName() + " " + m_groups.toString() + " " + m_props.toString(); }
+
 }

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import reflect.CodeExceptions;
-import reflect.ParamsHint;
 
 class StringPair {
 	String value;
@@ -28,7 +27,7 @@ class StringPair {
 	}
 }
 
-public abstract class SourceCodeParamsHint implements ParamsHint {
+public abstract class SourceCodeParamsHint {
 
 	private String m_package;
 	private Vector<String> m_imports = new Vector<String>();
@@ -677,7 +676,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		return true;
 	}
 
-	@Override public void getHints(String className) {
+	public void getHints(String className) {
 
 		File java = null;
 		final File root = getSourceRoot(className);
