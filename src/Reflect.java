@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import reflect.ClassHint;
 import reflect.CodeExceptions;
 import reflect.android.AndroidParamsHint;
 import reflect.android.api.Class;
@@ -13,11 +12,6 @@ public class Reflect {
 
 	public Reflect(AndroidParamsHint.HintCreator hinter) {
 		m_android_api = hinter;
-	}
-
-	private ClassHint[] getHints(String klazz)
-	{
-		return m_android_api.createHint().getHints(klazz);
 	}
 
 	private static final String spaces = "                                                            ";
@@ -37,7 +31,6 @@ public class Reflect {
 		System.out.println(" (" + curr + "/" + max + ")");
 
 		klazz.getHints(m_android_api.createHint());
-		ClassHint[] hints = getHints(clazz);
 	}
 
 	private static void usage(String err)

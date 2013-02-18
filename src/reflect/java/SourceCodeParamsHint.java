@@ -1,73 +1,14 @@
-package reflect;
+package reflect.java;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StreamTokenizer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-class Tokenizer {
-	private StreamTokenizer m_st;
-	private static Map<String, Integer> s_ignore = new HashMap<String, Integer>();
-	static {
-		s_ignore.put("native", 0);
-		s_ignore.put("private", 0);
-		s_ignore.put("protected", 0);
-		s_ignore.put("public", 0);
-		s_ignore.put("static", 0);
-		s_ignore.put("final", 0);
-		s_ignore.put("abstract", 0);
-		s_ignore.put("transient", 0);
-		s_ignore.put("volatile", 0);
-		s_ignore.put("synchronized", 0);
-	};
-
-	Tokenizer(FileReader rd) throws IOException
-	{
-	    m_st = new StreamTokenizer(rd);
-
-	    //m_st.parseNumbers();
-	    m_st.wordChars('_', '_');
-	    m_st.ordinaryChar('/');
-	    m_st.ordinaryChars(0, ' ');
-	    m_st.slashSlashComments(true);
-	    m_st.slashStarComments(true);
-	}
-	String nextToken() throws IOException
-	{
-		int token = m_st.nextToken();
-		switch (token) {
-		case StreamTokenizer.TT_NUMBER:
-			double num = m_st.nval;
-			if (num > -0.01 && num < 0.01)
-				return ".";
-			return String.valueOf(num);
-		case StreamTokenizer.TT_WORD:
-			String word = m_st.sval;
-			if (word.trim().length() == 0)
-				return nextToken();
-			if (s_ignore.containsKey(word))
-				return nextToken();
-			return word;
-		case '"':
-			String dquoteVal = m_st.sval;
-			return "\"" + dquoteVal + "\"";
-		case '\'':
-			String squoteVal = m_st.sval;
-			return "\'" + squoteVal + "\'";
-		case StreamTokenizer.TT_EOF:
-			return null;
-		default:
-			char ch = (char) m_st.ttype;
-			if (Character.isWhitespace(ch))
-				return nextToken();
-			return String.valueOf(ch);
-		}
-	}
-	void pushBack() { m_st.pushBack(); }
-}
+import reflect.CodeExceptions;
+import reflect.ParamsHint;
 
 class StringPair {
 	String value;
@@ -90,7 +31,6 @@ class StringPair {
 public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	private String m_package;
-	private Vector<ClassHint> m_hints;
 	private Vector<String> m_imports = new Vector<String>();
 	private static Map<String, String> s_builtins = new HashMap<String, String>();
 	
@@ -108,6 +48,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 	protected abstract File getSourceRoot(String className);
 	protected abstract boolean hasClass(String className);
+	protected abstract ClassHinter getClass(String className);
 
 
 	private class Code extends Tokenizer {
@@ -363,9 +304,9 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	}
 
 	private class MethodReader extends GenericsReader {
-		private ClassHint m_parent;
+		private ClassHinter m_parent;
 
-		MethodReader(Code tok, ClassHint parent, String ctor, String type, GenericsReader parent_reader) {
+		MethodReader(Code tok, ClassHinter parent, String ctor, String type, GenericsReader parent_reader) {
 			super(tok, ctor, type);
 			m_parent = parent;
 			if (parent_reader.m_aliases != null) {
@@ -448,7 +389,9 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		}
 
 		private boolean readMethod(String retType, String name) throws IOException {
-			MethodHint _meth = new MethodHint(retType, name);
+			MethodGroupHinter _group = m_parent.getMethodGroup(name);
+			Vector<String> types = new Vector<String>();
+			Vector<String> names = new Vector<String>();
 			String t = m_tok.nextToken();
 			while (t != null)
 			{
@@ -461,7 +404,9 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 						return false;
 					if (t.equals("{") && !m_tok.skipBlock())
 						return false;
-					m_parent.add(_meth);
+					MethodHinter _meth = _group.find(retType, types);
+					if (_meth != null)
+						_meth.setHints(names);
 					return true;
 				}
 
@@ -481,7 +426,8 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 						t = m_tok.nextToken();
 				}
 
-				_meth.addParam(param.value, param.nextToken);
+				types.add(param.value);
+				names.add(param.nextToken);
 			}
 			return false;
 		}
@@ -508,13 +454,12 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
    			currentToken = m_tok.nextToken();
 
-    		System.out.println("    " + _type.toString() + " " + currentToken);
-
     		if (currentToken == null)
     			return null;
 
     		if (currentToken.equals("("))
     		{
+        		System.out.println("    " + _type.toString() + " " + currentToken);
     			if (!readMethod(_type.value, _type.nextToken))
     				return null;
 
@@ -593,7 +538,14 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 	}
 	private boolean readClassBody(Code tok, String ctor, String typeName, String type, GenericsReader class_generics, String firstToken) throws IOException {
 
-		ClassHint _class = new ClassHint(type);
+		ClassHinter _class = getClass(type);
+		if (_class == null)
+		{
+			if (!tok.skipBlock())
+				return false;
+			return true;
+		}
+
 		String t = firstToken;
 
 		while (t != null)
@@ -606,7 +558,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 			if (t.equals("}"))
 			{
-				m_hints.add(_class);
+				_class.finished();
 				return true;
 			}
 
@@ -723,8 +675,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		return true;
 	}
 
-	@Override public ClassHint[] getHints(String className) {
-		m_hints = new Vector<ClassHint>();
+	@Override public void getHints(String className) {
 
 		File java = null;
 		final File root = getSourceRoot(className);
@@ -735,19 +686,13 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		}
 
 		if (java == null || !java.isFile())
-			return null;
+			return;
 
 		try {
 			if (!read(java))
-				return null;
+				return;
 		} catch (IOException ex) {
-			return null;
+			return;
 		}
-
-		if (m_hints.size() == 0)
-			return null;
-
-		ClassHint[] ret = new ClassHint[m_hints.size()];
-		return m_hints.toArray(ret);
 	}
 }

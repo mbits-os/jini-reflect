@@ -4,5 +4,5 @@ public interface ParamsHint {
 	public static interface HintCreator {
 		public abstract ParamsHint createHint();
 	}
-	public abstract ClassHint[] getHints(String className);
+	public abstract void getHints(String className);
 }

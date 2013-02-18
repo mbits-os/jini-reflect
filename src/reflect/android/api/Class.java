@@ -9,7 +9,7 @@ import reflect.ParamsHint;
 
 public class Class extends Artifact {
 
-	static class MethodGroup {
+	public static class MethodGroup {
 		private List<Method> m_methods;
 		private String m_name;
 		MethodGroup(String name) {
@@ -66,6 +66,12 @@ public class Class extends Artifact {
 				return true;
 		}
 		return false;
+	}
+
+	public MethodGroup get(String methName) {
+		if (!m_groups.containsKey(methName))
+			return null;
+		return m_groups.get(methName);
 	}
 
 	boolean has(Property prop) {
@@ -137,5 +143,5 @@ public class Class extends Artifact {
 			hint.getHints(getName());
 	}
 	
-	void setHinted(boolean hinted) { m_hinted = hinted; }
+	public void setHinted(boolean hinted) { m_hinted = hinted; }
 }
