@@ -314,7 +314,7 @@ public abstract class SourceCodeParamsHint {
 			}
 		}
 
-		private StringPair readType(String firstToken, String nextToken) throws IOException {
+		private StringPair readType(String firstToken, String nextToken, boolean methodParam) throws IOException {
 			if (nextToken.equals("<"))
 			{
 				if (!m_tok.skipGenerics())
@@ -350,14 +350,30 @@ public abstract class SourceCodeParamsHint {
 			if (dots == 3) // the "T... param" becomes "[T"
 				sb.append("[");
 
+			if (methodParam)
+			{
+				String t = m_tok.nextToken();
+				int depth = 0;
+				while (t.equals("["))
+				{
+					depth++;
+					if (!m_tok.skipIndex())
+						return new StringPair(null, null);
+					t = m_tok.nextToken();
+				}
+				m_tok.pushBack();
+				while (depth-- > 0)
+					sb.append("[");
+			}
+
 			sb.append(resolved == null ? firstToken : resolved);
 			return new StringPair(sb.toString(), nextToken);
 		}
 
-		private StringPair readType(String firstToken) throws IOException {
+		private StringPair readType(String firstToken, boolean methodParam) throws IOException {
 			String t = m_tok.nextToken();
 			if (t.equals("<") || t.equals("["))
-				return readType(firstToken, t);
+				return readType(firstToken, t, methodParam);
 			int dots = 0;
 			if (firstToken.endsWith("..."))
 			{
@@ -368,18 +384,40 @@ public abstract class SourceCodeParamsHint {
 				firstToken = firstToken.substring(0, firstToken.length()-3);
 			}
 			String resolved = resolve(firstToken);
+
+			StringBuilder sb = new StringBuilder();
 			if (resolved == null)
-				resolved = "?"+(dots == 3 ? "[" + firstToken : firstToken);
-			else if (dots == 3)
-				resolved = "[" + resolved;
-			return new StringPair(resolved, t);
+				sb.append("?");
+			if (methodParam)
+			{
+				String t1 = m_tok.nextToken();
+				int depth = 0;
+				while (t1.equals("["))
+				{
+					depth++;
+					if (!m_tok.skipIndex())
+						return new StringPair(null, null);
+					t1 = m_tok.nextToken();
+				}
+				m_tok.pushBack();
+				while (depth-- > 0)
+					sb.append("[");
+			}
+			if (dots == 3)
+				sb.append("[");
+			if (resolved != null)
+				sb.append(resolved);
+			else
+				sb.append(firstToken);
+
+			return new StringPair(sb.toString(), t);
 		}
 		
 		private StringPair readCtorOrSelfType() throws IOException {
 			StringPair _type = new StringPair("V", "<init>"); //assume it's a constructor
 			String t = m_tok.nextToken();
 			if (t.equals("<") || t.equals("[")) // definitely not a ctor
-				_type = readType(m_ctor, t);
+				_type = readType(m_ctor, t, false);
 			else if (t.equals("(")) // ctor would now have a open parenthesis
 				m_tok.pushBack();
 			else
@@ -411,10 +449,10 @@ public abstract class SourceCodeParamsHint {
 					return true;
 				}
 
-				StringPair param = readType(t);
+				StringPair param = readType(t, true);
 				if (param.nextToken == null)
 					break;
-				
+
 				if (param.nextToken.equals(",") || param.nextToken.equals(")"))
 				{
 					t = param.nextToken;
@@ -449,7 +487,7 @@ public abstract class SourceCodeParamsHint {
     			_type = readCtorOrSelfType();
     		}
     		else
-    			_type = readType(currentToken);
+    			_type = readType(currentToken, false);
 
     		if (_type.nextToken == null) return null;
 
