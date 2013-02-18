@@ -5,6 +5,9 @@ import java.util.Map;
 import reflect.CodeExceptions;
 import reflect.android.AndroidParamsHint;
 import reflect.android.api.Class;
+import reflect.android.api.Method;
+import reflect.android.api.Param;
+import reflect.android.api.Property;
 
 public class Reflect {
 
@@ -21,16 +24,46 @@ public class Reflect {
 		if (klazz == null) return;
 
 		String supah = klazz.getSuper();
+		String[] interfaces = klazz.getInterfaces();
 		System.out.print("class " + clazz);
-		if (supah != null)
+		if (supah != null || interfaces.length > 0)
 		{
 			if (clazz.length() < spaces.length())
 				System.out.print(spaces.substring(clazz.length()));
+		}
+		if (supah != null)
 			System.out.print(" extends " + supah);
+		if (interfaces.length > 0) {
+			System.out.print(" implements ");
+			boolean first = true;
+			for (String iface: interfaces) {
+				if (first) first = false;
+				else System.out.print(", ");
+				System.out.print(iface);
+			}
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
 
 		klazz.getHints(m_android_api.createHint());
+		for (Property prop: klazz.getProperties()) {
+			System.out.print("    ");
+			if (prop.isStatic())
+				System.out.print("static ");
+			System.out.println(prop.getSignature() + " " + prop.getName());
+		}
+		for (Method meth: klazz.getMethods()) {
+			System.out.print("    ");
+			if (meth.getType() == Method.Type.STATIC_METHOD)
+				System.out.print("static ");
+			System.out.print(meth.getReturnType() + " " + meth.getName() + "(");
+			boolean first = true;
+			for (Param param: meth.getParameterTypes()) {
+				if (first) first = false;
+				else System.out.print(", ");
+				System.out.print(param.getSignature() + " " + param.getName());
+			}
+			System.out.println(")");
+		}
 	}
 
 	private static void usage(String err)

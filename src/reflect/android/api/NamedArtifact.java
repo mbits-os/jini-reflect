@@ -13,7 +13,7 @@ public class NamedArtifact extends Artifact {
 		m_name = name;
 	}
 
-	void setName(String nameHint) { m_name = nameHint; }
-	String getName() { return m_name; }
+	public void setName(String nameHint) { m_name = nameHint; }
+	public String getName() { return m_name; }
 
 }

@@ -10,7 +10,7 @@ import reflect.ParamsHint;
 public class Class extends Artifact {
 
 	public static class MethodGroup {
-		private List<Method> m_methods;
+		public List<Method> m_methods;
 		private String m_name;
 		MethodGroup(String name) {
 			m_methods = new LinkedList<Method>();
@@ -54,6 +54,25 @@ public class Class extends Artifact {
 	public String getName() { return getSignature(); }
 	public String getSuper() { return m_super; }
 	public String[] getInterfaces() { return m_interfaces; }
+	public Property[] getProperties() {
+		Property[] props = new Property[m_props.size()];
+		return m_props.values().toArray(props);
+	}
+	public Method[] getMethods() {
+		int len = 0;
+
+		for (Map.Entry<String, MethodGroup> e: m_groups.entrySet())
+			len += e.getValue().m_methods.size();
+		
+		Method[] meths = new Method[len];
+
+		int index = 0;
+		for (Map.Entry<String, MethodGroup> e: m_groups.entrySet())
+			for (Method m: e.getValue().m_methods)
+				meths[index++] = m;
+
+		return meths;
+	}
 
 	boolean has(Method meth) {
 		final String methName = meth.getName();

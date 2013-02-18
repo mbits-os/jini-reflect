@@ -22,7 +22,9 @@ public class Param extends NamedArtifact {
 		case 'D': return "double" + Array + position;
 		case 'V': return "void" + Array + position;
 		case 'L':
-			int dot = sig.lastIndexOf('.');
+			int dot = sig.lastIndexOf('$');
+			if (dot == -1)
+				dot = sig.lastIndexOf('.');
 			if (dot == -1)
 				return "object" + Array + position;
 			String name = sig.substring(dot + 1, sig.length()-1);

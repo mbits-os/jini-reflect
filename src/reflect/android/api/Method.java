@@ -10,14 +10,6 @@ public class Method extends Artifact {
 	private String m_return = null;
 	private Type m_type;
 
-	public Method() {
-		this(1, "<init>", "()V");
-	}
-
-	public Method(String name, String signature) {
-		this(1, name, signature);
-	}
-
 	public Method(int since, String name, String signature) {
 		super(since, signature);
 		m_name = name;
@@ -67,8 +59,7 @@ public class Method extends Artifact {
 				final String type = new String(signature, paramStart, paramEnd - paramStart + 1);
 				params.add(new Param(type, position++));
 				paramStart = paramEnd;
-				if (signature[paramEnd] == ';')
-					++paramStart;
+				++paramStart;
 			}
 			paramEnd++;
 		}

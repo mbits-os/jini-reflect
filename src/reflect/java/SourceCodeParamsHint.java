@@ -234,7 +234,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
 			String cand = null;
 			if (typeName.equals(m_ctor))
-				cand = m_type;
+				cand = "L" + m_type + ";";
 
 			if (cand == null)
 			{
@@ -389,7 +389,6 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 		}
 
 		private boolean readMethod(String retType, String name) throws IOException {
-			MethodGroupHinter _group = m_parent.getMethodGroup(name);
 			Vector<String> types = new Vector<String>();
 			Vector<String> names = new Vector<String>();
 			String t = m_tok.nextToken();
@@ -404,6 +403,9 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 						return false;
 					if (t.equals("{") && !m_tok.skipBlock())
 						return false;
+					MethodGroupHinter _group = m_parent.getMethodGroup(name);
+					if (_group == null)
+						return true;
 					MethodHinter _meth = _group.find(retType, types);
 					if (_meth != null)
 						_meth.setHints(names);
