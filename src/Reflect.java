@@ -5,9 +5,7 @@ import java.util.Map;
 import reflect.CodeExceptions;
 import reflect.android.api.Class;
 import reflect.android.api.Classes;
-import reflect.android.api.Method;
-import reflect.android.api.Param;
-import reflect.android.api.Property;
+import reflect.cpp.CppWriter;
 
 public class Reflect {
 
@@ -40,8 +38,10 @@ public class Reflect {
 			}
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
+		CppWriter writer = new CppWriter(klazz);
+		writer.printHeader();
 
-		for (Property prop: klazz.getProperties()) {
+		/*for (Property prop: klazz.getProperties()) {
 			System.out.print("    ");
 			if (prop.isStatic())
 				System.out.print("static ");
@@ -62,7 +62,7 @@ public class Reflect {
 		}
 
 		for (String internal: klazz.getInternals())
-			printClass(internal, curr, max);
+			printClass(internal, curr, max);*/
 	}
 
 	private static void usage(String err)
