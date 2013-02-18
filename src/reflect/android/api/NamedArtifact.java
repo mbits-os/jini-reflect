@@ -16,4 +16,5 @@ public class NamedArtifact extends Artifact {
 	public void setName(String nameHint) { m_name = nameHint; }
 	public String getName() { return m_name; }
 
+	public String toString() { return getSignature() + " " + getName(); }
 }

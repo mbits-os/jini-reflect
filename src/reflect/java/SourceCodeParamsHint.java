@@ -461,7 +461,7 @@ public abstract class SourceCodeParamsHint implements ParamsHint {
 
     		if (currentToken.equals("("))
     		{
-        		System.out.println("    " + _type.toString() + " " + currentToken);
+        		//System.out.println("    " + _type.toString() + " " + currentToken);
     			if (!readMethod(_type.value, _type.nextToken))
     				return null;
 

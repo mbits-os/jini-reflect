@@ -26,12 +26,17 @@ public class AndroidMethodGroupHinter implements MethodGroupHinter {
 	}
 
 	private boolean matches(String hintedType, String apiType) {
+		//System.out.println("       mathing: " + hintedType + " with " + apiType);
 		if (hintedType.equals(apiType))
 			return true;
 		return false;
 	}
 
 	private boolean matches(Method method, String retType, Vector<String> types) {
+		//System.out.print("    Matching\n      (");
+		//for (String s: types) System.out.print(s);
+		//System.out.println(")" + retType + "\n      " + method.getSignature());
+
 		Param[] params = method.getParameterTypes();
 		if (params.length != types.size())
 			return false;

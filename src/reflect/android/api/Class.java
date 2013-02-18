@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import reflect.ParamsHint;
 
@@ -30,6 +31,7 @@ public class Class extends Artifact {
 	private Map<String, Property> m_props = new HashMap<String, Property>();
 	private String m_super;
 	private String[] m_interfaces;
+	private Vector<String> m_internals = new Vector<String>();
 	private boolean m_hinted;
 
 	public Class() {}
@@ -54,6 +56,10 @@ public class Class extends Artifact {
 	public String getName() { return getSignature(); }
 	public String getSuper() { return m_super; }
 	public String[] getInterfaces() { return m_interfaces; }
+	public String[] getInternals() {
+		String[] subs = new String[m_internals.size()];
+		return m_internals.toArray(subs);
+	}
 	public Property[] getProperties() {
 		Property[] props = new Property[m_props.size()];
 		return m_props.values().toArray(props);
@@ -112,6 +118,10 @@ public class Class extends Artifact {
 		m_props.put(prop.getName(), prop);
 	}
 
+	void addInternalClass(String sub) {
+		m_internals.add(sub);
+	}
+
 	public boolean fixDeclarationsFromVM() {
 		java.lang.Class<?> _this = null;
 		try {
@@ -163,4 +173,6 @@ public class Class extends Artifact {
 	}
 	
 	public void setHinted(boolean hinted) { m_hinted = hinted; }
+
+	public String toString() { return getName() + " " + m_groups.toString() + " " + m_props.toString(); }
 }

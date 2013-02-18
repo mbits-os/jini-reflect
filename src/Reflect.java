@@ -45,6 +45,8 @@ public class Reflect {
 		System.out.println(" (" + curr + "/" + max + ")");
 
 		klazz.getHints(m_android_api.createHint());
+		klazz.fixDeclarationsFromVM();
+
 		for (Property prop: klazz.getProperties()) {
 			System.out.print("    ");
 			if (prop.isStatic())
@@ -64,6 +66,9 @@ public class Reflect {
 			}
 			System.out.println(")");
 		}
+
+		for (String internal: klazz.getInternals())
+			printClass(internal, curr, max);
 	}
 
 	private static void usage(String err)
@@ -78,7 +83,7 @@ public class Reflect {
 	{
 
 		CodeExceptions.readExceptions();
-
+		
 		Map<String, Integer> classes = new HashMap<String, Integer>();
 		String sdk = null;
 

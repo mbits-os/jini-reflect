@@ -27,6 +27,7 @@ public class API {
 
 	public boolean read(File android_sdk) {
 		final File api = new File(android_sdk, API_VERSIONS);
+		Map<String, String> subs = new HashMap<String, String>();
 
 		Document doc = null;
 		try {
@@ -43,13 +44,20 @@ public class API {
 		for (int i = 0; i < len; ++i)
 		{
 			final Element node = (Element)nodes.item(i);
-			if (!read(node))
+			if (!read(node, subs))
 				return false;
+		}
+		
+		for (Map.Entry<String, String> e: subs.entrySet())
+		{
+			Class cont = find(e.getValue());
+			if (cont == null) continue;
+			cont.addInternalClass(e.getKey());
 		}
 		return true;
 	}
 
-	private boolean read(Element clazz) {
+	private boolean read(Element clazz, Map<String, String> subs) {
 		final String name = clazz.getAttribute("name");
 		final String since = clazz.getAttribute("since");
 		final int iSince;
@@ -57,21 +65,33 @@ public class API {
 		else iSince = Integer.valueOf(since);
 
 		Class _class = new Class(iSince, name.replace("/", "."));
+		int pos = name.lastIndexOf('$');
+		if (pos != -1)
+			subs.put(_class.getName(), name.substring(0, pos).replace("/", "."));
 
 		NodeList nodes = clazz.getElementsByTagName("method");
 		int len = nodes.getLength();
 		for (int i = 0; i < len; ++i)
 		{
 			final Element node = (Element)nodes.item(i);
-			if (!read(_class, node))
+			if (!readMethod(_class, node))
 				return false;
 		}
 
+		nodes = clazz.getElementsByTagName("field");
+		len = nodes.getLength();
+		for (int i = 0; i < len; ++i)
+		{
+			final Element node = (Element)nodes.item(i);
+			if (!readProp(_class, node))
+				return false;
+		}
+		
 		add(_class);
 		return true;
 	}
 
-	private boolean read(Class _class, Element method) {
+	private boolean readMethod(Class _class, Element method) {
 		final String name = method.getAttribute("name");
 		final String since = method.getAttribute("since");
 		
@@ -85,6 +105,20 @@ public class API {
 		else iSince = Integer.valueOf(since);
 		
 		_class.add(new Method(iSince, names[0], "(" + names[1].replace("/", ".")));
+		return true;
+	}
+
+	private boolean readProp(Class _class, Element method) {
+		final String name = method.getAttribute("name");
+		final String since = method.getAttribute("since");
+		
+		if (name == null) return false;
+
+		final int iSince;
+		if (since == null || since.isEmpty()) iSince = 1;
+		else iSince = Integer.valueOf(since);
+		
+		_class.add(new Property(iSince, name));
 		return true;
 	}
 

@@ -25,7 +25,7 @@ public class Method extends Artifact {
 				getSignature().equals(m.getSignature());
 	}
 
-	public String toString() { return getSignature(); }
+	public String toString() { return m_return + " " + getName() + " " + m_params.toString(); }
 
 	private void breakSignature() {
 		final String sig = getSignature();
