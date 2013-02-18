@@ -58,6 +58,12 @@ public class Class extends Artifact {
 		String[] subs = new String[m_internals.size()];
 		return m_internals.toArray(subs);
 	}
+	public Class[] getClasses() {
+		Class[] subs = new Class[m_internals.size()];
+		for (int i = 0; i < subs.length; ++i)
+			subs[i] = Classes.forName(m_internals.get(i));
+		return subs;
+	}
 	public Property[] getProperties() {
 		Property[] props = new Property[m_props.size()];
 		return m_props.values().toArray(props);
