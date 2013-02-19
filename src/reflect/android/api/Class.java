@@ -34,15 +34,8 @@ public class Class extends Artifact {
 
 	public Class() {}
 
-	public Class(int since, String signature) {
-		this(since, signature, null, new String[0]);
-		m_interfaces = new String[0];
-	}
-
-	public Class(int since, String signature, String superClass) {
-		this(since, signature, superClass, new String[0]);
-		m_super = superClass;
-		m_interfaces = new String[0];
+	public Class(int since, String signature, String[] interfaces) {
+		this(since, signature, null, interfaces);
 	}
 
 	public Class(int since, String signature, String superClass, String[] interfaces) {

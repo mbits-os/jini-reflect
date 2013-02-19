@@ -6,6 +6,7 @@ import java.util.Vector;
 import reflect.android.api.Class;
 import reflect.android.api.Class.MethodGroup;
 import reflect.android.api.Method;
+import reflect.android.api.Method.Type;
 import reflect.android.api.Param;
 import reflect.android.api.Property;
 
@@ -141,7 +142,7 @@ public class CppWriter {
 		printProps(indent2, clazz, new OnProperty() {
 			@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 				print(indent);
-				print("inline ");
+				//print("inline ");
 				if (isStatic) print("static ");
 				print(getType(type, className));
 				print(" ");
@@ -152,7 +153,7 @@ public class CppWriter {
 		printMethods(indent2, clazz, simpleName, new OnMethod() {
 			@Override public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
-				print("inline ");
+				//print("inline ");
 				if (type == Method.Type.STATIC_METHOD) print("static ");
 				if (type == Method.Type.CONSTRUCTOR)
 				{
@@ -193,19 +194,42 @@ public class CppWriter {
 	private class ConstructBindings {
 		SemiColonHelper m_sch = new SemiColonHelper();
 		void printBindings(Class clazz) {
-			println("\t\tClasses()");
+			println("\t\tClass()");
 			
-			printProps("\t\t", clazz, new OnProperty() {
+			printProps("\t\t\t", clazz, new OnProperty() {
 				@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 					print(indent);
 					print(m_sch.produce());
-					print("jni::");
-					if (isStatic) print("Static");
-					print("Property< ");
-					print(getType(type, className));
-					print(" > m_");
+					print("m_");
 					print(name);
-					println(";");
+					print("(\"");
+					print(name);
+					println("\")");
+				}
+			});
+
+			final String name = clazz.getName();
+			int pos = name.lastIndexOf(".");
+			pos = pos < 0 ? 0 : pos + 1;
+			int dollar = name.lastIndexOf("$");
+			if (dollar > pos) pos = dollar + 1;
+			final String simpleName = name.substring(pos);
+
+			printMethods("\t\t\t", clazz, simpleName, new OnMethod() {
+				@Override
+				public void onMethod(String className, String simpleName, String indent, Type type, String retType, String name, Param[] pars, int version) {
+					if (type == Method.Type.CONSTRUCTOR)
+						return;
+
+					print(indent);
+					print(m_sch.produce());
+					print("m_");
+					print(name);
+					if (version != 0)
+						print(String.valueOf(version));
+					print("(\"");
+					print(name);
+					println("\")");
 				}
 			});
 			// bindings
@@ -225,7 +249,7 @@ public class CppWriter {
 
 		println("\tclass " + pkgName + "::Class: public jni::Class< " + pkgName + "::Class >");
 		println("\t{");
-		println("\t\tfriend class" + simpleName + ";");
+		println("\t\tfriend class " + simpleName + ";");
 		printProps("\t\t", clazz, new OnProperty() {
 			@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 				print(indent);

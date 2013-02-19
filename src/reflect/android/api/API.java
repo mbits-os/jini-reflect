@@ -58,19 +58,49 @@ public class API {
 	}
 
 	private boolean read(Element clazz, Map<String, String> subs) {
+		Vector<String> interfaces = new Vector<String>();
 		final String name = clazz.getAttribute("name");
 		final String since = clazz.getAttribute("since");
 		final int iSince;
 		if (since == null) iSince = 1;
 		else iSince = Integer.valueOf(since);
 
-		Class _class = new Class(iSince, name.replace("/", "."));
+		NodeList nodes;
+		int len;
+
+		String superClass = null;
+
+		nodes = clazz.getElementsByTagName("extends");
+		len = nodes.getLength();
+		if (len > 0)
+		{
+			final Element node = (Element)nodes.item(0);
+			superClass = node.getAttribute("name");
+			if (superClass.isEmpty())
+				superClass = null;
+		}
+
+		nodes = clazz.getElementsByTagName("implements");
+		len = nodes.getLength();
+		for (int i = 0; i < len; ++i)
+		{
+			final Element node = (Element)nodes.item(i);
+			final String iface = node.getAttribute("name");
+			interfaces.add(iface);
+		}
+		String[] ifaces = new String[interfaces.size()];
+		ifaces = interfaces.toArray(ifaces);
+
+		Class _class = superClass == null ?
+				new Class(iSince, name.replace("/", "."), ifaces) :
+				new Class(iSince, name.replace("/", "."), superClass.replace("/", "."), ifaces);
+
 		int pos = name.lastIndexOf('$');
 		if (pos != -1)
 			subs.put(_class.getName(), name.substring(0, pos).replace("/", "."));
 
-		NodeList nodes = clazz.getElementsByTagName("method");
-		int len = nodes.getLength();
+		nodes = clazz.getElementsByTagName("method");
+		len = nodes.getLength();
 		for (int i = 0; i < len; ++i)
 		{
 			final Element node = (Element)nodes.item(i);
@@ -108,9 +138,9 @@ public class API {
 		return true;
 	}
 
-	private boolean readProp(Class _class, Element method) {
-		final String name = method.getAttribute("name");
-		final String since = method.getAttribute("since");
+	private boolean readProp(Class _class, Element property) {
+		final String name = property.getAttribute("name");
+		final String since = property.getAttribute("since");
 		
 		if (name == null) return false;
 
