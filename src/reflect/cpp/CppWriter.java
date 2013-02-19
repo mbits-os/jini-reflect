@@ -1,5 +1,10 @@
 package reflect.cpp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -12,14 +17,34 @@ import reflect.android.api.Property;
 
 public class CppWriter {
 	private Class m_class;
+	private PrintStream m_out;
 
 	public CppWriter(Class klazz) {
 		m_class = klazz;
+		m_out = System.out;
 	}
 
 	public void printHeader() {
-		final String name = m_class.getName();
+		final File out = new File("../../code/" + m_class.getName().replace(".", "/") + ".hpp");
 
+		try {
+			final File abs = out.getCanonicalFile();
+			final File dir = abs.getParentFile();
+			dir.mkdirs();
+			m_out = new PrintStream(out, "UTF-8");
+			doPrintHeader();
+		} catch (FileNotFoundException e) {
+		} catch (UnsupportedEncodingException e) {
+		} catch (IOException e) {
+		} finally {
+			if (m_out != System.out)
+				m_out.close();
+			m_out = System.out;
+		}
+	}
+
+	private void doPrintHeader() {
+		final String name = m_class.getName();
 		int pos = name.lastIndexOf(".");
 		final int filePos = pos < 0 ? 0 : pos + 1;
 		if (pos < 0) pos = name.length();
@@ -66,6 +91,11 @@ public class CppWriter {
 		}
 		namespaceEnd(pkg);
 		println();
+		if (pkg.equals("java.lang"))
+		{
+			println("using java::lang::" + name.substring(filePos) + ";");
+			println();
+		}
 		println("#endif // " + guard_macro);
 	}
 
@@ -345,9 +375,42 @@ public class CppWriter {
 		case 'V': return "void";
 		case 'L':
 			return arrayed(arrays,
-					signature.substring(arrays + 1, signature.length()-1).replace(".", "::").replace("$", "::")
+					getClass(signature.substring(arrays + 1, signature.length()-1), className).replace(".", "::").replace("$", "::")
 					);
 		}
+		return signature;
+	}
+
+	private String getClass(String signature, String className) {
+		int pkgPos = className.lastIndexOf('.');
+
+		// a.b.c.D$E @ a.b.c.D$E --> E
+		// a.b.c.D @ a.b.c.D --> D
+		if (signature.equals(className))
+		{
+			int pos = signature.lastIndexOf('$');
+			if ( pos >= 0) return signature.substring(pos + 1);
+			pos = signature.lastIndexOf('.');
+			if ( pos >= 0) return signature.substring(pos + 1);
+			return signature;
+		}
+
+		// a.b.c.D$E$F @ a.b.c.D --> E$F
+		if (signature.startsWith(className + "$"))
+			return signature.substring(className.length() + 1);
+
+		// a.b.c.D$E$F @ a.b.c.X --> D$E$F
+		final String pkg = className.substring(0, pkgPos + 1);
+		if (signature.startsWith(pkg))
+			return signature.substring(pkgPos + 1);
+
+		// a.b.c.D$E$F @ a.b.y.X --> c.D$E$F
+		// TODO
+		
+		// java.lang.D$E @ a.b.c.X --> D$E
+		if (signature.startsWith("java.lang."))
+			return signature.substring(10);
+
 		return signature;
 	}
 
@@ -372,12 +435,12 @@ public class CppWriter {
 		return sb.toString();
 	}
 	private void println() {
-		System.out.println();
+		m_out.println();
 	}
 	private void println(String string) {
-		System.out.println(string);
+		m_out.println(string);
 	}
 	private void print(String string) {
-		System.out.print(string);
+		m_out.print(string);
 	}
 }
