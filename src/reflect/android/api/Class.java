@@ -68,6 +68,10 @@ public class Class extends Artifact {
 		Property[] props = new Property[m_props.size()];
 		return m_props.values().toArray(props);
 	}
+	public MethodGroup[] getGroups() {
+		MethodGroup[] groups = new MethodGroup[m_groups.size()];
+		return m_groups.values().toArray(groups);
+	}
 	public Method[] getMethods() {
 		int len = 0;
 
