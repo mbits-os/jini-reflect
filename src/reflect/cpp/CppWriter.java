@@ -154,7 +154,7 @@ public class CppWriter {
 			@Override public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
 				//print("inline ");
-				if (type == Method.Type.STATIC_METHOD) print("static ");
+				if (type != Method.Type.METHOD) print("static ");
 				if (type == Method.Type.CONSTRUCTOR)
 				{
 					print(simpleName);
@@ -196,7 +196,7 @@ public class CppWriter {
 		void printBindings(Class clazz) {
 			println("\t\tClass()");
 			
-			printProps("\t\t\t", clazz, new OnProperty() {
+			printProps("\t\t", clazz, new OnProperty() {
 				@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 					print(indent);
 					print(m_sch.produce());
@@ -215,7 +215,7 @@ public class CppWriter {
 			if (dollar > pos) pos = dollar + 1;
 			final String simpleName = name.substring(pos);
 
-			printMethods("\t\t\t", clazz, simpleName, new OnMethod() {
+			printMethods("\t\t", clazz, simpleName, new OnMethod() {
 				@Override
 				public void onMethod(String className, String simpleName, String indent, Type type, String retType, String name, Param[] pars, int version) {
 					if (type == Method.Type.CONSTRUCTOR)
@@ -302,8 +302,6 @@ public class CppWriter {
 		new ConstructBindings().printBindings(clazz);
 		println();
 		println("\t\tDECLARE_JAVA_CLASS(\"" + name.replace(".", "/") + "\")");
-		println();
-		//bindings
 		println("\t};");
 		
 /*

@@ -86,7 +86,7 @@ public class API {
 		{
 			final Element node = (Element)nodes.item(i);
 			final String iface = node.getAttribute("name");
-			interfaces.add(iface);
+			interfaces.add(iface.replace("/", "."));
 		}
 		String[] ifaces = new String[interfaces.size()];
 		ifaces = interfaces.toArray(ifaces);

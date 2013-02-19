@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import reflect.java.SourceCodeParamsHint;
+
 public class Class extends Artifact {
 
 	public static class MethodGroup {
@@ -30,7 +32,7 @@ public class Class extends Artifact {
 	private String m_super;
 	private String[] m_interfaces;
 	private Vector<String> m_internals = new Vector<String>();
-	private boolean m_hinted;
+	private boolean m_hinted = false, m_vmfixed = false;
 
 	public Class() {}
 
@@ -136,7 +138,15 @@ public class Class extends Artifact {
 				continue;
 
 			final Property prop = m_props.get(fld.getName());
-			prop.setSignature(fld.getType().getName());
+			java.lang.Class<?> c = fld.getType();
+			String name = c.getName();
+			if (name.charAt(0) != '[')
+			{
+				String n = SourceCodeParamsHint.builtin(name);
+				if (n == null) n = "L" + name + ";";
+				name = n;
+			}
+			prop.setSignature(name);
 			prop.setIsStatic(java.lang.reflect.Modifier.isStatic(fld.getModifiers()));
 		}
 		for (java.lang.reflect.Method meth: _this.getMethods())
@@ -169,12 +179,16 @@ public class Class extends Artifact {
 	}
 
 	boolean update() {
-		if (m_hinted) return true;
+		if (!m_vmfixed)
+		{
+			m_vmfixed = true;
+			if (!fixDeclarationsFromVM())
+				return false;
+		}
 
-		if (!fixDeclarationsFromVM())
-			return false;
+		if (!m_hinted)
+			Classes.getHints(getName());
 
-		Classes.getHints(getName());
 		return true;
 	}
 

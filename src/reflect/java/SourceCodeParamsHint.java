@@ -45,6 +45,11 @@ public abstract class SourceCodeParamsHint {
 		s_builtins.put("void", "V");
 	}
 
+	public static String builtin(String typeName) {
+		if (s_builtins.containsKey(typeName))
+			return s_builtins.get(typeName);
+		return null;
+	}
 	protected abstract File getSourceRoot(String className);
 	protected abstract boolean hasClass(String className);
 	protected abstract ClassHinter getClass(String className);
