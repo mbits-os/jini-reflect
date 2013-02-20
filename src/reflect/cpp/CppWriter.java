@@ -24,8 +24,30 @@ public class CppWriter {
 		m_out = System.out;
 	}
 
-	public void printHeader() {
-		final File out = new File("../../code/" + m_class.getName().replace(".", "/") + ".hpp");
+	public void printSource(File src) {
+		final File out = new File(src, m_class.getName().replace(".", "/") + ".cpp");
+
+		try {
+			final File abs = out.getCanonicalFile();
+			final File dir = abs.getParentFile();
+			dir.mkdirs();
+			m_out = new PrintStream(out, "UTF-8");
+			doPrintSource();
+		} catch (FileNotFoundException e) {
+		} catch (UnsupportedEncodingException e) {
+		} catch (IOException e) {
+		} finally {
+			if (m_out != System.out)
+				m_out.close();
+			m_out = System.out;
+		}
+	}
+
+	private void doPrintSource() {
+	}
+
+	public void printHeader(File inc) {
+		final File out = new File(inc, m_class.getName().replace(".", "/") + ".hpp");
 
 		try {
 			final File abs = out.getCanonicalFile();
