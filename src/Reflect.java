@@ -1,7 +1,13 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 import reflect.CodeExceptions;
 import reflect.android.api.Class;
 import reflect.android.api.Classes;
@@ -77,6 +83,53 @@ public class Reflect {
 	{
 
 		CodeExceptions.readExceptions();
+
+		ArgumentParser parser = ArgumentParsers.newArgumentParser("Reflect")
+				.defaultHelp(true)
+				.description("Create JINI bindings for given class(es). CLASS can be in form java.lang.Class to generate binding for one class only or java.lang.* to generate it for all java.lang classes (but not java.class.reflect classes). When a subclass is provided ($ is present), it will be changed to the outer-most class.");
+		parser.addArgument("-a", "--android")
+				.metavar("api")
+				.type(Integer.class)
+				.dest("targetAPI")
+				.required(true)
+				.help("Android API Level (e.g. -a 17 for Android 4.2)");
+		parser.addArgument("--dest")
+				.metavar("dir")
+				.type(File.class)
+				.setDefault(new File("./code"))
+				.dest("dest")
+				.help("The output directory");
+		parser.addArgument("--inc")
+				.metavar("dir")
+				.type(String.class)
+				.dest("inc")
+				.help("The output dir for .hpp files (default: dest)");
+		parser.addArgument("--src")
+				.metavar("dir")
+				.type(String.class)
+				.dest("src")
+				.help("The output dir for .cpp files (default: dest)");
+		parser.addArgument("--parents")
+				.action(Arguments.storeTrue())
+				.setDefault(false)
+				.help("Generate classes for the extends and implements classes");
+		parser.addArgument("--all-deps")
+				.action(Arguments.storeTrue())
+				.setDefault(false)
+				.help("Generate classes for the extends, implements, field and parameter classes");
+		parser.addArgument("files")
+				.metavar("CLASS")
+				.type(String.class)
+				.nargs("+")
+				.help("Class to generate binding for");
+
+		Namespace ns = null;
+		try {
+			ns = parser.parseArgs(args);
+		} catch (ArgumentParserException e) {
+			parser.handleError(e);
+			System.exit(1);
+		}
 		
 		Map<String, Integer> classes = new HashMap<String, Integer>();
 		String sdk = null;
