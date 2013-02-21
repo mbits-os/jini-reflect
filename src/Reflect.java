@@ -86,12 +86,12 @@ public class Reflect {
 				.help("The output directory");
 		parser.addArgument("--inc")
 				.metavar("dir")
-				.type(String.class)
+				.type(File.class)
 				.dest("inc")
 				.help("The output dir for .hpp files (default: $dest" + File.separator + "inc)");
 		parser.addArgument("--src")
 				.metavar("dir")
-				.type(String.class)
+				.type(File.class)
 				.dest("src")
 				.help("The output dir for .cpp files (default: $dest" + File.separator + "src)");
 		parser.addArgument("--preserve-refs")
