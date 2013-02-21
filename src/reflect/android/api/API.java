@@ -187,20 +187,17 @@ public class API {
 		Vector<String> classes = new Vector<String>();
 		for (Map.Entry<String, Class> e: m_classes.entrySet())
 		{
-			if (e.getValue().availableSince() > targetAPI)
-				continue;
-			
-			final String className = e.getKey();
-			if (className.indexOf('$') != -1)
+			Class c = e.getValue();
+			if (c.availableSince() > targetAPI)
 				continue;
 
-			int pos = className.lastIndexOf('.');
-			if (pos == -1 && !packageName.isEmpty())
-				continue;
-			if (pos != -1 && !packageName.equals(className.substring(0, pos)))
+			if (!c.getSimpleName().equals(c.getOuterName()))
 				continue;
 
-			classes.add(className);
+			if (!packageName.equals(c.getPackage()))
+				continue;
+
+			classes.add(c.getName());
 		}
 		String [] items = new String[classes.size()];
 		return classes.toArray(items);

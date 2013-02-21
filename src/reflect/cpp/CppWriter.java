@@ -103,12 +103,9 @@ public class CppWriter {
 	}
 	private void doPrintHeader() {
 		final String name = m_class.getName();
-		int pos = name.lastIndexOf(".");
-		final int filePos = pos < 0 ? 0 : pos + 1;
-		if (pos < 0) pos = name.length();
 
-		String pkg = name.substring(0, pos);
-		String filename = name.substring(filePos) + ".hpp";
+		String pkg = m_class.getPackage();
+		String filename = m_class.getSimpleName() + ".hpp";
 		final String guard_macro = "__JINI_" + name.toUpperCase().replace(".", "_") + "_HPP__";
 		Vector<Class> classes = new Vector<Class>();
 
@@ -156,7 +153,7 @@ public class CppWriter {
 		println();
 		if (pkg.equals("java.lang"))
 		{
-			println("using java::lang::" + name.substring(filePos) + ";");
+			println("using java::lang::" + m_class.getSimpleName() + ";");
 			println();
 		}
 		println("#endif // " + guard_macro);
@@ -189,7 +186,7 @@ public class CppWriter {
 		}
 		return true;
 	}
-	private void printMethods(String indent, Class clazz, String simpleName, OnMethod cb) {
+	private void printMethods(String indent, Class clazz, OnMethod cb) {
 		for (MethodGroup group: clazz.getGroups())
 		{
 			if (group.m_methods.size() == 1) {
@@ -198,7 +195,7 @@ public class CppWriter {
 					continue;
 
 				cb.onMethod(
-						clazz.getName(), simpleName, indent, meth.getType(),
+						clazz.getName(), clazz.getSimpleName(), indent, meth.getType(),
 						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
 						0);
 				continue;
@@ -209,7 +206,7 @@ public class CppWriter {
 					continue;
 
 				cb.onMethod(
-						clazz.getName(), simpleName, indent, meth.getType(),
+						clazz.getName(), clazz.getSimpleName(), indent, meth.getType(),
 						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
 						++ver);
 			}
@@ -236,11 +233,7 @@ public class CppWriter {
 		final String name = clazz.getName();
 		final String indent2 = indent + "\t";
 
-		int pos = name.lastIndexOf(".");
-		pos = pos < 0 ? 0 : pos + 1;
-		int dollar = name.lastIndexOf("$");
-		if (dollar > pos) pos = dollar + 1;
-		String simpleName = name.substring(pos);
+		String simpleName = clazz.getSimpleName();
 
 		print(indent); println("class " + simpleName);
 		print(indent); println("\t: private jni::Object<" + simpleName + ">");
@@ -282,7 +275,7 @@ public class CppWriter {
 				println("();");
 			}
 		});
-		printMethods(indent2, clazz, simpleName, new OnMethod() {
+		printMethods(indent2, clazz, new OnMethod() {
 			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
 				//print("inline ");
@@ -340,14 +333,7 @@ public class CppWriter {
 				}
 			});
 
-			final String name = clazz.getName();
-			int pos = name.lastIndexOf(".");
-			pos = pos < 0 ? 0 : pos + 1;
-			int dollar = name.lastIndexOf("$");
-			if (dollar > pos) pos = dollar + 1;
-			final String simpleName = name.substring(pos);
-
-			printMethods("\t\t", clazz, simpleName, new OnMethod() {
+			printMethods("\t\t", clazz, new OnMethod() {
 				public void onMethod(String className, String simpleName, String indent, Type type, String retType, String name, Param[] pars, int version) {
 					if (type == Method.Type.CONSTRUCTOR)
 						return;
@@ -369,14 +355,8 @@ public class CppWriter {
 	}
 	private void printObjectClassDef(Class clazz) {
 		final String name = clazz.getName();
-
-		int pos = name.lastIndexOf(".");
-		pos = pos < 0 ? 0 : pos + 1;
-		final String pkgName = name.substring(pos).replace(".", "::").replace("$", "::");
-
-		int dollar = name.lastIndexOf("$");
-		if (dollar > pos) pos = dollar + 1;
-		String simpleName = name.substring(pos);
+		final String pkgName = clazz.getOuterName().replace(".", "::").replace("$", "::");
+		final String simpleName = clazz.getSimpleName();
 
 		println("\tclass " + pkgName + "::Class: public jni::Class< " + pkgName + "::Class >");
 		println("\t{");
@@ -393,7 +373,7 @@ public class CppWriter {
 				println(";");
 			}
 		});
-		printMethods("\t\t", clazz, simpleName, new OnMethod() {
+		printMethods("\t\t", clazz, new OnMethod() {
 			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
 				print("jni::");

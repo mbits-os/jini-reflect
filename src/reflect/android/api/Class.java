@@ -29,6 +29,9 @@ public class Class extends Artifact {
 
 	private Map<String, MethodGroup> m_groups = new HashMap<String, MethodGroup>();
 	private Map<String, Property> m_props = new HashMap<String, Property>();
+	private String m_package;
+	private String m_simpleName;
+	private String m_outerName;
 	private String m_super;
 	private String[] m_interfaces;
 	private Vector<String> m_internals = new Vector<String>();
@@ -44,9 +47,24 @@ public class Class extends Artifact {
 		super(since, signature);
 		m_super = superClass;
 		m_interfaces = interfaces;
+		final String name = getName();
+		m_package = null;
+		int pos = name.lastIndexOf('.');
+		if (pos == -1) {
+			m_package = null;
+			m_outerName = name;
+		} else {
+			m_package = name.substring(0, pos);
+			m_outerName = name.substring(pos + 1);
+		}
+		// if indexOf return -1, then substring will get 0; in this case it should return 'this'
+		m_simpleName = m_outerName.substring(m_outerName.lastIndexOf('$') + 1);
 	}
 
 	public String getName() { return getSignature(); }
+	public String getPackage() { return m_package; }
+	public String getSimpleName() { return m_simpleName; }
+	public String getOuterName() { return m_outerName; }
 	public String getSuper() { return m_super; }
 	public String[] getInterfaces() { return m_interfaces; }
 	public String[] getInternals() {
