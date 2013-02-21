@@ -157,25 +157,7 @@ public class Reflect {
 				boolean all = ns.getBoolean("all_deps");
 				int i = 0;
 				while (i < classes.size())
-				{
-					final Class c = Classes.forName(classes.get(i++));
-					if (c == null) continue;
-					final String sup = c.getSuper();
-					final String[] ifaces = c.getInterfaces();
-					if (sup != null) addClass(classes, sup);
-					for (String iface: ifaces)
-						addClass(classes, iface);
-
-					if (all) {
-						for (Property prop: c.getProperties())
-							addSignature(classes, prop.getSignature());
-						for (Method method: c.getMethods()) {
-							addSignature(classes, method.getReturnType());
-							for (Param param: method.getParameterTypes())
-								addSignature(classes, param.getSignature());
-						}
-					}
-				}
+					addClass(classes, Classes.forName(classes.get(i++)), all);
 			}
 
 			int curr = 0;
@@ -208,5 +190,27 @@ public class Reflect {
 			if (s.equals(className)) return;
 
 		classes.add(className);
+	}
+
+	static void addClass(List<String> classes, Class c, boolean all) {
+		if (c == null) return;
+		final String sup = c.getSuper();
+		final String[] ifaces = c.getInterfaces();
+		if (sup != null) addClass(classes, sup);
+		for (String iface: ifaces)
+			addClass(classes, iface);
+
+		if (all) {
+			for (Property prop: c.getProperties())
+				addSignature(classes, prop.getSignature());
+			for (Method method: c.getMethods()) {
+				addSignature(classes, method.getReturnType());
+				for (Param param: method.getParameterTypes())
+					addSignature(classes, param.getSignature());
+			}
+		}
+
+		for (Class sub: c.getClasses())
+			addClass(classes, sub, all);
 	}
 }
