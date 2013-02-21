@@ -64,4 +64,9 @@ public class Classes {
 		if (impl == null) return new String[0];
 		return impl.m_api.getClasses(impl.m_targetAPI);
 	}
+
+	static public String[] packageClasses(String packageName) {
+		if (impl == null) return new String[0];
+		return impl.m_api.getPackage(packageName, impl.m_targetAPI);
+	}
 }

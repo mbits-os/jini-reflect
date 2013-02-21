@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -128,13 +129,15 @@ public class Reflect {
 		File inc = (File)ns.get("inc");
 		File src = (File)ns.get("src");
 		File dest = (File)ns.get("dest");
-		if (inc == null) inc = new File(dest, "inc");
-		if (src == null) src = new File(dest, "src");
 		boolean all = ns.getBoolean("all");
 		boolean deps = ns.getBoolean("all_deps");
 		boolean parents = ns.getBoolean("parents");
 		boolean refs = ns.getBoolean("refs");
+		final List<String> list = ns.getList("files");
+		List<String> classes = new LinkedList<String>();
 
+		if (inc == null) inc = new File(dest, "inc");
+		if (src == null) src = new File(dest, "src");
 		if (all) deps = true; // deps is a subset of deps
 		if (deps) parents = true; // parents is a subset of deps
 		if (deps) refs = true; //if deps (or all) is present, we do not want to look for limits, as there should be none
@@ -145,12 +148,11 @@ public class Reflect {
 			System.out.print("Sources   : "); System.out.println(src.getCanonicalPath());
 			System.out.print("Mode      : "); System.out.println(all ? "Entire API" : deps ? "All dependencies" : parents ? "Parents" : "Classes");
 			System.out.print("Unk. refs : "); System.out.println(refs ? "preserved" : "methods removed");
-			System.out.print("Classes   : "); if (all) System.out.println("all"); else System.out.println(ns.getList("files"));
+			System.out.print("Classes   : "); if (all) System.out.println("all"); else System.out.println(list);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		
-		List<String> classes = ns.<String>getList("files");
 		int sdk = ns.getInt("targetAPI");
 
 		try {
@@ -161,6 +163,16 @@ public class Reflect {
 			}
 
 			final Reflect reflect = new Reflect(inc, src);
+
+			for (String item: list) {
+				if (item.endsWith(".*")) {
+					String [] pkg = Classes.packageClasses(item.substring(0, item.length()-2));
+					for (String clazz: pkg)
+						classes.add(clazz);
+					continue;
+				}
+				classes.add(item);
+			}
 
 			if (all)
 			{

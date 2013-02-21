@@ -183,6 +183,29 @@ public class API {
 		return classes.toArray(items);
 	}
 
+	public String[] getPackage(String packageName, int targetAPI) {
+		Vector<String> classes = new Vector<String>();
+		for (Map.Entry<String, Class> e: m_classes.entrySet())
+		{
+			if (e.getValue().availableSince() > targetAPI)
+				continue;
+			
+			final String className = e.getKey();
+			if (className.indexOf('$') != -1)
+				continue;
+
+			int pos = className.lastIndexOf('.');
+			if (pos == -1 && !packageName.isEmpty())
+				continue;
+			if (pos != -1 && !packageName.equals(className.substring(0, pos)))
+				continue;
+
+			classes.add(className);
+		}
+		String [] items = new String[classes.size()];
+		return classes.toArray(items);
+	}
+
 	public Class get(String clazz, int targetAPI) {
 		if (!m_classes.containsKey(clazz))
 			return null;
