@@ -87,12 +87,12 @@ public class Reflect {
 				.metavar("dir")
 				.type(String.class)
 				.dest("inc")
-				.help("The output dir for .hpp files (default: $dest/inc)");
+				.help("The output dir for .hpp files (default: $dest" + File.separator + "inc)");
 		parser.addArgument("--src")
 				.metavar("dir")
 				.type(String.class)
 				.dest("src")
-				.help("The output dir for .cpp files (default: $dest/src)");
+				.help("The output dir for .cpp files (default: $dest" + File.separator + "src)");
 		parser.addArgument("--preserve-refs")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
@@ -101,15 +101,15 @@ public class Reflect {
 		parser.addArgument("--parents")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
-				.help("Generate classes for the extends and implements classes");
+				.help("Generate classes for the superclass and interfaces classes");
 		parser.addArgument("--all-deps")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
-				.help("Generate classes for the extends, implements, field and parameter classes");
+				.help("Generate classes for the superclass, interfaces, field and parameter classes; implies --parent and --preserve-refs");
 		parser.addArgument("--all")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
-				.help("Generates bindings for all the classes in the API");
+				.help("Generates bindings for all the classes in the API; implies --all-deps, --parent and --preserve-refs");
 		parser.addArgument("files")
 				.metavar("CLASS")
 				.type(String.class)
@@ -130,17 +130,22 @@ public class Reflect {
 		File dest = (File)ns.get("dest");
 		if (inc == null) inc = new File(dest, "inc");
 		if (src == null) src = new File(dest, "src");
+		boolean all = ns.getBoolean("all");
+		boolean deps = ns.getBoolean("all_deps");
+		boolean parents = ns.getBoolean("parents");
+		boolean refs = ns.getBoolean("refs");
+
+		if (all) deps = true; // deps is a subset of deps
+		if (deps) parents = true; // parents is a subset of deps
+		if (deps) refs = true; //if deps (or all) is present, we do not want to look for limits, as there should be none
 
 		try {		
 			System.out.print("API Level : "); System.out.println(ns.getInt("targetAPI"));
 			System.out.print("Headers   : "); System.out.println(inc.getCanonicalPath());
 			System.out.print("Sources   : "); System.out.println(src.getCanonicalPath());
-			System.out.print("Mode      : "); System.out.println(
-					ns.getBoolean("all") ? "Entire API" :
-						ns.getBoolean("all_deps") ? "All dependencies" : 
-							ns.getBoolean("parents") ? "Parents" : "Only classes");
-			System.out.print("Unk. refs : "); System.out.println(ns.getBoolean("refs") ? "preserved" : "methods removed");
-			System.out.print("Classes   : "); System.out.println(ns.getList("files"));
+			System.out.print("Mode      : "); System.out.println(all ? "Entire API" : deps ? "All dependencies" : parents ? "Parents" : "Classes");
+			System.out.print("Unk. refs : "); System.out.println(refs ? "preserved" : "methods removed");
+			System.out.print("Classes   : "); if (all) System.out.println("all"); else System.out.println(ns.getList("files"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -157,7 +162,7 @@ public class Reflect {
 
 			final Reflect reflect = new Reflect(inc, src);
 
-			if (ns.getBoolean("all"))
+			if (all)
 			{
 				classes.clear();
 				String[] api_classes = Classes.classNames();
@@ -165,16 +170,15 @@ public class Reflect {
 					if (clazz.indexOf('$') == -1)
 						classes.add(clazz);
 			}
-			else if (ns.getBoolean("parents") || ns.getBoolean("all_deps"))
+			else if (parents) // || deps, see above
 			{
-				boolean all = ns.getBoolean("all_deps");
 				int i = 0;
 				while (i < classes.size())
-					addClass(classes, Classes.forName(classes.get(i++)), all);
+					addClass(classes, Classes.forName(classes.get(i++)), deps);
 			}
 
 			int curr = 0;
-			if (!ns.getBoolean("refs"))
+			if (!refs)
 				reflect.setKnownClasses(classes);
 
 			for (String s: classes)

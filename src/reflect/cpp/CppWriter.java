@@ -35,9 +35,13 @@ public class CppWriter {
 			if (className.substring(0, pos).equals("java.lang"))
 				return true;
 		}
+		pos = className.lastIndexOf('$');
+		if (pos != -1) className = className.substring(0, pos);
+
 		for(String s: m_classes)
 			if (s.equals(className))
 				return true;
+
 		return false;
 	}
 
@@ -163,19 +167,36 @@ public class CppWriter {
 	}
 	
 	private void printProps(String indent, Class clazz, OnProperty cb) {
-		for (Property prop: clazz.getProperties())
+		for (Property prop: clazz.getProperties()) {
+			if (!isKnownClassOrBuiltin(prop.getSignature()))
+				continue;
 			cb.onProperty(clazz.getName(), indent, prop.isStatic(), prop.getSignature(), prop.getName());
+		}
 	}
 
 	private static interface OnMethod {
 		void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version);
 	}
-	
+
+	private boolean methodHasOnlyKnownClasses(Method meth) {
+		if (!isKnownClassOrBuiltin(meth.getReturnType()))
+			return false;
+
+		for (Param param: meth.getParameterTypes())
+		{
+			if (!isKnownClassOrBuiltin(param.getSignature()))
+				return false;
+		}
+		return true;
+	}
 	private void printMethods(String indent, Class clazz, String simpleName, OnMethod cb) {
 		for (MethodGroup group: clazz.getGroups())
 		{
 			if (group.m_methods.size() == 1) {
 				Method meth = group.m_methods.get(0);
+				if (!methodHasOnlyKnownClasses(meth))
+					continue;
+
 				cb.onMethod(
 						clazz.getName(), simpleName, indent, meth.getType(),
 						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
@@ -184,6 +205,9 @@ public class CppWriter {
 			}
 			int ver = 0;
 			for (Method meth: group.m_methods) {
+				if (!methodHasOnlyKnownClasses(meth))
+					continue;
+
 				cb.onMethod(
 						clazz.getName(), simpleName, indent, meth.getType(),
 						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
@@ -221,10 +245,11 @@ public class CppWriter {
 		print(indent); println("class " + simpleName);
 		print(indent); println("\t: private jni::Object<" + simpleName + ">");
 		final String superClass = clazz.getSuper();
-		if (superClass != null) {
+		if (superClass != null && isKnownClass(superClass)) {
 			print(indent); println("\t, public " + getClass(superClass, name));
 		}
 		for (String iface: clazz.getInterfaces()) {
+			if (!isKnownClass(iface)) continue;
 			print(indent); println("\t, public " + getClass(iface, name));
 		}
 		print(indent); println("{");
@@ -237,10 +262,11 @@ public class CppWriter {
 		println();
 		print(indent2); println(simpleName + "(jobject _this = NULL)");
 		print(indent2); println("\t: jni::Object<" + simpleName + ">(_this)");
-		if (superClass != null) {
+		if (superClass != null && isKnownClass(superClass)) {
 			print(indent2); println("\t, " + getClass(superClass, name) + "(_this)");
 		}
 		for (String iface: clazz.getInterfaces()) {
+			if (!isKnownClass(iface)) continue;
 			print(indent2); println("\t, " + getClass(iface, name) + "(_this)");
 		}
 		print(indent2); println("{}");
@@ -560,5 +586,16 @@ public class CppWriter {
 			if (s.equals(className)) return;
 
 		classes.add(className);
+	}
+
+	private boolean isKnownClassOrBuiltin(String type) {
+		int array = 0;
+		while (array < type.length() && type.charAt(array) == '[')
+			++array;
+
+		if (array < type.length() && type.charAt(array) == 'L')
+			return isKnownClass(type.substring(array + 1, type.length() - 1));
+
+		return true;
 	}
 }
