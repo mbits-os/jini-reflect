@@ -20,10 +20,25 @@ import reflect.android.api.Property;
 public class CppWriter {
 	private Class m_class;
 	private PrintStream m_out;
+	private List<String> m_classes;
 
-	public CppWriter(Class klazz) {
+	public CppWriter(Class klazz, List<String> classes) {
 		m_class = klazz;
 		m_out = System.out;
+		m_classes = classes;
+	}
+
+	private boolean isKnownClass(String className) {
+		if (m_classes == null) return true;
+		int pos = className.lastIndexOf('.');
+		if (pos != -1) {
+			if (className.substring(0, pos).equals("java.lang"))
+				return true;
+		}
+		for(String s: m_classes)
+			if (s.equals(className))
+				return true;
+		return false;
 	}
 
 	public void printSource(File src) {
@@ -535,6 +550,8 @@ public class CppWriter {
 			className = className.substring(0, pos);
 
 		if (m_class.getName().equals(className))
+			return;
+		if (!isKnownClass(className))
 			return;
 
 		className = className.replace(".", "/") + ".hpp";

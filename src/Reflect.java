@@ -19,10 +19,16 @@ public class Reflect {
 
 	private File m_inc;
 	private File m_src;
+	private List<String> m_classes;
 
 	public Reflect(File inc, File src) {
 		m_inc = inc;
 		m_src = src;
+		m_classes = null;
+	}
+
+	private void setKnownClasses(List<String> classes) {
+		m_classes  = classes;
 	}
 
 	private static final String spaces = "                                                            ";
@@ -51,7 +57,7 @@ public class Reflect {
 			}
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
-		CppWriter writer = new CppWriter(klazz);
+		CppWriter writer = new CppWriter(klazz, m_classes);
 		writer.printHeader(m_inc);
 		writer.printSource(m_src);
 	}
@@ -87,6 +93,11 @@ public class Reflect {
 				.type(String.class)
 				.dest("src")
 				.help("The output dir for .cpp files (default: $dest/src)");
+		parser.addArgument("--preserve-refs")
+				.action(Arguments.storeTrue())
+				.setDefault(false)
+				.dest("refs")
+				.help("If set, will preserve methods and properties, whose types are not builtin, in java.lang package nor on the list of classes");
 		parser.addArgument("--parents")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
@@ -121,14 +132,15 @@ public class Reflect {
 		if (src == null) src = new File(dest, "src");
 
 		try {		
-			System.out.print("API Level: "); System.out.println(ns.getInt("targetAPI"));
-			System.out.print("Headers:   "); System.out.println(inc.getCanonicalPath());
-			System.out.print("Sources:   "); System.out.println(src.getCanonicalPath());
-			System.out.print("Mode:      "); System.out.println(
+			System.out.print("API Level : "); System.out.println(ns.getInt("targetAPI"));
+			System.out.print("Headers   : "); System.out.println(inc.getCanonicalPath());
+			System.out.print("Sources   : "); System.out.println(src.getCanonicalPath());
+			System.out.print("Mode      : "); System.out.println(
 					ns.getBoolean("all") ? "Entire API" :
 						ns.getBoolean("all_deps") ? "All dependencies" : 
 							ns.getBoolean("parents") ? "Parents" : "Only classes");
-			System.out.print("Classes:   "); System.out.println(ns.getList("files"));
+			System.out.print("Unk. refs : "); System.out.println(ns.getBoolean("refs") ? "preserved" : "methods removed");
+			System.out.print("Classes   : "); System.out.println(ns.getList("files"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -162,6 +174,9 @@ public class Reflect {
 			}
 
 			int curr = 0;
+			if (!ns.getBoolean("refs"))
+				reflect.setKnownClasses(classes);
+
 			for (String s: classes)
 			{
 				reflect.printClass(s, ++curr, classes.size());
