@@ -67,6 +67,21 @@ public class CppWriter {
 		}
 	}
 
+	private String relativize(String className, String include)
+	{
+		String[] src = className.split("\\.");
+		String[] dst = include.split("/");
+		int pos = 0;
+		while (pos < src.length - 1 && pos < dst.length - 1 && src[pos].equals(dst[pos]))
+			++pos;
+		StringBuilder sb = new StringBuilder();
+		for (int i = pos; i < src.length - 1; ++i)
+			sb.append("../");
+		for (int i = pos; i < dst.length - 1; ++i)
+			sb.append(dst[i] + "/");
+		sb.append(dst[dst.length-1]);
+		return sb.toString();
+	}
 	private void doPrintHeader() {
 		final String name = m_class.getName();
 		int pos = name.lastIndexOf(".");
@@ -91,7 +106,7 @@ public class CppWriter {
 		println("#include \"jini.hpp\"");
 		List<String> includes = getIncludes();
 		for (String incl: includes) {
-			println("#include \"" + incl + "\"");
+			println("#include \"" + relativize(name, incl) + "\"");
 		}
 		println();
 		namespaceStart(pkg);
@@ -188,7 +203,15 @@ public class CppWriter {
 		if (dollar > pos) pos = dollar + 1;
 		String simpleName = name.substring(pos);
 
-		print(indent); println("class " + simpleName + ": public jni::Object<" + simpleName + ">");
+		print(indent); println("class " + simpleName);
+		print(indent); println("\t: private jni::Object<" + simpleName + ">");
+		final String superClass = clazz.getSuper();
+		if (superClass != null) {
+			print(indent); println("\t, public " + getClass(superClass, name));
+		}
+		for (String iface: clazz.getInterfaces()) {
+			print(indent); println("\t, public " + getClass(iface, name));
+		}
 		print(indent); println("{");
 		print(indent); println("public:");
 		for (Class sub: clazz.getClasses()) {
@@ -197,7 +220,16 @@ public class CppWriter {
 		}
 		print(indent2); println("DECLARE_GETCLASS();");
 		println();
-		print(indent2); println(simpleName + "(jobject _this = NULL): jni::Object<" + simpleName + ">(_this) {}");
+		print(indent2); println(simpleName + "(jobject _this = NULL)");
+		print(indent2); println("\t: jni::Object<" + simpleName + ">(_this)");
+		if (superClass != null) {
+			print(indent2); println("\t, " + getClass(superClass, name) + "(_this)");
+		}
+		for (String iface: clazz.getInterfaces()) {
+			print(indent2); println("\t, " + getClass(iface, name) + "(_this)");
+		}
+		print(indent2); println("{}");
+		println();
 		printProps(indent2, clazz, new OnProperty() {
 			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 				print(indent);
@@ -217,7 +249,7 @@ public class CppWriter {
 				if (type == Method.Type.CONSTRUCTOR)
 				{
 					print(simpleName);
-					print(" __construct");
+					print(" jini_newObject");
 				}
 				else
 				{
@@ -382,13 +414,16 @@ public class CppWriter {
 		case 'V': return "void";
 		case 'L':
 			return arrayed(arrays,
-					getClass(signature.substring(arrays + 1, signature.length()-1), className).replace(".", "::").replace("$", "::")
+					getClass(signature.substring(arrays + 1, signature.length()-1), className)
 					);
 		}
 		return signature;
 	}
 
 	private String getClass(String signature, String className) {
+		return innerGetClass(signature, className).replace(".", "::").replace("$", "::");
+	}
+	private String innerGetClass(String signature, String className) {
 		int pkgPos = className.lastIndexOf('.');
 
 		// a.b.c.D$E @ a.b.c.D$E --> E
