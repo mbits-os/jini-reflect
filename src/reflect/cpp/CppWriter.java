@@ -28,6 +28,9 @@ public class CppWriter {
 		m_classes = classes;
 	}
 
+	private static String j2c(String j) {
+		return j.replace(".", "::").replace("$", "::");
+	}
 	private boolean isKnownClass(String className) {
 		if (m_classes == null) return true;
 		int pos = className.lastIndexOf('.');
@@ -136,7 +139,7 @@ public class CppWriter {
 		
 		namespaceStart("jni");
 		for (Class clazz: classes) {
-			final String _name = clazz.getName().replace(".", "::").replace("$", "::");
+			final String _name = j2c(clazz.getName());
 			println("\ttemplate <> struct TypeInfo< " + _name + " >: TypeInfo_Object< " + _name + " > {};");
 		}
 		namespaceEnd("jni");
@@ -267,7 +270,7 @@ public class CppWriter {
 		printProps(indent2, clazz, new OnProperty() {
 			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 				print(indent);
-				//print("inline ");
+				print("inline ");
 				if (isStatic) print("static ");
 				print(getType(type, className));
 				print(" ");
@@ -278,7 +281,7 @@ public class CppWriter {
 		printMethods(indent2, clazz, new OnMethod() {
 			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
-				//print("inline ");
+				print("inline ");
 				if (type != Method.Type.METHOD) print("static ");
 				if (type == Method.Type.CONSTRUCTOR)
 				{
@@ -355,7 +358,7 @@ public class CppWriter {
 	}
 	private void printObjectClassDef(Class clazz) {
 		final String name = clazz.getName();
-		final String pkgName = clazz.getOuterName().replace(".", "::").replace("$", "::");
+		final String pkgName = j2c(clazz.getOuterName());
 		final String simpleName = clazz.getSimpleName();
 
 		println("\tclass " + pkgName + "::Class: public jni::Class< " + pkgName + "::Class >");
@@ -406,7 +409,52 @@ public class CppWriter {
 				println(";");
 			}
 		});
-		// bindings
+		println();
+		printProps("\t\t", clazz, new OnProperty() {
+			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
+				print(indent);
+				print("inline ");
+				print(getType(type, className));
+				print(" ");
+				print(name);
+				print("(");
+				if (!isStatic) print("jobject thiz");
+				println(");");
+			}
+		});
+		printMethods("\t\t", clazz, new OnMethod() {
+			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
+				print(indent);
+				print("inline ");
+				if (type == Method.Type.CONSTRUCTOR)
+				{
+					print(simpleName);
+					print(" jini_newObject");
+				}
+				else
+				{
+					print(getType(retType, className));
+					print(" ");
+					print(name);
+				}
+				print("(");
+				if (type == Method.Type.METHOD)
+				{
+					print("jobject thiz");
+					if (pars.length > 0)
+						print(", ");
+				}
+				printParameters(", ", className, pars, new OnParameter() {
+					public void onParameter(String className, String sep, String type, String name) {
+						print(sep);
+						print(getType(type, className));
+						print(" ");
+						print(name);
+					}
+				});
+				println(");");
+			}
+		});
 		println("\tpublic:");
 		new ConstructBindings().printBindings(clazz);
 		println();
@@ -414,7 +462,184 @@ public class CppWriter {
 		println("\t};");
 	}
 
+	private class TypePrinter {
+		Class m_clazz;
+		String m_dummy;
+		TypePrinter(Class clazz) {
+			m_clazz = clazz;
+			m_dummy = clazz.getPackage() + ".?";
+		}
+		public void printObjectProps() {
+			printProps("\t", m_clazz, new OnProperty() {
+				public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
+					print(indent);
+					print("inline ");
+					print(getType(type, m_dummy));
+					print(" ");
+					print(j2c(m_clazz.getOuterName()));
+					print("::");
+					print(name);
+					print("() { return getClass().");
+					print(name);
+					print("(");
+					if (!isStatic) {
+						print("m_this");
+					}
+					println("); }");
+				}
+			});
+		}
+		public void printObjectMethods() {
+			printMethods("\t", m_clazz, new OnMethod() {
+				public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
+					print(indent);
+					print("inline ");
+					if (type == Method.Type.CONSTRUCTOR)
+					{
+						print(CppWriter.this.getClass(className, m_dummy));
+						print(" ");
+						print(j2c(m_clazz.getOuterName()));
+						print("::jini_newObject");
+					}
+					else
+					{
+						print(getType(retType, m_dummy));
+						print(" ");
+						print(j2c(m_clazz.getOuterName()));
+						print("::");
+						print(name);
+					}
+					print("(");
+					printParameters(", ", className, pars, new OnParameter() {
+						public void onParameter(String className, String sep, String type, String name) {
+							print(sep);
+							print(getType(type, className));
+							print(" ");
+							print(name);
+						}
+					});
+					print(") { ");
+					if (type == Method.Type.CONSTRUCTOR || !retType.equals("V"))
+						print("return ");
+					print("getClass().");
+					if (type == Method.Type.CONSTRUCTOR)
+						print("jini_newObject");
+					else
+						print(name);
+					print("(");
+					if (type == Method.Type.METHOD) {
+						print("m_this");
+						if (pars.length > 0)
+							print(", ");
+					}
+					printParameters(", ", className, pars, new OnParameter() {
+						public void onParameter(String className, String sep, String type, String name) {
+							print(sep);
+							print(name);
+						}
+					});
+					println("); }");
+				}
+			});
+		}
+		public void printClassProps() {
+			printProps("\t", m_clazz, new OnProperty() {
+				public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
+					print(indent);
+					print("inline ");
+					print(getType(type, m_dummy));
+					print(" ");
+					print(j2c(m_clazz.getOuterName()));
+					print("::Class::");
+					print(name);
+					print("(");
+					if (!isStatic) print("jobject thiz");
+					print(") { return m_");
+					print(name);
+					print("(m_class");
+					if (!isStatic) {
+						print(", thiz");
+					}
+					println("); }");
+				}
+			});
+		}
+		public void printClassMethods() {
+			printMethods("\t", m_clazz, new OnMethod() {
+				public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
+					print(indent);
+					print("inline ");
+					if (type == Method.Type.CONSTRUCTOR)
+					{
+						print(CppWriter.this.getClass(className, m_dummy));
+						print(" ");
+						print(j2c(m_clazz.getOuterName()));
+						print("::Class::jini_newObject");
+					}
+					else
+					{
+						print(getType(retType, m_dummy));
+						print(" ");
+						print(j2c(m_clazz.getOuterName()));
+						print("::Class::");
+						print(name);
+					}
+					print("(");
+					if (type == Method.Type.METHOD) {
+						print("jobject thiz");
+						if (pars.length > 0)
+							print(", ");
+					}
+					printParameters(", ", className, pars, new OnParameter() {
+						public void onParameter(String className, String sep, String type, String name) {
+							print(sep);
+							print(getType(type, className));
+							print(" ");
+							print(name);
+						}
+					});
+					print(") { ");
+					if (type == Method.Type.CONSTRUCTOR || !retType.equals("V"))
+						print("return ");
+					print("m_");
+					if (type == Method.Type.CONSTRUCTOR)
+						print("ctor");
+					else
+						print(name);
+					if (version != 0)
+						print(String.valueOf(version));
+					print("(");
+					if (type == Method.Type.METHOD) {
+						print("thiz");
+					} else {
+						print("m_class");
+					}
+					if (pars.length > 0)
+						print(", ");
+					printParameters(", ", className, pars, new OnParameter() {
+						public void onParameter(String className, String sep, String type, String name) {
+							print(sep);
+							print(name);
+						}
+					});
+					println("); }");
+				}
+			});
+		}
+	}
 	private void printObjectMethodDef(Class clazz) {
+		//final String name = clazz.getName();
+		final String pkgName = j2c(clazz.getOuterName());
+		//final String simpleName = clazz.getSimpleName();
+
+		TypePrinter tp = new TypePrinter(clazz);
+		println("\tDEFINE_GETCLASS(" + pkgName + ");");
+		println();
+		tp.printObjectProps();
+		tp.printObjectMethods();
+		println();
+		tp.printClassProps();
+		tp.printClassMethods();
 	}
 
 	private String getType(String signature, String className) {
@@ -442,7 +667,7 @@ public class CppWriter {
 	}
 
 	private String getClass(String signature, String className) {
-		return innerGetClass(signature, className).replace(".", "::").replace("$", "::");
+		return j2c(innerGetClass(signature, className));
 	}
 	private String innerGetClass(String signature, String className) {
 		int pkgPos = className.lastIndexOf('.');
@@ -483,7 +708,7 @@ public class CppWriter {
 
 	private void namespaceEnd(String ns) {
 		final int depth = ns.split("\\.").length;
-		println(repeat("}", depth) + " // " + ns.replace(".", "::"));
+		println(repeat("}", depth) + " // " + j2c(ns));
 	}
 
 	private static String arrayed(int arrays, String inner) {
