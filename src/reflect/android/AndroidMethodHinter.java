@@ -14,7 +14,7 @@ public class AndroidMethodHinter implements MethodHinter {
 		m_method = method;
 	}
 
-	@Override public void setHints(Vector<String> names) {
+	public void setHints(Vector<String> names) {
 		Param[] params = m_method.getParameterTypes();
 		int len = names.size();
 

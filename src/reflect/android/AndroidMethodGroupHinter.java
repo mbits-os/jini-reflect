@@ -16,7 +16,7 @@ public class AndroidMethodGroupHinter implements MethodGroupHinter {
 		m_group = group;
 	}
 
-	@Override public MethodHinter find(String retType, Vector<String> types) {
+	public MethodHinter find(String retType, Vector<String> types) {
 		for (Method method: m_group.m_methods)
 		{
 			if (matches(method, retType, types))

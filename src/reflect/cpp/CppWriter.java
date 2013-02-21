@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import reflect.android.api.Class;
@@ -86,7 +88,12 @@ public class CppWriter {
 		println("#ifndef " + guard_macro);
 		println("#define " + guard_macro);
 		println();
-		//includes
+		println("#include \"jini.hpp\"");
+		List<String> includes = getIncludes();
+		for (String incl: includes) {
+			println("#include \"" + incl + "\"");
+		}
+		println();
 		namespaceStart(pkg);
 		println();
 		printObjectDef(m_class, classes, "\t");
@@ -192,7 +199,7 @@ public class CppWriter {
 		println();
 		print(indent2); println(simpleName + "(jobject _this = NULL): jni::Object<" + simpleName + ">(_this) {}");
 		printProps(indent2, clazz, new OnProperty() {
-			@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
+			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 				print(indent);
 				//print("inline ");
 				if (isStatic) print("static ");
@@ -203,7 +210,7 @@ public class CppWriter {
 			}
 		});
 		printMethods(indent2, clazz, simpleName, new OnMethod() {
-			@Override public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
+			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
 				//print("inline ");
 				if (type != Method.Type.METHOD) print("static ");
@@ -220,7 +227,7 @@ public class CppWriter {
 				}
 				print("(");
 				printParameters(", ", className, pars, new OnParameter() {
-					@Override public void onParameter(String className, String sep, String type, String name) {
+					public void onParameter(String className, String sep, String type, String name) {
 						print(sep);
 						print(getType(type, className));
 						print(" ");
@@ -249,7 +256,7 @@ public class CppWriter {
 			println("\t\tClass()");
 			
 			printProps("\t\t", clazz, new OnProperty() {
-				@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
+				public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 					print(indent);
 					print(m_sch.produce());
 					print("m_");
@@ -268,7 +275,6 @@ public class CppWriter {
 			final String simpleName = name.substring(pos);
 
 			printMethods("\t\t", clazz, simpleName, new OnMethod() {
-				@Override
 				public void onMethod(String className, String simpleName, String indent, Type type, String retType, String name, Param[] pars, int version) {
 					if (type == Method.Type.CONSTRUCTOR)
 						return;
@@ -303,7 +309,7 @@ public class CppWriter {
 		println("\t{");
 		println("\t\tfriend class " + simpleName + ";");
 		printProps("\t\t", clazz, new OnProperty() {
-			@Override public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
+			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
 				print(indent);
 				print("jni::");
 				if (isStatic) print("Static");
@@ -315,7 +321,6 @@ public class CppWriter {
 			}
 		});
 		printMethods("\t\t", clazz, simpleName, new OnMethod() {
-			@Override
 			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
 				print(indent);
 				print("jni::");
@@ -333,7 +338,6 @@ public class CppWriter {
 					if (pars.length > 0) print(",");
 				}
 				printParameters(",", className, pars, new OnParameter() {
-					@Override
 					public void onParameter(String className, String sep, String type, String name) {
 						print(sep);
 						print(" " + getType(type, className));
@@ -355,25 +359,6 @@ public class CppWriter {
 		println();
 		println("\t\tDECLARE_JAVA_CLASS(\"" + name.replace(".", "/") + "\")");
 		println("\t};");
-		
-/*
-	class Bitmap::Config::Class: public jni::Class<Bitmap::Config::Class>
-	{
-		friend class Config;
-		jni::StaticField<Config> m_ARGB_8888;
-		jni::StaticMethod<Config, jstring> m_valueOf;
-	public:
-		Class()
-			: m_ARGB_8888("ARGB_8888")
-			, m_valueOf("valueOf")
-		{}
-
-		DECLARE_JAVA_CLASS("android/graphics/Bitmap$Config")
-
-		Config ARGB_8888() { return m_ARGB_8888(m_class); }
-		Config valueOf(const char* utf8) { return m_valueOf(m_class, jni::Env()->NewStringUTF(utf8)); }
-	};
- * */
 	}
 
 	private void printObjectMethodDef(Class clazz) {
@@ -464,5 +449,64 @@ public class CppWriter {
 	}
 	private void print(String string) {
 		m_out.print(string);
+	}
+
+	private List<String> getIncludes()
+	{
+		List<String> out = new LinkedList<String>();
+
+		getIncludes(out, m_class);
+
+		Collections.sort(out);
+
+		return out;
+	}
+
+	private void getIncludes(List<String> classes, Class c) {
+		final String sup = c.getSuper();
+		final String[] ifaces = c.getInterfaces();
+		if (sup != null) addClass(classes, sup);
+		for (String iface: ifaces)
+			addClass(classes, iface);
+
+		for (Property prop: c.getProperties())
+			addSignature(classes, prop.getSignature());
+		for (Method method: c.getMethods()) {
+			addSignature(classes, method.getReturnType());
+			for (Param param: method.getParameterTypes())
+				addSignature(classes, param.getSignature());
+		}
+
+		for (Class sub: c.getClasses()) {
+			if (sub == null) continue;
+			getIncludes(classes, sub);
+		}
+	}
+
+	private void addSignature(List<String> classes, String type)
+	{
+		int array = 0;
+		while (array < type.length() && type.charAt(array) == '[')
+			++array;
+
+		if (array < type.length() && type.charAt(array) == 'L')
+			addClass(classes, type.substring(array + 1, type.length() - 1));
+	}
+
+	private void addClass(List<String> classes, String className)
+	{
+		int pos = className.indexOf('$');
+		if (pos != -1)
+			className = className.substring(0, pos);
+
+		if (m_class.getName().equals(className))
+			return;
+
+		className = className.replace(".", "/") + ".hpp";
+
+		for (String s: classes)
+			if (s.equals(className)) return;
+
+		classes.add(className);
 	}
 }

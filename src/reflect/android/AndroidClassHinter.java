@@ -12,9 +12,9 @@ public class AndroidClassHinter implements ClassHinter {
 		m_class = clazz;
 	}
 
-	@Override public void finished() { m_class.setHinted(true); }
+	public void finished() { m_class.setHinted(true); }
 
-	@Override public MethodGroupHinter getMethodGroup(String methodName) {
+	public MethodGroupHinter getMethodGroup(String methodName) {
 		Class.MethodGroup group = m_class.get(methodName);
 		if (group == null)
 			return null;
