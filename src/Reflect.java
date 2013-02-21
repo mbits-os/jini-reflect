@@ -121,13 +121,14 @@ public class Reflect {
 		if (src == null) src = new File(dest, "src");
 
 		try {		
-			System.out.print("API Level:  "); System.out.println(ns.getInt("targetAPI"));
-			System.out.print("Headers:    "); System.out.println(inc.getCanonicalPath());
-			System.out.print("Sources:    "); System.out.println(src.getCanonicalPath());
-			System.out.print("Parents:    "); System.out.println(ns.getBoolean("parents"));
-			System.out.print("All Deps:   "); System.out.println(ns.getBoolean("all_deps"));
-			System.out.print("Entire API: "); System.out.println(ns.getBoolean("all"));
-			System.out.print("Classes:    "); System.out.println(ns.getList("files"));
+			System.out.print("API Level: "); System.out.println(ns.getInt("targetAPI"));
+			System.out.print("Headers:   "); System.out.println(inc.getCanonicalPath());
+			System.out.print("Sources:   "); System.out.println(src.getCanonicalPath());
+			System.out.print("Mode:      "); System.out.println(
+					ns.getBoolean("all") ? "Entire API" :
+						ns.getBoolean("all_deps") ? "All dependencies" : 
+							ns.getBoolean("parents") ? "Parents" : "Only classes");
+			System.out.print("Classes:   "); System.out.println(ns.getList("files"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
