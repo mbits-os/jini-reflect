@@ -8,22 +8,20 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mbits.os</groupId>
-  <artifactId>Reflect</artifactId>
+  <artifactId>reflect</artifactId>
   <version>0.1</version>
   <name>Reflect</name>
   <description>Create JINI bindings for given class(es).</description>
   <inceptionYear>2013</inceptionYear>
   <url>https://github.com/mbits-os/jini</url>
+  <organization>
+    <name>midnightBITS</name>
+    <url>https://github.com/mbits-os</url>
+  </organization>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
-  </parent>
 
   <licenses>
     <license>
@@ -36,13 +34,12 @@
     <developer>
       <id>mzdun</id>
       <name>Marcin Zdun</name>
-      <timezone>+1</timezone>
     </developer>
   </developers>
 
   <issueManagement>
     <system>github.com</system>
-    <url>https://github.com/tatsuhiro-t/argparse4j/issues</url>
+    <url>https://github.com/mbits-os/jini/issues</url>
   </issueManagement>
 
   <scm>
@@ -75,23 +72,6 @@
           </reportSet>
         </reportSets>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8</version>
-        <configuration>
-          <locale>en</locale>
-          <stylesheet>java</stylesheet>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <id>default</id>
-            <reports>
-              <report>javadoc</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
     </plugins>
   </reporting>
   
@@ -99,6 +79,25 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <outputDirectory>${project.build.directory}</outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>bin</descriptorRef>
+            <descriptorRef>src</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -110,7 +109,7 @@
             </manifest>
             <manifestEntries>
               <url>${project.url}</url>
-              <Class-Path>dependency/argparse4j-0.3.2.jar</Class-Path>
+              <Class-Path>argparse4j-0.3.2.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>
@@ -118,11 +117,11 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
         <executions>
           <execution>
-            <id>attach-javadocs</id>
+            <id>attach-sources</id>
             <goals>
               <goal>jar</goal>
             </goals>
