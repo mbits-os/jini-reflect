@@ -9,6 +9,7 @@ import reflect.android.api.Param;
 public abstract class MethodWriter extends TypeUtils {
 	public PrintStream out;
 	public Class clazz;
+	private Template tmplt = new Template();
 	public String indent;
 	public String name;
 	public String var;
@@ -22,6 +23,8 @@ public abstract class MethodWriter extends TypeUtils {
 		out = _out;
 		clazz = _clazz;
 		indent = _indent;
+		tmplt.clear();
+		tmplt.setHost(this);
 
 		if (_meth.getType() == Method.Type.CONSTRUCTOR) {
 			name = "jini_newObject";
@@ -41,10 +44,41 @@ public abstract class MethodWriter extends TypeUtils {
 		type = _meth.getType();
 		pars = _meth.getParameterTypes();
 
+		tmplt.put("name", name);
+		tmplt.put("var", var);
+		tmplt.put("rawRetType", rawRetType);
+		tmplt.put("classRetType", classRetType);
+		tmplt.put("nsRetType", nsRetType);
+		tmplt.put("namesAndTypes", NAMES_AND_TYPES);
+		tmplt.put("names", NAMES);
+		tmplt.put("types", TYPES);
+
 		onMethod();
 	}
 
 	abstract void onMethod();
+
+	public void put(String key, String replacement) {
+		tmplt.put(key, replacement);
+	}
+
+	void templateLine(String tmplt) {
+		out.print(indent);
+		this.tmplt.println(out, tmplt);
+	}
+
+	private static Template.Action NAMES_AND_TYPES = new Template.Action() {
+		@Override public void onCall(Object host, StringBuilder sb, String arg) { ((MethodWriter)host).namesAndTypes(sb, arg); }
+		@Override public void onCall(Object host, StringBuilder sb) { ((MethodWriter)host).namesAndTypes(sb); }
+	};
+	private static Template.Action NAMES = new Template.Action() {
+		@Override public void onCall(Object host, StringBuilder sb, String arg) { ((MethodWriter)host).names(sb, arg); }
+		@Override public void onCall(Object host, StringBuilder sb) { ((MethodWriter)host).names(sb); }
+	};
+	private static Template.Action TYPES = new Template.Action() {
+		@Override public void onCall(Object host, StringBuilder sb, String arg) { ((MethodWriter)host).types(sb, arg); }
+		@Override public void onCall(Object host, StringBuilder sb) { ((MethodWriter)host).types(sb); }
+	};
 
 	public void namesAndTypes(StringBuilder sb) {
 		ParamWriter.printNameAndType(sb, clazz, pars);

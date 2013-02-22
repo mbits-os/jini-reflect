@@ -201,14 +201,9 @@ public class CppWriter extends TypeUtils {
 		MethodWriter.print(m_out, indent2, clazz, new MethodWriter() {
 			@Override
 			void onMethod() {
-				// inline $static$classRetType $name($typesAndNames);
-				StringBuilder sb = new StringBuilder();
-				sb.append(indent); sb.append("inline ");
-				if (type != Method.Type.METHOD) sb.append("static ");
-				sb.append(classRetType); sb.append(" "); sb.append(name); sb.append("(");
-				namesAndTypes(sb);
-				sb.append(");");
-				out.println(sb);
+				put("static", type != Method.Type.METHOD ? "static " : "");
+
+				templateLine("inline $static$classRetType $name($namesAndTypes);");
 			}
 		});
 		m_patch.onObjectMembers(m_out, indent2, clazz);
@@ -249,9 +244,8 @@ public class CppWriter extends TypeUtils {
 					if (type == Method.Type.CONSTRUCTOR)
 						return;
 
-					out.print(indent);
-					out.print(m_sch.produce());
-					out.print(var + "(\"" + name + "\")");
+					put("helper", m_sch.produce());
+					templateLine("$helper$var(\"$name\")");
 				}
 			});
 			// bindings
@@ -282,24 +276,17 @@ public class CppWriter extends TypeUtils {
 		MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
 			@Override
 			void onMethod() {
-				// jni::$Type< ${types: $classRetType} > $var;
-				StringBuilder sb = new StringBuilder();
-				sb.append(indent); sb.append("jni::");
+				final String Type;
 				if (type == Method.Type.CONSTRUCTOR)
-				{
-					sb.append("Constructor<");
-					types(sb);
-				}
+					Type = "Constructor";
 				else
-				{
 					if (type == Method.Type.STATIC_METHOD)
-						sb.append("Static");
+						Type = "StaticMethod";
+					else
+						Type = "Method";
+				put("Type", Type);
 
-					sb.append("Method< ");
-					types(sb, classRetType);
-				}
-				sb.append(" > "); sb.append(var); sb.append(";");
-				out.println(sb);
+				templateLine("jni::$Type< ${types: $classRetType} > $var;");
 			}
 		});
 		println();
@@ -319,15 +306,9 @@ public class CppWriter extends TypeUtils {
 		MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
 			@Override
 			void onMethod() {
-				// inline $classRetType $name(${namesAndTypes: $jobject});
-				StringBuilder sb = new StringBuilder();
-				sb.append(indent); sb.append("inline "); sb.append(classRetType); sb.append(" "); sb.append(name); sb.append("(");
-				if (type == Method.Type.METHOD)
-					namesAndTypes(sb, "jobject thiz");
-				else
-					namesAndTypes(sb);
-				sb.append(");");
-				out.println(sb);
+				put("jobject", type == Method.Type.METHOD ? "jobject thiz" : "");
+
+				templateLine("inline $classRetType $name(${namesAndTypes: $jobject});");
 			}
 		});
 		println("\tpublic:");
@@ -369,24 +350,11 @@ public class CppWriter extends TypeUtils {
 			MethodWriter.print(m_out, "\t", m_clazz, new MethodWriter() {
 				@Override
 				void onMethod() {
-					// inline $nsRetType $outerName::$name($namesAndTypes) { ${return}getClass().$name(${names: $thiz}); }
-					StringBuilder sb = new StringBuilder();
-					sb.append(indent); sb.append("inline "); sb.append(nsRetType);
-					sb.append(" "); sb.append(j2c(m_clazz.getOuterName())); sb.append("::"); sb.append(name); sb.append("(");
-					namesAndTypes(sb);
-					sb.append(") { ");
+					put("return", !rawRetType.equals("V") ? "return " : "");
+					put("thiz", type == Method.Type.METHOD ? "m_this" : "");
+					put("outerName", j2c(m_clazz.getOuterName()));
 
-					if (!rawRetType.equals("V"))
-						sb.append("return ");
-
-					sb.append(var); sb.append("(");
-					if (type == Method.Type.METHOD) {
-						names(sb, "m_this");
-					} else {
-						names(sb);
-					}
-					sb.append("); }");
-					out.println(sb);
+					templateLine("inline $nsRetType $outerName::$name($namesAndTypes) { ${return}getClass().$name(${names: $thiz}); }");
 				}
 			});
 		}
@@ -417,30 +385,12 @@ public class CppWriter extends TypeUtils {
 			MethodWriter.print(m_out, "\t", m_clazz, new MethodWriter() {
 				@Override
 				void onMethod() {
-					// inline $nsRetType $outerName::Class::$name(${namesAndTypes: $jobject}) { $return$var(${names: $thiz}); }
-					StringBuilder sb = new StringBuilder();
-					sb.append(indent); sb.append("inline "); sb.append(nsRetType);
-					sb.append(" "); sb.append(j2c(m_clazz.getOuterName())); sb.append("::Class::"); sb.append(name); sb.append("(");
-					
-					if (type == Method.Type.METHOD)
-						namesAndTypes(sb, "jobject thiz");
-					else
-						namesAndTypes(sb);
-					sb.append(") { ");
+					put("return", !rawRetType.equals("V") ? "return " : "");
+					put("jobject", type == Method.Type.METHOD ? "jobject thiz" : "");
+					put("thiz", type == Method.Type.METHOD ? "thiz" : "m_class");
+					put("outerName", j2c(m_clazz.getOuterName()));
 
-					if (!rawRetType.equals("V"))
-						sb.append("return ");
-
-					sb.append(var); sb.append("(");
-					final String thiz;
-					if (type == Method.Type.METHOD) {
-						thiz = "thiz";
-					} else {
-						thiz = "m_class";
-					}
-					names(sb, thiz);
-					sb.append("); }");
-					out.println(sb);
+					templateLine("inline $nsRetType $outerName::Class::$name(${namesAndTypes: $jobject}) { $return$var(${names: $thiz}); }");
 				}
 			});
 		}
