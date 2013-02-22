@@ -70,7 +70,7 @@ public class CppWriter extends TypeUtils {
 		}
 	}
 
-	private String relativize(String className, String include)
+	/*private String relativize(String className, String include)
 	{
 		String[] src = className.split("\\.");
 		String[] dst = include.split("/");
@@ -84,7 +84,7 @@ public class CppWriter extends TypeUtils {
 			sb.append(dst[i] + "/");
 		sb.append(dst[dst.length-1]);
 		return sb.toString();
-	}
+	}*/
 
 	private void doPrintHeader() {
 		final String name = m_class.getName();
@@ -110,10 +110,11 @@ public class CppWriter extends TypeUtils {
 			//println("#include \"" + relativize(name, incl) + "\"");
 			println("#include \"" + incl + "\"");
 		}
-		m_patch.headerIncludes(m_out);
+		m_patch.onIncludes(m_out);
 		println();
 		namespaceStart(pkg);
 		println();
+		m_patch.onNamespaceStart(m_out);
 		printObjectDef(m_class, classes, "\t");
 		println();
 		namespaceEnd(pkg);
@@ -136,6 +137,7 @@ public class CppWriter extends TypeUtils {
 			printObjectMethodDef(clazz);
 			println();
 		}
+		m_patch.onNamespaceEnd(m_out);
 		namespaceEnd(pkg);
 		println();
 		if (pkg.equals("java.lang"))
@@ -182,7 +184,7 @@ public class CppWriter extends TypeUtils {
 			print(indent2); println("\t, " + getClass(iface, name) + "(_this)");
 		}
 		print(indent2); println("{}");
-		m_patch.constructorDeclarations(m_out, indent2, clazz);
+		m_patch.onConstructors(m_out, indent2, clazz);
 		println();
 		PropWriter.print(m_out, indent2, clazz, new PropWriter() {
 			@Override
@@ -218,7 +220,7 @@ public class CppWriter extends TypeUtils {
 				println(");");
 			}
 		});
-		m_patch.additionalOperations(m_out, indent2, clazz);
+		m_patch.onObjectMembers(m_out, indent2, clazz);
 		print(indent); println("};");
 	}
 
