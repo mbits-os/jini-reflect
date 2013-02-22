@@ -187,14 +187,9 @@ public class CppWriter extends TypeUtils {
 		println();
 		PropWriter.print(m_out, indent2, clazz, new PropWriter() {
 			@Override
-			void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
-				out.print(indent);
-				out.print("inline ");
-				if (isStatic) out.print("static ");
-				out.print(getType(type, clazz.getName()));
-				out.print(" ");
-				out.print(name);
-				out.println("();");
+			void onProperty() {
+				put("static", isStatic ? "static " : "");
+				templateLine("inline $static$classRetType $name()");
 			}
 		});
 		MethodWriter.print(m_out, indent2, clazz, new MethodWriter() {
@@ -226,14 +221,9 @@ public class CppWriter extends TypeUtils {
 			
 			PropWriter.print(m_out, "\t\t", clazz, new PropWriter() {
 				@Override
-				void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
-					out.print(indent);
-					out.print(m_sch.produce());
-					out.print("m_");
-					out.print(name);
-					out.print("(\"");
-					out.print(name);
-					out.println("\")");
+				void onProperty() {
+					put("helper", m_sch.produce());
+					templateLine("$helper$var(\"$name\")");
 				}
 			});
 
@@ -261,15 +251,11 @@ public class CppWriter extends TypeUtils {
 		println("\t\tfriend class " + simpleName + ";");
 		PropWriter.print(m_out, "\t\t", clazz, new PropWriter() {
 			@Override
-			void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
-				out.print(indent);
-				out.print("jni::");
-				if (isStatic) out.print("Static");
-				out.print("Property< ");
-				out.print(getType(type, clazz.getName()));
-				out.print(" > m_");
-				out.print(name);
-				out.println(";");
+			void onProperty() {
+				if (isStatic) put("Type", "StaticProperty");
+				else put("Type", "Property");
+
+				templateLine("jni::$Type< $classRetType > $var;");
 			}
 		});
 		MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
@@ -291,15 +277,10 @@ public class CppWriter extends TypeUtils {
 		println();
 		PropWriter.print(m_out, "\t\t", clazz, new PropWriter() {
 			@Override
-			void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
-				out.print(indent);
-				out.print("inline ");
-				out.print(getType(type, clazz.getName()));
-				out.print(" ");
-				out.print(name);
-				out.print("(");
-				if (!isStatic) out.print("jobject thiz");
-				out.println(");");
+			void onProperty() {
+				put("jobject", isStatic ? "jobject thiz" : "");
+
+				templateLine("inline $classRetType $name($jobject);");
 			}
 		});
 		MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
@@ -327,21 +308,11 @@ public class CppWriter extends TypeUtils {
 		public void printObjectProps() {
 			PropWriter.print(m_out, "\t", m_clazz, new PropWriter() {
 				@Override
-				void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
-					out.print(indent);
-					out.print("inline ");
-					out.print(getType(type, m_dummy));
-					out.print(" ");
-					out.print(j2c(m_clazz.getOuterName()));
-					out.print("::");
-					out.print(name);
-					out.print("() { return getClass().");
-					out.print(name);
-					out.print("(");
-					if (!isStatic) {
-						out.print("m_this");
-					}
-					out.println("); }");
+				void onProperty() {
+					put("outerName", j2c(m_clazz.getOuterName()));
+					put("thiz", isStatic ? "thiz" : "");
+
+					templateLine("inline $nsRetType $outerName::$name() { return getClass().$name($thiz); }");
 				}
 			});
 		}
@@ -360,23 +331,12 @@ public class CppWriter extends TypeUtils {
 		public void printClassProps() {
 			PropWriter.print(m_out, "\t", m_clazz, new PropWriter() {
 				@Override
-				void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
-					out.print(indent);
-					out.print("inline ");
-					out.print(getType(type, m_dummy));
-					out.print(" ");
-					out.print(j2c(m_clazz.getOuterName()));
-					out.print("::Class::");
-					out.print(name);
-					out.print("(");
-					if (!isStatic) out.print("jobject thiz");
-					out.print(") { return m_");
-					out.print(name);
-					out.print("(m_class");
-					if (!isStatic) {
-						out.print(", thiz");
-					}
-					out.println("); }");
+				void onProperty() {
+					put("outerName", j2c(m_clazz.getOuterName()));
+					put("jobject", isStatic ? "jobject thiz" : "");
+					put("thiz", isStatic ? ", thiz" : "");
+
+					templateLine("inline $nsRetType $outerName::Class::$name($jobject) { return getClass().$name(m_class$thiz); }");
 				}
 			});
 		}
