@@ -17,38 +17,18 @@ import reflect.android.api.Method.Type;
 import reflect.android.api.Param;
 import reflect.android.api.Property;
 
-public class CppWriter {
+public class CppWriter extends TypeUtils {
 	private Class m_class;
 	private PrintStream m_out;
-	private List<String> m_classes;
 
 	public CppWriter(Class klazz, List<String> classes) {
 		m_class = klazz;
 		m_out = System.out;
-		m_classes = classes;
-	}
-
-	private static String j2c(String j) {
-		return j.replace(".", "::").replace("$", "::");
-	}
-	private boolean isKnownClass(String className) {
-		if (m_classes == null) return true;
-		int pos = className.lastIndexOf('.');
-		if (pos != -1) {
-			if (className.substring(0, pos).equals("java.lang"))
-				return true;
-		}
-		pos = className.lastIndexOf('$');
-		if (pos != -1) className = className.substring(0, pos);
-
-		for(String s: m_classes)
-			if (s.equals(className))
-				return true;
-
-		return false;
+		s_classes = classes;
 	}
 
 	public void printSource(File src) {
+		/*
 		final File out = new File(src, m_class.getName().replace(".", "/") + ".cpp");
 
 		try {
@@ -65,9 +45,7 @@ public class CppWriter {
 				m_out.close();
 			m_out = System.out;
 		}
-	}
-
-	private void doPrintSource() {
+		*/
 	}
 
 	public void printHeader(File inc) {
@@ -162,74 +140,6 @@ public class CppWriter {
 		println("#endif // " + guard_macro);
 	}
 
-	private static interface OnProperty {
-		void onProperty(String className, String indent, boolean isStatic, String type, String name);
-	}
-	
-	private void printProps(String indent, Class clazz, OnProperty cb) {
-		for (Property prop: clazz.getProperties()) {
-			if (!isKnownClassOrBuiltin(prop.getSignature()))
-				continue;
-			cb.onProperty(clazz.getName(), indent, prop.isStatic(), prop.getSignature(), prop.getName());
-		}
-	}
-
-	private static interface OnMethod {
-		void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version);
-	}
-
-	private boolean methodHasOnlyKnownClasses(Method meth) {
-		if (!isKnownClassOrBuiltin(meth.getReturnType()))
-			return false;
-
-		for (Param param: meth.getParameterTypes())
-		{
-			if (!isKnownClassOrBuiltin(param.getSignature()))
-				return false;
-		}
-		return true;
-	}
-	private void printMethods(String indent, Class clazz, OnMethod cb) {
-		for (MethodGroup group: clazz.getGroups())
-		{
-			if (group.m_methods.size() == 1) {
-				Method meth = group.m_methods.get(0);
-				if (!methodHasOnlyKnownClasses(meth))
-					continue;
-
-				cb.onMethod(
-						clazz.getName(), clazz.getSimpleName(), indent, meth.getType(),
-						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
-						0);
-				continue;
-			}
-			int ver = 0;
-			for (Method meth: group.m_methods) {
-				if (!methodHasOnlyKnownClasses(meth))
-					continue;
-
-				cb.onMethod(
-						clazz.getName(), clazz.getSimpleName(), indent, meth.getType(),
-						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
-						++ver);
-			}
-		}
-	}
-
-	private static interface OnParameter {
-		void onParameter(String className, String sep, String type, String name);
-	}
-	
-	private void printParameters(String sep, String className, Param[] pars, OnParameter cb) {
-		boolean first = true;
-		for (Param par: pars)
-		{
-			final String _sep = first ? "" : sep;
-			first = false;
-			cb.onParameter(className, _sep, par.getSignature(), par.getName());
-		}
-	}
-
 	private void printObjectDef(Class clazz, Vector<Class> classes, String indent) {
 		classes.add(clazz);
 
@@ -242,11 +152,11 @@ public class CppWriter {
 		print(indent); println("\t: private jni::Object<" + simpleName + ">");
 		final String superClass = clazz.getSuper();
 		if (superClass != null && isKnownClass(superClass)) {
-			print(indent); println("\t, public " + getClass(superClass, name));
+			print(indent); println("\t, public " + TypeUtils.getClass(superClass, name));
 		}
 		for (String iface: clazz.getInterfaces()) {
 			if (!isKnownClass(iface)) continue;
-			print(indent); println("\t, public " + getClass(iface, name));
+			print(indent); println("\t, public " + TypeUtils.getClass(iface, name));
 		}
 		print(indent); println("{");
 		print(indent); println("public:");
@@ -259,11 +169,11 @@ public class CppWriter {
 		print(indent2); println(simpleName + "(jobject _this = NULL)");
 		print(indent2); println("\t: jni::Object<" + simpleName + ">(_this)");
 		if (superClass != null && isKnownClass(superClass)) {
-			print(indent2); println("\t, " + getClass(superClass, name) + "(_this)");
+			print(indent2); println("\t, " + TypeUtils.getClass(superClass, name) + "(_this)");
 		}
 		for (String iface: clazz.getInterfaces()) {
 			if (!isKnownClass(iface)) continue;
-			print(indent2); println("\t, " + getClass(iface, name) + "(_this)");
+			print(indent2); println("\t, " + TypeUtils.getClass(iface, name) + "(_this)");
 		}
 		print(indent2); println("{}");
 		println();
@@ -642,66 +552,6 @@ public class CppWriter {
 		tp.printClassMethods();
 	}
 
-	private String getType(String signature, String className) {
-		int arrays = 0;
-		while (signature.charAt(arrays) == '[') ++arrays;
-		if (arrays > 1) return "jobjectArray";
-
-		switch(signature.charAt(arrays))
-		{
-		case 'Z': return arrayed(arrays, "bool");
-		case 'B': return arrayed(arrays, "jbyte");
-		case 'C': return arrayed(arrays, "jchar");
-		case 'S': return arrayed(arrays, "jshort");
-		case 'I': return arrayed(arrays, "jint");
-		case 'J': return arrayed(arrays, "jlong");
-		case 'F': return arrayed(arrays, "jfloat");
-		case 'D': return arrayed(arrays, "jdouble");
-		case 'V': return "void";
-		case 'L':
-			return arrayed(arrays,
-					getClass(signature.substring(arrays + 1, signature.length()-1), className)
-					);
-		}
-		return signature;
-	}
-
-	private String getClass(String signature, String className) {
-		return j2c(innerGetClass(signature, className));
-	}
-	private String innerGetClass(String signature, String className) {
-		int pkgPos = className.lastIndexOf('.');
-
-		// a.b.c.D$E @ a.b.c.D$E --> E
-		// a.b.c.D @ a.b.c.D --> D
-		if (signature.equals(className))
-		{
-			int pos = signature.lastIndexOf('$');
-			if ( pos >= 0) return signature.substring(pos + 1);
-			pos = signature.lastIndexOf('.');
-			if ( pos >= 0) return signature.substring(pos + 1);
-			return signature;
-		}
-
-		// a.b.c.D$E$F @ a.b.c.D --> E$F
-		if (signature.startsWith(className + "$"))
-			return signature.substring(className.length() + 1);
-
-		// a.b.c.D$E$F @ a.b.c.X --> D$E$F
-		final String pkg = className.substring(0, pkgPos + 1);
-		if (signature.startsWith(pkg))
-			return signature.substring(pkgPos + 1);
-
-		// a.b.c.D$E$F @ a.b.y.X --> c.D$E$F
-		// TODO
-		
-		// java.lang.D$E @ a.b.c.X --> D$E
-		if (signature.startsWith("java.lang."))
-			return signature.substring(10);
-
-		return signature;
-	}
-
 	private void namespaceStart(String ns) {
 		println("namespace " + ns.replace(".", " { namespace ") + " {");
 	}
@@ -711,17 +561,6 @@ public class CppWriter {
 		println(repeat("}", depth) + " // " + j2c(ns));
 	}
 
-	private static String arrayed(int arrays, String inner) {
-		return repeat("jni::Array< ", arrays) + inner + repeat(" >", arrays);
-	}
-
-	private static String repeat(String s, int n) {
-		if (n == 0) return "";
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < n; ++i)
-			sb.append(s);
-		return sb.toString();
-	}
 	private void println() {
 		m_out.println();
 	}
@@ -791,16 +630,5 @@ public class CppWriter {
 			if (s.equals(className)) return;
 
 		classes.add(className);
-	}
-
-	private boolean isKnownClassOrBuiltin(String type) {
-		int array = 0;
-		while (array < type.length() && type.charAt(array) == '[')
-			++array;
-
-		if (array < type.length() && type.charAt(array) == 'L')
-			return isKnownClass(type.substring(array + 1, type.length() - 1));
-
-		return true;
 	}
 }
