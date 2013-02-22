@@ -22,13 +22,13 @@ public class Patches {
 	}
 
 	private static Impl impl = null;
-	private boolean hasImpl() {
+	private static boolean hasImpl() {
 		if (impl == null)
 			impl = new Impl();
 		return impl != null;
 	}
 
-	public Patch getPatch(String className) {
+	public static Patch getPatch(String className) {
 		if (!hasImpl()) return null;
 		return impl.getPatch(className);
 	}

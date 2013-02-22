@@ -15,15 +15,19 @@ import reflect.android.api.Method;
 import reflect.android.api.Method.Type;
 import reflect.android.api.Param;
 import reflect.android.api.Property;
+import reflect.patches.Patch;
+import reflect.patches.Patches;
 
 public class CppWriter extends TypeUtils {
 	private Class m_class;
 	private PrintStream m_out;
+	private Patch m_patch;
 
 	public CppWriter(Class klazz, List<String> classes) {
 		m_class = klazz;
 		m_out = System.out;
 		s_classes = classes;
+		m_patch = Patches.getPatch(m_class.getName());
 	}
 
 	public void printSource(File src) {
@@ -81,6 +85,7 @@ public class CppWriter extends TypeUtils {
 		sb.append(dst[dst.length-1]);
 		return sb.toString();
 	}
+
 	private void doPrintHeader() {
 		final String name = m_class.getName();
 
@@ -102,8 +107,10 @@ public class CppWriter extends TypeUtils {
 		println("#include \"jini.hpp\"");
 		List<String> includes = getIncludes();
 		for (String incl: includes) {
-			println("#include \"" + relativize(name, incl) + "\"");
+			//println("#include \"" + relativize(name, incl) + "\"");
+			println("#include \"" + incl + "\"");
 		}
+		m_patch.headerIncludes(m_out);
 		println();
 		namespaceStart(pkg);
 		println();
@@ -151,11 +158,11 @@ public class CppWriter extends TypeUtils {
 		print(indent); println("\t: private jni::Object<" + simpleName + ">");
 		final String superClass = clazz.getSuper();
 		if (superClass != null && isKnownClass(superClass)) {
-			print(indent); println("\t, public " + TypeUtils.getClass(superClass, name));
+			print(indent); println("\t, public " + getClass(superClass, name));
 		}
 		for (String iface: clazz.getInterfaces()) {
 			if (!isKnownClass(iface)) continue;
-			print(indent); println("\t, public " + TypeUtils.getClass(iface, name));
+			print(indent); println("\t, public " + getClass(iface, name));
 		}
 		print(indent); println("{");
 		print(indent); println("public:");
@@ -168,13 +175,14 @@ public class CppWriter extends TypeUtils {
 		print(indent2); println(simpleName + "(jobject _this = NULL)");
 		print(indent2); println("\t: jni::Object<" + simpleName + ">(_this)");
 		if (superClass != null && isKnownClass(superClass)) {
-			print(indent2); println("\t, " + TypeUtils.getClass(superClass, name) + "(_this)");
+			print(indent2); println("\t, " + getClass(superClass, name) + "(_this)");
 		}
 		for (String iface: clazz.getInterfaces()) {
 			if (!isKnownClass(iface)) continue;
-			print(indent2); println("\t, " + TypeUtils.getClass(iface, name) + "(_this)");
+			print(indent2); println("\t, " + getClass(iface, name) + "(_this)");
 		}
 		print(indent2); println("{}");
+		m_patch.constructorDeclarations(m_out, indent2, clazz);
 		println();
 		PropWriter.print(m_out, indent2, clazz, new PropWriter() {
 			@Override
@@ -210,6 +218,7 @@ public class CppWriter extends TypeUtils {
 				println(");");
 			}
 		});
+		m_patch.additionalOperations(m_out, indent2, clazz);
 		print(indent); println("};");
 	}
 

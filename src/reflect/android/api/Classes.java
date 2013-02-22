@@ -14,10 +14,10 @@ public class Classes {
 		private int m_targetAPI;
 
 		Impl(int targetAPI) throws IOException {
-			final String androidSDK = System.getenv("ANDROID_SDK");
+			final String androidSDK = System.getenv("ANDROID_HOME");
 			if (androidSDK == null)
 			{
-				throw new RuntimeException("Environment variable ANDROID_SDK is missing.");
+				throw new RuntimeException("Environment variable ANDROID_HOME is missing.");
 			}
 			m_sdk_root = new File(androidSDK);
 			m_api = new API();

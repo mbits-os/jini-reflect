@@ -17,10 +17,10 @@ public class API {
 	private static final String API_VERSIONS = "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml";
 
 	public boolean read() throws RuntimeException {
-		final String androidSDK = System.getenv("ANDROID_SDK");
+		final String androidSDK = System.getenv("ANDROID_HOME");
 		if (androidSDK == null)
 		{
-			throw new RuntimeException("Environment variable ANDROID_SDK is missing.");
+			throw new RuntimeException("Environment variable ANDROID_HOME is missing.");
 		}
 		return read(new File(androidSDK));
 	}
