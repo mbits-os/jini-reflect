@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Vector;
 
 import reflect.android.api.Class;
-import reflect.android.api.Class.MethodGroup;
 import reflect.android.api.Method;
 import reflect.android.api.Method.Type;
 import reflect.android.api.Param;
@@ -177,42 +176,37 @@ public class CppWriter extends TypeUtils {
 		}
 		print(indent2); println("{}");
 		println();
-		printProps(indent2, clazz, new OnProperty() {
-			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
-				print(indent);
-				print("inline ");
-				if (isStatic) print("static ");
-				print(getType(type, className));
-				print(" ");
-				print(name);
-				println("();");
+		PropWriter.print(m_out, indent2, clazz, new PropWriter() {
+			@Override
+			void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
+				out.print(indent);
+				out.print("inline ");
+				if (isStatic) out.print("static ");
+				out.print(getType(type, clazz.getName()));
+				out.print(" ");
+				out.print(name);
+				out.println("();");
 			}
 		});
-		printMethods(indent2, clazz, new OnMethod() {
-			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
-				print(indent);
-				print("inline ");
-				if (type != Method.Type.METHOD) print("static ");
+		MethodWriter.print(m_out, indent2, clazz, new MethodWriter() {
+			@Override
+			void onMethod(PrintStream out, Class clazz, String indent, Type type, String retType, String name, Param[] pars, int version) {
+				out.print(indent);
+				out.print("inline ");
+				if (type != Method.Type.METHOD) out.print("static ");
 				if (type == Method.Type.CONSTRUCTOR)
 				{
-					print(simpleName);
-					print(" jini_newObject");
+					out.print(clazz.getSimpleName());
+					out.print(" jini_newObject");
 				}
 				else
 				{
-					print(getType(retType, className));
-					print(" ");
-					print(name);
+					out.print(getType(retType, clazz.getName()));
+					out.print(" ");
+					out.print(name);
 				}
-				print("(");
-				printParameters(", ", className, pars, new OnParameter() {
-					public void onParameter(String className, String sep, String type, String name) {
-						print(sep);
-						print(getType(type, className));
-						print(" ");
-						print(name);
-					}
-				});
+				out.print("(");
+				ParamWriter.printNameAndType(out, clazz, pars);
 				println(");");
 			}
 		});
@@ -234,32 +228,34 @@ public class CppWriter extends TypeUtils {
 		void printBindings(Class clazz) {
 			println("\t\tClass()");
 			
-			printProps("\t\t", clazz, new OnProperty() {
-				public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
-					print(indent);
-					print(m_sch.produce());
-					print("m_");
-					print(name);
-					print("(\"");
-					print(name);
-					println("\")");
+			PropWriter.print(m_out, "\t\t", clazz, new PropWriter() {
+				@Override
+				void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
+					out.print(indent);
+					out.print(m_sch.produce());
+					out.print("m_");
+					out.print(name);
+					out.print("(\"");
+					out.print(name);
+					out.println("\")");
 				}
 			});
 
-			printMethods("\t\t", clazz, new OnMethod() {
-				public void onMethod(String className, String simpleName, String indent, Type type, String retType, String name, Param[] pars, int version) {
+			MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
+				@Override
+				void onMethod(PrintStream out, Class clazz, String indent, Type type, String retType, String name, Param[] pars, int version) {
 					if (type == Method.Type.CONSTRUCTOR)
 						return;
 
-					print(indent);
-					print(m_sch.produce());
-					print("m_");
-					print(name);
+					out.print(indent);
+					out.print(m_sch.produce());
+					out.print("m_");
+					out.print(name);
 					if (version != 0)
-						print(String.valueOf(version));
-					print("(\"");
-					print(name);
-					println("\")");
+						out.print(String.valueOf(version));
+					out.print("(\"");
+					out.print(name);
+					out.println("\")");
 				}
 			});
 			// bindings
@@ -274,95 +270,87 @@ public class CppWriter extends TypeUtils {
 		println("\tclass " + pkgName + "::Class: public jni::Class< " + pkgName + "::Class >");
 		println("\t{");
 		println("\t\tfriend class " + simpleName + ";");
-		printProps("\t\t", clazz, new OnProperty() {
-			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
-				print(indent);
-				print("jni::");
-				if (isStatic) print("Static");
-				print("Property< ");
-				print(getType(type, className));
-				print(" > m_");
-				print(name);
-				println(";");
+		PropWriter.print(m_out, "\t\t", clazz, new PropWriter() {
+			@Override
+			void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
+				out.print(indent);
+				out.print("jni::");
+				if (isStatic) out.print("Static");
+				out.print("Property< ");
+				out.print(getType(type, clazz.getName()));
+				out.print(" > m_");
+				out.print(name);
+				out.println(";");
 			}
 		});
-		printMethods("\t\t", clazz, new OnMethod() {
-			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
-				print(indent);
-				print("jni::");
+		MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
+			@Override
+			void onMethod(PrintStream out, Class clazz, String indent, Type type, String retType, String name, Param[] pars, int version) {
+				out.print(indent);
+				out.print("jni::");
 				if (type == Method.Type.CONSTRUCTOR)
 				{
-					print("Constructor<");
+					out.print("Constructor<");
 				}
 				else
 				{
 					if (type == Method.Type.STATIC_METHOD)
-						print("Static");
+						out.print("Static");
 
-					print("Method< ");
-					print(getType(retType, className));
-					if (pars.length > 0) print(",");
+					out.print("Method< ");
+					out.print(getType(retType, clazz.getName()));
+					if (pars.length > 0) out.print(",");
 				}
-				printParameters(",", className, pars, new OnParameter() {
-					public void onParameter(String className, String sep, String type, String name) {
-						print(sep);
-						print(" " + getType(type, className));
-					}
-				});
-				print(" > m_");
+				ParamWriter.printType(out, clazz, pars);
+				out.print(" > m_");
 				if (type == Method.Type.CONSTRUCTOR)
-					print("ctor");
+					out.print("ctor");
 				else
-					print(name);
+					out.print(name);
 				if (version != 0)
-					print(String.valueOf(version));
+					out.print(String.valueOf(version));
 				println(";");
 			}
 		});
 		println();
-		printProps("\t\t", clazz, new OnProperty() {
-			public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
-				print(indent);
-				print("inline ");
-				print(getType(type, className));
-				print(" ");
-				print(name);
-				print("(");
-				if (!isStatic) print("jobject thiz");
-				println(");");
+		PropWriter.print(m_out, "\t\t", clazz, new PropWriter() {
+			@Override
+			void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
+				out.print(indent);
+				out.print("inline ");
+				out.print(getType(type, clazz.getName()));
+				out.print(" ");
+				out.print(name);
+				out.print("(");
+				if (!isStatic) out.print("jobject thiz");
+				out.println(");");
 			}
 		});
-		printMethods("\t\t", clazz, new OnMethod() {
-			public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
-				print(indent);
-				print("inline ");
+		MethodWriter.print(m_out, "\t\t", clazz, new MethodWriter() {
+			@Override
+			void onMethod(PrintStream out, Class clazz, String indent, Type type, String retType, String name, Param[] pars, int version) {
+				out.print(indent);
+				out.print("inline ");
 				if (type == Method.Type.CONSTRUCTOR)
 				{
-					print(simpleName);
-					print(" jini_newObject");
+					out.print(clazz.getSimpleName());
+					out.print(" jini_newObject");
 				}
 				else
 				{
-					print(getType(retType, className));
-					print(" ");
-					print(name);
+					out.print(getType(retType, clazz.getName()));
+					out.print(" ");
+					out.print(name);
 				}
-				print("(");
+				out.print("(");
 				if (type == Method.Type.METHOD)
 				{
-					print("jobject thiz");
+					out.print("jobject thiz");
 					if (pars.length > 0)
-						print(", ");
+						out.print(", ");
 				}
-				printParameters(", ", className, pars, new OnParameter() {
-					public void onParameter(String className, String sep, String type, String name) {
-						print(sep);
-						print(getType(type, className));
-						print(" ");
-						print(name);
-					}
-				});
-				println(");");
+				ParamWriter.printNameAndType(out, clazz, pars);
+				out.println(");");
 			}
 		});
 		println("\tpublic:");
@@ -380,159 +368,134 @@ public class CppWriter extends TypeUtils {
 			m_dummy = clazz.getPackage() + ".?";
 		}
 		public void printObjectProps() {
-			printProps("\t", m_clazz, new OnProperty() {
-				public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
-					print(indent);
-					print("inline ");
-					print(getType(type, m_dummy));
-					print(" ");
-					print(j2c(m_clazz.getOuterName()));
-					print("::");
-					print(name);
-					print("() { return getClass().");
-					print(name);
-					print("(");
+			PropWriter.print(m_out, "\t", m_clazz, new PropWriter() {
+				@Override
+				void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
+					out.print(indent);
+					out.print("inline ");
+					out.print(getType(type, m_dummy));
+					out.print(" ");
+					out.print(j2c(m_clazz.getOuterName()));
+					out.print("::");
+					out.print(name);
+					out.print("() { return getClass().");
+					out.print(name);
+					out.print("(");
 					if (!isStatic) {
-						print("m_this");
+						out.print("m_this");
 					}
-					println("); }");
+					out.println("); }");
 				}
 			});
 		}
 		public void printObjectMethods() {
-			printMethods("\t", m_clazz, new OnMethod() {
-				public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
-					print(indent);
-					print("inline ");
+			MethodWriter.print(m_out, "\t", m_clazz, new MethodWriter() {
+				@Override
+				void onMethod(PrintStream out, Class clazz, String indent, Type type, String retType, String name, Param[] pars, int version) {
+					out.print(indent);
+					out.print("inline ");
 					if (type == Method.Type.CONSTRUCTOR)
 					{
-						print(CppWriter.this.getClass(className, m_dummy));
-						print(" ");
-						print(j2c(m_clazz.getOuterName()));
-						print("::jini_newObject");
+						out.print(getClass(clazz.getName(), m_dummy));
+						out.print(" ");
+						out.print(j2c(m_clazz.getOuterName()));
+						out.print("::jini_newObject");
 					}
 					else
 					{
-						print(getType(retType, m_dummy));
-						print(" ");
-						print(j2c(m_clazz.getOuterName()));
-						print("::");
-						print(name);
+						out.print(getType(retType, m_dummy));
+						out.print(" ");
+						out.print(j2c(m_clazz.getOuterName()));
+						out.print("::");
+						out.print(name);
 					}
-					print("(");
-					printParameters(", ", className, pars, new OnParameter() {
-						public void onParameter(String className, String sep, String type, String name) {
-							print(sep);
-							print(getType(type, className));
-							print(" ");
-							print(name);
-						}
-					});
-					print(") { ");
+					out.print("(");
+					ParamWriter.printNameAndType(out, clazz, pars);
+					out.print(") { ");
 					if (type == Method.Type.CONSTRUCTOR || !retType.equals("V"))
-						print("return ");
-					print("getClass().");
+						out.print("return ");
+					out.print("getClass().");
 					if (type == Method.Type.CONSTRUCTOR)
-						print("jini_newObject");
+						out.print("jini_newObject");
 					else
-						print(name);
-					print("(");
-					if (type == Method.Type.METHOD) {
-						print("m_this");
-						if (pars.length > 0)
-							print(", ");
-					}
-					printParameters(", ", className, pars, new OnParameter() {
-						public void onParameter(String className, String sep, String type, String name) {
-							print(sep);
-							print(name);
-						}
-					});
-					println("); }");
+						out.print(name);
+					out.print("(");
+					if (type == Method.Type.METHOD)
+						ParamWriter.printName(out, "m_this", clazz, pars);
+					else
+						ParamWriter.printName(out, clazz, pars);
+					out.println("); }");
 				}
 			});
 		}
 		public void printClassProps() {
-			printProps("\t", m_clazz, new OnProperty() {
-				public void onProperty(String className, String indent, boolean isStatic, String type, String name) {
-					print(indent);
-					print("inline ");
-					print(getType(type, m_dummy));
-					print(" ");
-					print(j2c(m_clazz.getOuterName()));
-					print("::Class::");
-					print(name);
-					print("(");
-					if (!isStatic) print("jobject thiz");
-					print(") { return m_");
-					print(name);
-					print("(m_class");
+			PropWriter.print(m_out, "\t", m_clazz, new PropWriter() {
+				@Override
+				void onProperty(PrintStream out, String indent, Class clazz, boolean isStatic, String type, String name) {
+					out.print(indent);
+					out.print("inline ");
+					out.print(getType(type, m_dummy));
+					out.print(" ");
+					out.print(j2c(m_clazz.getOuterName()));
+					out.print("::Class::");
+					out.print(name);
+					out.print("(");
+					if (!isStatic) out.print("jobject thiz");
+					out.print(") { return m_");
+					out.print(name);
+					out.print("(m_class");
 					if (!isStatic) {
-						print(", thiz");
+						out.print(", thiz");
 					}
-					println("); }");
+					out.println("); }");
 				}
 			});
 		}
 		public void printClassMethods() {
-			printMethods("\t", m_clazz, new OnMethod() {
-				public void onMethod(String className, String simpleName, String indent, Method.Type type, String retType, String name, Param[] pars, int version) {
-					print(indent);
-					print("inline ");
+			MethodWriter.print(m_out, "\t", m_clazz, new MethodWriter() {
+				@Override
+				void onMethod(PrintStream out, Class clazz, String indent, Type type, String retType, String name, Param[] pars, int version) {
+					out.print(indent);
+					out.print("inline ");
 					if (type == Method.Type.CONSTRUCTOR)
 					{
-						print(CppWriter.this.getClass(className, m_dummy));
-						print(" ");
-						print(j2c(m_clazz.getOuterName()));
-						print("::Class::jini_newObject");
+						out.print(getClass(clazz.getName(), m_dummy));
+						out.print(" ");
+						out.print(j2c(m_clazz.getOuterName()));
+						out.print("::Class::jini_newObject");
 					}
 					else
 					{
-						print(getType(retType, m_dummy));
-						print(" ");
-						print(j2c(m_clazz.getOuterName()));
-						print("::Class::");
-						print(name);
+						out.print(getType(retType, m_dummy));
+						out.print(" ");
+						out.print(j2c(m_clazz.getOuterName()));
+						out.print("::Class::");
+						out.print(name);
 					}
-					print("(");
-					if (type == Method.Type.METHOD) {
-						print("jobject thiz");
-						if (pars.length > 0)
-							print(", ");
-					}
-					printParameters(", ", className, pars, new OnParameter() {
-						public void onParameter(String className, String sep, String type, String name) {
-							print(sep);
-							print(getType(type, className));
-							print(" ");
-							print(name);
-						}
-					});
-					print(") { ");
+					out.print("(");
+					if (type == Method.Type.METHOD)
+						ParamWriter.printNameAndType(out, "jobject thiz", clazz, pars);
+					else
+						ParamWriter.printNameAndType(out, clazz, pars);
+					out.print(") { ");
 					if (type == Method.Type.CONSTRUCTOR || !retType.equals("V"))
-						print("return ");
-					print("m_");
+						out.print("return ");
+					out.print("m_");
 					if (type == Method.Type.CONSTRUCTOR)
-						print("ctor");
+						out.print("ctor");
 					else
-						print(name);
+						out.print(name);
 					if (version != 0)
-						print(String.valueOf(version));
-					print("(");
+						out.print(String.valueOf(version));
+					out.print("(");
+					final String thiz;
 					if (type == Method.Type.METHOD) {
-						print("thiz");
+						thiz = "thiz";
 					} else {
-						print("m_class");
+						thiz = "m_class";
 					}
-					if (pars.length > 0)
-						print(", ");
-					printParameters(", ", className, pars, new OnParameter() {
-						public void onParameter(String className, String sep, String type, String name) {
-							print(sep);
-							print(name);
-						}
-					});
-					println("); }");
+					ParamWriter.printName(out, thiz, clazz, pars);
+					out.println("); }");
 				}
 			});
 		}

@@ -3,7 +3,7 @@ package reflect.cpp;
 import java.util.List;
 
 public class TypeUtils {
-	private static String repeat(String s, int n) {
+	public static String repeat(String s, int n) {
 		if (n == 0) return "";
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < n; ++i)

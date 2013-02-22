@@ -7,7 +7,7 @@ import reflect.android.api.Method;
 import reflect.android.api.Param;
 
 public abstract class MethodWriter extends TypeUtils {
-	abstract void onMethod(PrintStream out, Object o, Class clazz, String indent, Method.Type type, String retType, String name, Param[] pars, int version);
+	abstract void onMethod(PrintStream out, Class clazz, String indent, Method.Type type, String retType, String name, Param[] pars, int version);
 
 	private static boolean methodHasOnlyKnownClasses(Method meth) {
 		if (!isKnownClassOrBuiltin(meth.getReturnType()))
@@ -20,7 +20,7 @@ public abstract class MethodWriter extends TypeUtils {
 		}
 		return true;
 	}
-	public void printMethods(PrintStream out, Object o, String indent, Class clazz, MethodWriter cb) {
+	public static void print(PrintStream out, String indent, Class clazz, MethodWriter cb) {
 		for (Class.MethodGroup group: clazz.getGroups())
 		{
 			if (group.m_methods.size() == 1) {
@@ -29,7 +29,7 @@ public abstract class MethodWriter extends TypeUtils {
 					continue;
 
 				cb.onMethod(
-						out, o, clazz, indent, meth.getType(),
+						out, clazz, indent, meth.getType(),
 						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
 						0);
 				continue;
@@ -40,14 +40,10 @@ public abstract class MethodWriter extends TypeUtils {
 					continue;
 
 				cb.onMethod(
-						out, o, clazz, indent, meth.getType(),
+						out, clazz, indent, meth.getType(),
 						meth.getReturnType(), meth.getName(), meth.getParameterTypes(),
 						++ver);
 			}
 		}
 	}
-	public void printMethods(PrintStream out, String indent, Class clazz, MethodWriter cb) {
-		printMethods(out, null, indent, clazz, cb);
-	}
-
 }
