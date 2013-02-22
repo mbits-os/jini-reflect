@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import reflect.android.api.Class;
 import reflect.android.api.Method;
-import reflect.android.api.Method.Type;
 import reflect.android.api.Param;
 import reflect.android.api.Property;
 import reflect.patches.Patch;
@@ -350,7 +349,7 @@ public class CppWriter extends TypeUtils {
 			MethodWriter.print(m_out, "\t", m_clazz, new MethodWriter() {
 				@Override
 				void onMethod() {
-					put("return", !rawRetType.equals("V") ? "return " : "");
+					put("return", isVoid ? "" : "return ");
 					put("thiz", type == Method.Type.METHOD ? "m_this" : "");
 					put("outerName", j2c(m_clazz.getOuterName()));
 
@@ -385,7 +384,7 @@ public class CppWriter extends TypeUtils {
 			MethodWriter.print(m_out, "\t", m_clazz, new MethodWriter() {
 				@Override
 				void onMethod() {
-					put("return", !rawRetType.equals("V") ? "return " : "");
+					put("return", isVoid ? "" : "return ");
 					put("jobject", type == Method.Type.METHOD ? "jobject thiz" : "");
 					put("thiz", type == Method.Type.METHOD ? "thiz" : "m_class");
 					put("outerName", j2c(m_clazz.getOuterName()));

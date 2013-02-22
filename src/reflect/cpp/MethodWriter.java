@@ -7,19 +7,21 @@ import reflect.android.api.Method;
 import reflect.android.api.Param;
 
 public abstract class MethodWriter extends TypeUtils {
-	public PrintStream out;
-	public Class clazz;
+	private PrintStream out;
+	private Class clazz;
 	private Template tmplt = new Template();
-	public String indent;
-	public String name;
-	public String var;
-	public Method.Type type;
-	public Param[] pars;
-	public String classRetType;
-	public String nsRetType;
-	public String rawRetType;
+	private String indent;
+	private Param[] pars;
+	protected Method.Type type;
+	protected boolean isVoid;
 
 	private void onMethod(PrintStream _out, Class _clazz, String _ns_dummy, String _indent, Method _meth, int _version) {
+		String name;
+		String var;
+		String classRetType;
+		String nsRetType;
+		String rawRetType;
+
 		out = _out;
 		clazz = _clazz;
 		indent = _indent;
@@ -43,6 +45,7 @@ public abstract class MethodWriter extends TypeUtils {
 
 		type = _meth.getType();
 		pars = _meth.getParameterTypes();
+		isVoid = rawRetType.equals("V");
 
 		tmplt.put("name", name);
 		tmplt.put("var", var);
