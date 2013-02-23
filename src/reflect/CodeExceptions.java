@@ -1,6 +1,7 @@
 package reflect;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,12 +12,12 @@ import java.util.Map;
 
 public class CodeExceptions {
 	private static Map<String, String> s_map = new HashMap<String, String>();
-	public static void readExceptions() {
+	public static void readExceptions(File appDir) {
 		BufferedReader br = null;
 		try {
 			InputStream    fis;
 			String         line;
-			fis = new FileInputStream("exceptions.txt");
+			fis = new FileInputStream(new File(appDir, "../exceptions.txt"));
 			br = new BufferedReader(new InputStreamReader(fis, Charset.forName("UTF-8")));
 			while ((line = br.readLine()) != null) {
 				final String[] chunks = line.split(":");

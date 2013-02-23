@@ -103,8 +103,16 @@ public class Reflect {
 
 	public static void main(String[] args)
 	{
+		final File cwd = new File(System.getProperty("user.dir"));
+		final File appDir;
+		try {
+			appDir = new File(cwd, System.getProperty("java.class.path")).getCanonicalFile().getParentFile();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return;
+		}
 
-		CodeExceptions.readExceptions();
+		CodeExceptions.readExceptions(appDir);
 
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("Reflect")
 				.defaultHelp(true)
