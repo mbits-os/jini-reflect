@@ -128,18 +128,18 @@ public class Class extends Artifact {
 		return _prop.equals(prop);
 	}
 
-	void add(Method meth) {
+	public void add(Method meth) {
 		final String methName = meth.getName();
 		if (!m_groups.containsKey(methName))
 			m_groups.put(methName, new MethodGroup(methName));
 		m_groups.get(methName).add(meth);
 	}
 
-	void add(Property prop) {
+	public void add(Property prop) {
 		m_props.put(prop.getName(), prop);
 	}
 
-	void addInternalClass(String sub) {
+	public void addInternalClass(String sub) {
 		m_internals.add(sub);
 	}
 

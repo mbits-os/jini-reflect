@@ -1,4 +1,4 @@
-package reflect.android.api;
+package reflect.android;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import reflect.android.AndroidParamsHint;
+import reflect.android.api.Class;
+import reflect.android.api.Method;
+import reflect.android.api.Property;
 import reflect.api.APIBase;
 import reflect.utils.ClassPathHack;
 
