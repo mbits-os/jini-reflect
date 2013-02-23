@@ -11,11 +11,11 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import reflect.CodeExceptions;
 import reflect.android.API;
-import reflect.android.api.Class;
-import reflect.android.api.Classes;
-import reflect.android.api.Method;
-import reflect.android.api.Param;
-import reflect.android.api.Property;
+import reflect.api.Class;
+import reflect.api.Classes;
+import reflect.api.Method;
+import reflect.api.Param;
+import reflect.api.Property;
 import reflect.cpp.CppWriter;
 
 public class Reflect {
