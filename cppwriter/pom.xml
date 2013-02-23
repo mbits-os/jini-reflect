@@ -12,36 +12,10 @@
   <version>0.1</version>
   <name>cppwriter</name>
   <description>C++ writer for the reflect.</description>
-  <inceptionYear>2013</inceptionYear>
-  <url>https://github.com/mbits-os/jini</url>
-  <organization>
-    <name>midnightBITS</name>
-    <url>https://github.com/mbits-os</url>
-  </organization>
-
-  <parent>
-    <groupId>com.mbits.os</groupId>
-    <artifactId>reflect-parent</artifactId>
-    <version>1.0</version>
-  </parent>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <licenses>
-    <license>
-      <name>MIT</name>
-      <url>https://raw.github.com/tatsuhiro-t/argparse4j/master/LICENSE.txt</url>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <id>mzdun</id>
-      <name>Marcin Zdun</name>
-    </developer>
-  </developers>
 
   <issueManagement>
     <system>github.com</system>

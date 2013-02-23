@@ -8,17 +8,54 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mbits.os</groupId>
-  <artifactId>reflect-parent</artifactId>
+  <artifactId>reflect</artifactId>
   <packaging>pom</packaging>
-  <version>1.0</version>
+  <version>0.1</version>
   <name>root</name>
 
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://raw.github.com/tatsuhiro-t/argparse4j/master/LICENSE.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>mzdun</id>
+      <name>Marcin Zdun</name>
+    </developer>
+  </developers>
+
   <modules>
-    <module>libreflect</module>
-    <module>reflect</module>
-    <module>android-reflect</module>
+    <module>application</module>
     <module>cppwriter</module>
+    <module>libreflect</module>
+    <module>android-reflect</module>
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>libreflect</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>cppwriter</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>android-reflect</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>application</artifactId>
+      <version>0.1</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -30,7 +67,35 @@
           <outputDirectory>${project.build.directory}</outputDirectory>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-distribution</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>assembly/dev.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <issueManagement>
+    <system>github.com</system>
+    <url>https://github.com/mbits-os/jini/issues</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:git:https://github.com/mbits-os/jini.git</connection>
+  </scm>
 
 </project>
