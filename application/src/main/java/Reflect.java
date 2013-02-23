@@ -9,7 +9,6 @@ import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
-import reflect.Plugins;
 import reflect.android.API;
 import reflect.api.Class;
 import reflect.api.Classes;
@@ -20,6 +19,7 @@ import reflect.cpp.CppWriter;
 import reflect.patches.BitmapPatch;
 import reflect.patches.Patches;
 import reflect.patches.StringPatch;
+import reflect.plugin.Plugins;
 
 public class Reflect {
 
@@ -107,7 +107,6 @@ public class Reflect {
 	private static File getAppDir() {
 		String path = Reflect.class.getResource("/" + Reflect.class.getName() + ".class").toString();
 		while (path.startsWith("jar:")) {
-			System.out.println(path);
 			int pos = path.lastIndexOf("!");
 			if (pos == -1) pos = path.length();
 			path = path.substring(4, pos);
@@ -115,7 +114,6 @@ public class Reflect {
 		if (path.startsWith("file:/")) {
 			path = path.substring(6);
 		}
-		System.out.println(path);
 		try {
 			return new File(path).getCanonicalFile().getParentFile();
 		} catch (IOException e) {

@@ -1,4 +1,4 @@
-package reflect;
+package reflect.plugin;
 
 public interface Plugin {
 
