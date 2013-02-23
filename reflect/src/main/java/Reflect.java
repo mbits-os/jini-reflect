@@ -1,8 +1,10 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -10,6 +12,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import reflect.CodeExceptions;
+import reflect.Plugins;
 import reflect.android.API;
 import reflect.api.Class;
 import reflect.api.Classes;
@@ -101,16 +104,32 @@ public class Reflect {
 		}
 	}
 
+	private static File getAppDir() {
+		String path = Reflect.class.getResource("/" + Reflect.class.getName() + ".class").toString();
+		while (path.startsWith("jar:")) {
+			System.out.println(path);
+			int pos = path.lastIndexOf("!");
+			if (pos == -1) pos = path.length();
+			path = path.substring(4, pos);
+		}
+		if (path.startsWith("file:/")) {
+			path = path.substring(6);
+		}
+		System.out.println(path);
+		try {
+			return new File(path).getCanonicalFile().getParentFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+		return null;
+	}
 	public static void main(String[] args)
 	{
-		final File cwd = new File(System.getProperty("user.dir"));
-		final File appDir;
-		try {
-			appDir = new File(cwd, System.getProperty("java.class.path")).getCanonicalFile().getParentFile();
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		final File appDir = getAppDir();
+		if (appDir == null)
 			return;
-		}
+
+		Plugins.loadPlugins(new File(appDir, "plugins"));
 
 		CodeExceptions.readExceptions(appDir);
 
