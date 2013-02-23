@@ -20,6 +20,13 @@
   </organization>
   <packaging>jar</packaging>
 
+  <parent>
+    <groupId>com.mbits.os</groupId>
+    <artifactId>reflect-parent</artifactId>
+    <version>1.0</version>
+    <relativePath>..</relativePath>
+  </parent>
+
   <licenses>
     <license>
       <name>MIT</name>
@@ -77,7 +84,6 @@
   </reporting>
   
   <build>
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -103,15 +109,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <archive>
-            <manifest>
-              <mainClass>Reflect</mainClass>
-            </manifest>
-            <manifestEntries>
-              <url>${project.url}</url>
-              <Class-Path>argparse4j-0.3.2.jar</Class-Path>
-            </manifestEntries>
-          </archive>
         </configuration>
       </plugin>
 
