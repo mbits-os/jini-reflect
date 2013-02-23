@@ -20,11 +20,13 @@ public class Reflect {
 
 	private File m_inc;
 	private File m_src;
+	private boolean m_utf8;
 	private List<String> m_classes;
 
-	public Reflect(File inc, File src) {
+	public Reflect(File inc, File src, boolean utf8) {
 		m_inc = inc;
 		m_src = src;
+		m_utf8 = utf8;
 		m_classes = null;
 	}
 
@@ -58,7 +60,7 @@ public class Reflect {
 			}
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
-		CppWriter writer = new CppWriter(klazz, m_classes);
+		CppWriter writer = new CppWriter(klazz, m_classes, m_utf8);
 		writer.printHeader(m_inc);
 		writer.printSource(m_src);
 	}
@@ -78,6 +80,10 @@ public class Reflect {
 				.dest("targetAPI")
 				.required(true)
 				.help("Android API Level (e.g. -a 17 for Android 4.2)");
+		parser.addArgument("-8", "--utf8")
+				.action(Arguments.storeTrue())
+				.setDefault(false)
+				.help("In generated interfaces the java.lang.String will be replaced by const char*");
 		parser.addArgument("--dest")
 				.metavar("dir")
 				.type(File.class)
@@ -129,6 +135,7 @@ public class Reflect {
 		File inc = (File)ns.get("inc");
 		File src = (File)ns.get("src");
 		File dest = (File)ns.get("dest");
+		boolean utf8 = ns.getBoolean("utf8");
 		boolean all = ns.getBoolean("all");
 		boolean deps = ns.getBoolean("all_deps");
 		boolean parents = ns.getBoolean("parents");
@@ -146,6 +153,7 @@ public class Reflect {
 			System.out.print("API Level : "); System.out.println(ns.getInt("targetAPI"));
 			System.out.print("Headers   : "); System.out.println(inc.getCanonicalPath());
 			System.out.print("Sources   : "); System.out.println(src.getCanonicalPath());
+			System.out.print("Strings   : "); System.out.println(utf8 ? "const char* utf8" : "java.lang.String");
 			System.out.print("Mode      : "); System.out.println(all ? "Entire API" : deps ? "All dependencies" : parents ? "Parents" : "Classes");
 			System.out.print("Unk. refs : "); System.out.println(refs ? "preserved" : "methods removed");
 			System.out.print("Classes   : "); if (all) System.out.println("all"); else System.out.println(list);
@@ -162,7 +170,7 @@ public class Reflect {
 				return;
 			}
 
-			final Reflect reflect = new Reflect(inc, src);
+			final Reflect reflect = new Reflect(inc, src, utf8);
 
 			for (String item: list) {
 				if (item.endsWith(".*")) {

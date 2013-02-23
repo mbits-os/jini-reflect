@@ -3,6 +3,7 @@ package reflect.cpp;
 import java.util.List;
 
 public class TypeUtils {
+	protected static boolean s_utf8 = false;
 	public static String repeat(String s, int n) {
 		if (n == 0) return "";
 		StringBuilder sb = new StringBuilder();
@@ -16,6 +17,9 @@ public class TypeUtils {
 	}
 
 	public static String getType(String signature, String className) {
+		return getType(signature, className, false);
+	}
+	public static String getType(String signature, String className, boolean allowUtf8Conversion) {
 		int arrays = 0;
 		while (signature.charAt(arrays) == '[') ++arrays;
 		if (arrays > 1) return "jobjectArray";
@@ -33,17 +37,24 @@ public class TypeUtils {
 		case 'V': return "void";
 		case 'L':
 			return arrayed(arrays,
-					getClass(signature.substring(arrays + 1, signature.length()-1), className)
+					getClass(signature.substring(arrays + 1, signature.length()-1), className, allowUtf8Conversion)
 					);
 		}
 		return signature;
 	}
 
 	public static String getClass(String signature, String className) {
-		return j2c(innerGetClass(signature, className));
+		return j2c(innerGetClass(signature, className, false));
 	}
 
-	public static String innerGetClass(String signature, String className) {
+	public static String getClass(String signature, String className, boolean allowUtf8Conversion) {
+		return j2c(innerGetClass(signature, className, allowUtf8Conversion));
+	}
+
+	public static String innerGetClass(String signature, String className, boolean allowUtf8Conversion) {
+		if (allowUtf8Conversion && s_utf8 && signature.equals("java.lang.String"))
+			return "const char*";
+
 		int pkgPos = className.lastIndexOf('.');
 
 		// a.b.c.D$E @ a.b.c.D$E --> E

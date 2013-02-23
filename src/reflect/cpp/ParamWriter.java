@@ -85,13 +85,13 @@ public abstract class ParamWriter extends TypeUtils {
 
 		@Override void onParameter(PrintStream out, Class clazz, String sep, String type, String name) {
 			out.print(sep);
-			out.print(getType(type, clazz.getName()));
+			out.print(getType(type, clazz.getName(), true));
 			out.print(" ");
 			out.print(name);
 		}
 		@Override void onParameter(StringBuilder sb, Class clazz, String sep, String type, String name) {
 			sb.append(sep);
-			sb.append(getType(type, clazz.getName()));
+			sb.append(getType(type, clazz.getName(), true));
 			sb.append(" ");
 			sb.append(name);
 		}
@@ -113,11 +113,11 @@ public abstract class ParamWriter extends TypeUtils {
 
 		@Override void onParameter(PrintStream out, Class clazz, String sep, String type, String name) {
 			out.print(sep);
-			out.print(getType(type, clazz.getName()));
+			out.print(getType(type, clazz.getName(), true));
 		}
 		@Override void onParameter(StringBuilder sb, Class clazz, String sep, String type, String name) {
 			sb.append(sep);
-			sb.append(getType(type, clazz.getName()));
+			sb.append(getType(type, clazz.getName(), true));
 		}
 	};
 }

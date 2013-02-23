@@ -50,7 +50,10 @@ public class Template {
 		}
 		switch (token) {
 		case StreamTokenizer.TT_NUMBER:
-			return String.valueOf(m_st.nval);
+			final String num = String.valueOf(m_st.nval);
+			if (num.equals("0.0"))
+				return ".";
+			return num;
 		case StreamTokenizer.TT_WORD:
 			return m_st.sval;
 		case StreamTokenizer.TT_EOF:

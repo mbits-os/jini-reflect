@@ -22,10 +22,11 @@ public class CppWriter extends TypeUtils {
 	private PrintStream m_out;
 	private Patch m_patch;
 
-	public CppWriter(Class klazz, List<String> classes) {
+	public CppWriter(Class klazz, List<String> classes, boolean utf8) {
 		m_class = klazz;
 		m_out = System.out;
 		s_classes = classes;
+		s_utf8 = utf8;
 		m_patch = Patches.getPatch(m_class.getName());
 	}
 
@@ -189,7 +190,7 @@ public class CppWriter extends TypeUtils {
 			@Override
 			void onProperty() {
 				put("static", isStatic ? "static " : "");
-				templateLine("inline $static$classRetType $name()");
+				templateLine("inline $static$classRetType $name();");
 			}
 		});
 		MethodWriter.print(m_out, indent2, clazz, new MethodWriter() {
