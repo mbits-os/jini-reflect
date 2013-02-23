@@ -2,8 +2,8 @@ package reflect.cpp;
 
 import java.io.PrintStream;
 
-import reflect.android.api.Class;
-import reflect.android.api.Param;
+import reflect.api.Class;
+import reflect.api.Param;
 
 public abstract class ParamWriter extends TypeUtils {
 

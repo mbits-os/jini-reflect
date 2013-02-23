@@ -2,9 +2,9 @@ package reflect.android;
 
 import java.util.Vector;
 
-import reflect.android.api.Class.MethodGroup;
-import reflect.android.api.Method;
-import reflect.android.api.Param;
+import reflect.api.Class.MethodGroup;
+import reflect.api.Method;
+import reflect.api.Param;
 import reflect.java.MethodGroupHinter;
 import reflect.java.MethodHinter;
 

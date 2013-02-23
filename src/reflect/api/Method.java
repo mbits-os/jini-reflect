@@ -1,4 +1,4 @@
-package reflect.android.api;
+package reflect.api;
 
 import java.util.Vector;
 

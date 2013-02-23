@@ -2,8 +2,8 @@ package reflect.cpp;
 
 import java.io.PrintStream;
 
-import reflect.android.api.Class;
-import reflect.android.api.Property;
+import reflect.api.Class;
+import reflect.api.Property;
 
 public abstract class PropWriter extends TypeUtils {
 	private PrintStream out;

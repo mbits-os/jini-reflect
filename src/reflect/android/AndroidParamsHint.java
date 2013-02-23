@@ -2,7 +2,7 @@ package reflect.android;
 
 import java.io.File;
 
-import reflect.android.api.Class;
+import reflect.api.Class;
 import reflect.java.ClassHinter;
 import reflect.java.SourceCodeParamsHint;
 

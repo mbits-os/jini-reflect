@@ -2,9 +2,9 @@ package reflect.cpp;
 
 import java.io.PrintStream;
 
-import reflect.android.api.Class;
-import reflect.android.api.Method;
-import reflect.android.api.Param;
+import reflect.api.Class;
+import reflect.api.Method;
+import reflect.api.Param;
 
 public abstract class MethodWriter extends TypeUtils {
 	private PrintStream out;

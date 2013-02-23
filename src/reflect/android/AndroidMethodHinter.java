@@ -2,8 +2,8 @@ package reflect.android;
 
 import java.util.Vector;
 
-import reflect.android.api.Method;
-import reflect.android.api.Param;
+import reflect.api.Method;
+import reflect.api.Param;
 import reflect.java.MethodHinter;
 
 public class AndroidMethodHinter implements MethodHinter {

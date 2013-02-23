@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import reflect.android.api.Class;
-
 public abstract class APIBase {
 	private Map<String, Class> m_classes = new HashMap<String, Class>();
 

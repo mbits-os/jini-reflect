@@ -1,4 +1,4 @@
-package reflect.android.api;
+package reflect.api;
 
 public class Artifact {
 	private int m_since;

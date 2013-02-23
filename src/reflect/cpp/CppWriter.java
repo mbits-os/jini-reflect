@@ -10,10 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import reflect.android.api.Class;
-import reflect.android.api.Method;
-import reflect.android.api.Param;
-import reflect.android.api.Property;
+import reflect.api.Class;
+import reflect.api.Method;
+import reflect.api.Param;
+import reflect.api.Property;
 import reflect.patches.Patch;
 import reflect.patches.Patches;
 

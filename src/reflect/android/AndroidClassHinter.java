@@ -1,6 +1,6 @@
 package reflect.android;
 
-import reflect.android.api.Class;
+import reflect.api.Class;
 import reflect.java.ClassHinter;
 import reflect.java.MethodGroupHinter;
 

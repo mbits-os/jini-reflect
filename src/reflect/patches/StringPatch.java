@@ -2,7 +2,7 @@ package reflect.patches;
 
 import java.io.PrintStream;
 
-import reflect.android.api.Class;
+import reflect.api.Class;
 
 public class StringPatch extends Patch {
 
