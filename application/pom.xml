@@ -32,11 +32,6 @@
       <artifactId>cppwriter</artifactId>
       <version>0.1</version>
     </dependency>
-    <dependency>
-      <groupId>com.mbits.os</groupId>
-      <artifactId>android-reflect</artifactId>
-      <version>0.1</version>
-    </dependency>
   </dependencies>
 
   <reporting>
@@ -84,7 +79,7 @@
             </manifest>
             <manifestEntries>
               <url>${project.url}</url>
-              <Class-Path>lib/argparse4j-0.3.2.jar lib/libreflect.jar lib/cppwriter.jar plugins/android-reflect.jar</Class-Path>
+              <Class-Path>lib/argparse4j-0.3.2.jar lib/libreflect.jar lib/cppwriter.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>

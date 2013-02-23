@@ -9,14 +9,12 @@ import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
-import reflect.android.API;
 import reflect.api.Class;
 import reflect.api.Classes;
 import reflect.api.Method;
 import reflect.api.Param;
 import reflect.api.Property;
 import reflect.cpp.CppWriter;
-import reflect.patches.BitmapPatch;
 import reflect.patches.Patches;
 import reflect.patches.StringPatch;
 import reflect.plugin.Plugins;
@@ -131,18 +129,14 @@ public class Reflect {
 
 		//CodeExceptions.readExceptions(appDir);
 		Patches.put("java.lang.String", new StringPatch());
-		Patches.put("android.graphics.Bitmap", new BitmapPatch());
 
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("Reflect")
 				.defaultHelp(true)
 				.description("Create JINI bindings for given class(es). CLASS can be in form java.lang.Class to generate binding for one class only or java.lang.* to generate it for all java.lang classes (but not java.class.reflect classes). When a subclass is provided ($ is present), it will be changed to the outer-most class.")
 				.epilog("Either --all or at least one class is needed.");
-		parser.addArgument("-a", "--android")
-				.metavar("API")
-				.type(Integer.class)
-				.dest("targetAPI")
-				.required(true)
-				.help("Android API Level (e.g. -a 17 for Android 4.2)");
+
+		Plugins.onAddArguments(parser);
+
 		parser.addArgument("-8", "--utf8")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
@@ -228,18 +222,9 @@ public class Reflect {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		int sdk = ns.getInt("targetAPI");
 
 		try {
-			final API android = new API();
-			Classes.addApi(android);
-
-			if (!android.setTargetApi(sdk))
-			{
-				System.err.println("Could not initiate android-" + sdk + " environment");
-				return;
-			}
+			Plugins.onReadArguments(ns);
 
 			if (!Classes.readApis())
 				return;

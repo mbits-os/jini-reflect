@@ -1,8 +1,9 @@
-package reflect.patches;
+package reflect.android.patches;
 
 import java.io.PrintStream;
 
 import reflect.api.Class;
+import reflect.patches.Patch;
 
 public class BitmapPatch extends Patch {
 	public void onIncludes(PrintStream out)

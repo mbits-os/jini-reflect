@@ -52,16 +52,18 @@ public class API extends APIBase {
 		new AndroidParamsHint(m_sdk, this, m_targetAPI).getHints(className);
 	}
 	
-	public boolean setTargetApi(int targetAPI) {
+	public void setTargetApi(int targetAPI) throws IOException {
+		boolean succeeded = false;
 		m_targetAPI = targetAPI;
 		m_sdk = new File(m_sdk_root, "sources" + File.separator + "android-" + targetAPI);
-		try {
-			ClassPathHack.addFile(new File(m_sdk_root, "platforms" + File.separator + "android-" + targetAPI + File.separator + "android.jar"));
-			ClassPathHack.addFile(new File(m_sdk_root, "add-ons" + File.separator + "addon-google_apis-google-" + targetAPI + File.separator + "libs" + File.separator + "maps.jar"));
-		} catch (IOException e) {
-			return false;
+		succeeded = m_sdk.exists() && m_sdk.isDirectory();
+		if (!succeeded) {
+			System.err.println("No sources under " + m_sdk);
 		}
-		return true;
+		succeeded |= ClassPathHack.addFile(new File(m_sdk_root, "platforms/android-" + targetAPI + "/android.jar"));
+		succeeded |= ClassPathHack.addFile(new File(m_sdk_root, "add-ons/addon-google_apis-google-" + targetAPI + "/libs/maps.jar"));
+		if (!succeeded)
+			throw new IOException("There is no support for API Level " + targetAPI);
 	}
 
 	public boolean read(File android_sdk) {

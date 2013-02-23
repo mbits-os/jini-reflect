@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
+
 import reflect.InterfaceNotFound;
 import reflect.PluginJarException;
 
@@ -67,6 +71,21 @@ public class Plugins {
 				System.err.println("While reading " + file + ":");
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public static void onAddArguments(ArgumentParser parser) {
+		for (Plugin plug: s_plugins) {
+			if (!plug.wantsArguments()) continue;
+			ArgumentGroup group = parser.addArgumentGroup(plug.getName() + " arguments");
+			plug.onAddArguments(group);
+		}
+	}
+
+	public static void onReadArguments(Namespace ns) throws Exception {
+		for (Plugin plug: s_plugins) {
+			if (!plug.wantsArguments()) continue;
+			plug.onReadArguments(ns);
 		}
 	}
 }
