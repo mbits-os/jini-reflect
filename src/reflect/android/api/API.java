@@ -1,6 +1,7 @@
 package reflect.android.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -12,17 +13,53 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class API {
-	private Map<String, Class> m_classes = new HashMap<String, Class>();
-	private static final String API_VERSIONS = "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml";
+import reflect.android.AndroidParamsHint;
+import reflect.api.APIBase;
+import reflect.utils.ClassPathHack;
 
-	public boolean read() throws RuntimeException {
+public class API extends APIBase {
+	private static final String API_VERSIONS = "platform-tools" + File.separator + "api" + File.separator + "api-versions.xml";
+	private File m_sdk_root;
+	private File m_sdk;
+	private int m_targetAPI;
+
+
+	public API() {
 		final String androidSDK = System.getenv("ANDROID_HOME");
 		if (androidSDK == null)
 		{
 			throw new RuntimeException("Environment variable ANDROID_HOME is missing.");
 		}
-		return read(new File(androidSDK));
+		m_sdk_root = new File(androidSDK);
+		m_targetAPI = -1;
+		m_sdk    = null;
+	}
+
+	@Override public boolean read() throws RuntimeException {
+		if (m_targetAPI == -1)
+			throw new RuntimeException("Android API Level is not set");
+		return read(m_sdk_root);
+	}
+
+	@Override protected boolean filterOut(Class c)
+	{
+		return c.availableSince() >= m_targetAPI;
+	}
+
+	@Override public void getHints(String className) {
+		new AndroidParamsHint(m_sdk, this, m_targetAPI).getHints(className);
+	}
+	
+	public boolean setTargetApi(int targetAPI) {
+		m_targetAPI = targetAPI;
+		m_sdk = new File(m_sdk_root, "sources" + File.separator + "android-" + targetAPI);
+		try {
+			ClassPathHack.addFile(new File(m_sdk_root, "platforms" + File.separator + "android-" + targetAPI + File.separator + "android.jar"));
+			ClassPathHack.addFile(new File(m_sdk_root, "add-ons" + File.separator + "addon-google_apis-google-" + targetAPI + File.separator + "libs" + File.separator + "maps.jar"));
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 	public boolean read(File android_sdk) {
@@ -150,72 +187,5 @@ public class API {
 		
 		_class.add(new Property(iSince, name));
 		return true;
-	}
-
-	void add(Class clazz) {
-		m_classes.put(clazz.getName(), clazz);
-	}
-
-	public Class find(String clazz) {
-		if (!m_classes.containsKey(clazz))
-			return null;
-		return m_classes.get(clazz);
-	}
-
-	public Class find(String clazz, int targetAPI) {
-		final Class result = find(clazz);
-		if (result == null) return null;
-		if (result.availableSince() > targetAPI)
-			return null;
-		return result;
-	}
-
-	public String[] getClasses(int targetAPI)
-	{
-		Vector<String> classes = new Vector<String>();
-		for (Map.Entry<String, Class> e: m_classes.entrySet())
-		{
-			if (e.getValue().availableSince() > targetAPI)
-				continue;
-			classes.add(e.getKey());
-		}
-		String [] items = new String[classes.size()];
-		return classes.toArray(items);
-	}
-
-	public String[] getPackage(String packageName, int targetAPI) {
-		Vector<String> classes = new Vector<String>();
-		for (Map.Entry<String, Class> e: m_classes.entrySet())
-		{
-			Class c = e.getValue();
-			if (c.availableSince() > targetAPI)
-				continue;
-
-			if (!c.getSimpleName().equals(c.getOuterName()))
-				continue;
-
-			if (!packageName.equals(c.getPackage()))
-				continue;
-
-			classes.add(c.getName());
-		}
-		String [] items = new String[classes.size()];
-		return classes.toArray(items);
-	}
-
-	public Class get(String clazz, int targetAPI) {
-		if (!m_classes.containsKey(clazz))
-			return null;
-		Class klazz = m_classes.get(clazz);
-		if (klazz.availableSince() > targetAPI)
-			return null;
-		return klazz;
-	}
-
-	void setHinted(String clazz, int targetAPI, boolean hinted)
-	{
-		Class klazz = get(clazz, targetAPI);
-		if (klazz != null)
-			klazz.setHinted(hinted);
 	}
 }

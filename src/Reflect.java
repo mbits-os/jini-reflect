@@ -10,6 +10,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import reflect.CodeExceptions;
+import reflect.android.api.API;
 import reflect.android.api.Class;
 import reflect.android.api.Classes;
 import reflect.android.api.Method;
@@ -204,11 +205,17 @@ public class Reflect {
 		int sdk = ns.getInt("targetAPI");
 
 		try {
-			if (!Classes.setTargetApi(sdk))
+			final API android = new API();
+			Classes.addApi(android);
+
+			if (!android.setTargetApi(sdk))
 			{
 				System.err.println("Could not initiate android-" + sdk + " environment");
 				return;
 			}
+
+			if (!Classes.readApis())
+				return;
 
 			final Reflect reflect = new Reflect(inc, src, utf8);
 

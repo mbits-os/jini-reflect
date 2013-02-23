@@ -1,53 +1,97 @@
 package reflect.android.api;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
-import reflect.android.AndroidParamsHint;
-import reflect.utils.ClassPathHack;
+import reflect.api.APIBase;
 
 public class Classes {
 	static class Impl {
-		private File m_sdk_root;
-		private File m_sdk;
-		private API m_api;
-		private int m_targetAPI;
-
-		Impl(int targetAPI) throws IOException {
-			final String androidSDK = System.getenv("ANDROID_HOME");
-			if (androidSDK == null)
-			{
-				throw new RuntimeException("Environment variable ANDROID_HOME is missing.");
-			}
-			m_sdk_root = new File(androidSDK);
-			m_api = new API();
-			m_targetAPI = targetAPI;
-			m_sdk    = new File(m_sdk_root, "sources" + File.separator + "android-" + targetAPI);
-			ClassPathHack.addFile(new File(m_sdk_root, "platforms" + File.separator + "android-" + targetAPI + File.separator + "android.jar"));
-			ClassPathHack.addFile(new File(m_sdk_root, "add-ons" + File.separator + "addon-google_apis-google-" + targetAPI + File.separator + "libs" + File.separator + "maps.jar"));
-		}
+		private List<APIBase> m_apis = new LinkedList<APIBase>();
 
 		Class forName(String className) {
-			Class clazz = m_api.get(className, m_targetAPI);
-			if (clazz == null) return null;
-			clazz.update();
-			return clazz;
+			for (APIBase api: m_apis) {
+				Class clazz = api.get(className);
+				if (clazz == null) continue;
+				clazz.update();
+				return clazz;
+			}
+			return null;
 		}
 
-		boolean read() { return m_api.read(m_sdk_root); }
+		boolean read() throws IOException {
+			for (APIBase api: m_apis)
+				if (!api.read())
+					return false;
+			return true;
+		}
+
+		public void addApi(APIBase api) {
+			m_apis.add(api);
+		}
+
+		public String[] getClasses() {
+			Vector<String> classes = new Vector<String>();
+			boolean first = true;
+			for (APIBase api: m_apis) {
+				final Vector<String> api_classes = api.getClasses();
+				if (first) {
+					classes.addAll(api_classes);
+					first = false;
+				} else {
+					for (String clazz: api_classes) {
+						if (classes.contains(clazz))
+							continue;
+						classes.add(clazz);
+					}
+				}
+			}
+			String [] items = new String[classes.size()];
+			return classes.toArray(items);
+		}
+
+		public String[] getPackage(String packageName) {
+			for (APIBase api: m_apis) {
+				final String[] pkg = api.getPackage(packageName);
+				if (pkg != null)
+					return pkg;
+			}
+			return new String[0];
+		}
+
+		public void getHints(String className) {
+			for (APIBase api: m_apis)
+				api.getHints(className);
+		}
 	}
 
 	private static Impl impl = null;
 
+	private static void ensureImpl() {
+		if (impl == null)
+			impl = new Impl();
+	}
+
 	public static Class forName(String className) {
+		ensureImpl();
 		if (impl == null)
 			return null;
 		return impl.forName(className);
 	}
 
-	public static boolean setTargetApi(int target_api) {
+	public static void addApi(APIBase api) {
+		ensureImpl();
+		if (impl == null)
+			return;
+		impl.addApi(api);
+	}
+	public static boolean readApis() {
 		try {
-			impl = new Impl(target_api);
+			ensureImpl();
+			if (impl == null)
+				return false;
 			return impl.read();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -57,16 +101,16 @@ public class Classes {
 
 	static void getHints(String className) {
 		if (impl != null)
-			new AndroidParamsHint(impl.m_sdk, impl.m_api, impl.m_targetAPI).getHints(className);
+			impl.getHints(className);
 	}
 	
 	static public String[] classNames() {
 		if (impl == null) return new String[0];
-		return impl.m_api.getClasses(impl.m_targetAPI);
+		return impl.getClasses();
 	}
 
 	static public String[] packageClasses(String packageName) {
 		if (impl == null) return new String[0];
-		return impl.m_api.getPackage(packageName, impl.m_targetAPI);
+		return impl.getPackage(packageName);
 	}
 }

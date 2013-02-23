@@ -518,7 +518,7 @@ public abstract class SourceCodeParamsHint {
 	}
 
 	private boolean readEnum(Code tok, String ctor, String typeName) throws IOException {
-		System.out.println("    >>> Reading an enum " + ctor + " (" + typeName +")");
+		//System.out.println("    >>> Reading an enum " + ctor + " (" + typeName +")");
 		final String type;
 		if (m_package != null)
 			type = m_package + "." + typeName;
