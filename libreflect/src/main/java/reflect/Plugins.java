@@ -21,12 +21,27 @@ public class Plugins {
 			if (!file.isFile() || !file.toString().endsWith(".jar"))
 				continue;
 
+			System.out.println("   " + file);
+
 			JarInputStream jar = null;
 			try {
 				InputStream in = new FileInputStream(file);
 				jar = new JarInputStream(in);
 				Manifest mt = jar.getManifest();
 				Attributes main = mt.getMainAttributes();
+				System.out.println("    <main>:");
+				for (Entry<Object, Object> attr: main.entrySet()) {
+					Object key = attr.getKey();
+					Object val = attr.getValue();
+					System.out.print("        ");
+					System.out.print(key.getClass().getName());
+					System.out.print(" ");
+					System.out.print(key.toString());
+					System.out.print(": ");
+					System.out.print(val.getClass().getName());
+					System.out.print(" ");
+					System.out.println(val.toString());
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {

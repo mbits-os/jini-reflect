@@ -8,11 +8,6 @@ public class Patches {
 		private Map<String, Patch> m_patches = new HashMap<String, Patch>();
 		private static Patch s_dummy = new Patch();
 
-		Impl() {
-			m_patches.put("java.lang.String", new StringPatch());
-			m_patches.put("android.graphics.Bitmap", new BitmapPatch());
-		}
-
 		public Patch getPatch(String className) {
 			if (m_patches.containsKey(className))
 				return m_patches.get(className);
@@ -31,5 +26,10 @@ public class Patches {
 	public static Patch getPatch(String className) {
 		if (!hasImpl()) return null;
 		return impl.getPatch(className);
+	}
+
+	public static void put(String className, Patch patch) {
+		if (!hasImpl()) return;
+		impl.m_patches.put(className, patch);
 	}
 }

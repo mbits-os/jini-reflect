@@ -59,6 +59,11 @@
       <version>0.1</version>
     </dependency>
     <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>cppwriter</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
       <groupId>net.sourceforge.argparse4j</groupId>
       <artifactId>argparse4j</artifactId>
       <version>0.3.2</version>

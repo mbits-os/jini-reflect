@@ -1,17 +1,14 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
-import reflect.CodeExceptions;
 import reflect.Plugins;
 import reflect.android.API;
 import reflect.api.Class;
@@ -20,6 +17,9 @@ import reflect.api.Method;
 import reflect.api.Param;
 import reflect.api.Property;
 import reflect.cpp.CppWriter;
+import reflect.patches.BitmapPatch;
+import reflect.patches.Patches;
+import reflect.patches.StringPatch;
 
 public class Reflect {
 
@@ -132,6 +132,8 @@ public class Reflect {
 		Plugins.loadPlugins(new File(appDir, "plugins"));
 
 		//CodeExceptions.readExceptions(appDir);
+		Patches.put("java.lang.String", new StringPatch());
+		Patches.put("android.graphics.Bitmap", new BitmapPatch());
 
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("Reflect")
 				.defaultHelp(true)
