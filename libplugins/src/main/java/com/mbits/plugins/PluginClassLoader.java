@@ -1,4 +1,4 @@
-package reflect.plugin;
+package com.mbits.plugins;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

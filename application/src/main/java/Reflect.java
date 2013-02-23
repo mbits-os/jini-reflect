@@ -17,7 +17,7 @@ import reflect.api.Property;
 import reflect.cpp.CppWriter;
 import reflect.patches.Patches;
 import reflect.patches.StringPatch;
-import reflect.plugin.Plugins;
+import reflect.plugin.ReflectPlugins;
 
 public class Reflect {
 
@@ -125,7 +125,7 @@ public class Reflect {
 		if (appDir == null)
 			return;
 
-		Plugins.loadPlugins(new File(appDir, "plugins"));
+		ReflectPlugins.loadPlugins(new File(appDir, "plugins"));
 
 		//CodeExceptions.readExceptions(appDir);
 		Patches.put("java.lang.String", new StringPatch());
@@ -135,7 +135,7 @@ public class Reflect {
 				.description("Create JINI bindings for given class(es). CLASS can be in form java.lang.Class to generate binding for one class only or java.lang.* to generate it for all java.lang classes (but not java.class.reflect classes). When a subclass is provided ($ is present), it will be changed to the outer-most class.")
 				.epilog("Either --all or at least one class is needed.");
 
-		Plugins.onAddArguments(parser);
+		ReflectPlugins.onAddArguments(parser);
 
 		parser.addArgument("-8", "--utf8")
 				.action(Arguments.storeTrue())
@@ -224,7 +224,7 @@ public class Reflect {
 		}
 
 		try {
-			Plugins.onReadArguments(ns);
+			ReflectPlugins.onReadArguments(ns);
 
 			if (!Classes.readApis())
 				return;

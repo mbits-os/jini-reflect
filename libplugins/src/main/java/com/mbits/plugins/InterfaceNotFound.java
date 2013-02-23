@@ -1,4 +1,4 @@
-package reflect;
+package com.mbits.plugins;
 
 public class InterfaceNotFound extends ReflectiveOperationException {
 

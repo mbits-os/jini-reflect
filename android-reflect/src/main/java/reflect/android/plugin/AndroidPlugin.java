@@ -6,9 +6,9 @@ import reflect.android.API;
 import reflect.android.patches.BitmapPatch;
 import reflect.api.Classes;
 import reflect.patches.Patches;
-import reflect.plugin.Plugin;
+import reflect.plugin.ReflectPlugin;
 
-public class AndroidPlugin implements Plugin {
+public class AndroidPlugin implements ReflectPlugin {
 	public AndroidPlugin() {
 		Patches.put("android.graphics.Bitmap", new BitmapPatch());
 	}

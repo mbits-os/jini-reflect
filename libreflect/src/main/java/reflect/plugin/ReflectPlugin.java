@@ -3,9 +3,9 @@ package reflect.plugin;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
 
-public interface Plugin {
+import com.mbits.plugins.Plugin;
 
-	String getName();
+public interface ReflectPlugin extends Plugin {
 	boolean wantsArguments();
 	void onAddArguments(ArgumentGroup group);
 	void onReadArguments(Namespace ns) throws Exception;
