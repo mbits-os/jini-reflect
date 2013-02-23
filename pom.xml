@@ -11,7 +11,7 @@
   <artifactId>reflect-parent</artifactId>
   <packaging>pom</packaging>
   <version>1.0</version>
-  <name>Reflect Parent Project</name>
+  <name>root</name>
 
   <modules>
     <module>libreflect</module>

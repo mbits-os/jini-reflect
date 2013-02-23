@@ -118,12 +118,8 @@
         <version>2.3.2</version>
         <configuration>
           <archive>
-            <manifest>
-              <mainClass>Reflect</mainClass>
-            </manifest>
             <manifestEntries>
-              <url>${project.url}</url>
-              <Class-Path>argparse4j-0.3.2.jar libreflect-0.1.jar</Class-Path>
+              <Plugin-Class>reflect.android.plugin.AndroidPlugin</Plugin-Class>
             </manifestEntries>
           </archive>
         </configuration>

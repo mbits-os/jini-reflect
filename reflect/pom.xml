@@ -128,7 +128,7 @@
             </manifest>
             <manifestEntries>
               <url>${project.url}</url>
-              <Class-Path>argparse4j-0.3.2.jar libreflect-0.1.jar</Class-Path>
+              <Class-Path>argparse4j-0.3.2.jar libreflect-0.1.jar cppwriter-0.1.jar android-reflect-0.1.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>
