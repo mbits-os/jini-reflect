@@ -10,7 +10,7 @@
   <groupId>com.mbits.os</groupId>
   <artifactId>reflect</artifactId>
   <version>0.1</version>
-  <name>Reflect</name>
+  <name>reflect</name>
   <description>Create JINI bindings for given class(es).</description>
   <inceptionYear>2013</inceptionYear>
   <url>https://github.com/mbits-os/jini</url>
@@ -23,7 +23,6 @@
     <groupId>com.mbits.os</groupId>
     <artifactId>reflect-parent</artifactId>
     <version>1.0</version>
-    <relativePath>..</relativePath>
   </parent>
 
   <properties>
