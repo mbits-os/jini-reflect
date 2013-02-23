@@ -32,6 +32,11 @@
       <artifactId>argparse4j</artifactId>
       <version>0.3.2</version>
     </dependency>
+    <dependency>
+      <groupId>com.mbits.os.plugins</groupId>
+      <artifactId>libplugins</artifactId>
+      <version>0.1</version>
+    </dependency>
   </dependencies>
 
   <reporting>
@@ -65,6 +70,19 @@
             <descriptorRef>bin</descriptorRef>
             <descriptorRef>src</descriptorRef>
           </descriptorRefs>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Class-Path>libplugins.jar</Class-Path>
+            </manifestEntries>
+          </archive>
         </configuration>
       </plugin>
 

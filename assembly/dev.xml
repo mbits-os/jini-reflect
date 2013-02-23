@@ -19,6 +19,12 @@
       <fileMode>0644</fileMode>
     </file>
     <file>
+      <source>target/dependency/libplugins-0.1.jar</source>
+      <outputDirectory>lib</outputDirectory>
+      <destName>libplugins.jar</destName>
+      <fileMode>0644</fileMode>
+    </file>
+    <file>
       <source>target/dependency/cppwriter-0.1.jar</source>
       <outputDirectory>lib</outputDirectory>
       <destName>cppwriter.jar</destName>

@@ -32,6 +32,7 @@
     <module>cppwriter</module>
     <module>libreflect</module>
     <module>android-reflect</module>
+    <module>libplugins</module>
   </modules>
 
   <dependencies>
@@ -53,6 +54,11 @@
     <dependency>
       <groupId>com.mbits.os</groupId>
       <artifactId>application</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mbits.os.plugins</groupId>
+      <artifactId>libplugins</artifactId>
       <version>0.1</version>
     </dependency>
   </dependencies>
