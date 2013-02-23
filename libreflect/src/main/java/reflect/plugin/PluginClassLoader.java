@@ -69,6 +69,8 @@ public class PluginClassLoader extends ClassLoader {
 		try {
 			String filename = classname.replace('.', File.separatorChar)+".class";
 			ZipEntry entry = zip.getEntry(filename);
+			if (entry == null) entry = zip.getEntry(classname.replace('.', '\\')+".class");
+			if (entry == null) entry = zip.getEntry(classname.replace('.', '/')+".class");
 			in = zip.getInputStream(entry);
 			out = new ByteArrayOutputStream();
 			copy(in, out);
