@@ -29,7 +29,7 @@
   <dependencies>
     <dependency>
       <groupId>com.mbits.os</groupId>
-      <artifactId>cppwriter</artifactId>
+      <artifactId>libcppwriter</artifactId>
       <version>0.1</version>
     </dependency>
   </dependencies>
@@ -79,7 +79,7 @@
             </manifest>
             <manifestEntries>
               <url>${project.url}</url>
-              <Class-Path>lib/argparse4j-0.3.2.jar lib/libreflect.jar lib/cppwriter.jar</Class-Path>
+              <Class-Path>lib/argparse4j-0.3.2.jar lib/libreflect.jar lib/libcppwriter.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>

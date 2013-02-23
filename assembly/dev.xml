@@ -13,30 +13,6 @@
 
   <files>
     <file>
-      <source>target/dependency/android-reflect-0.1.jar</source>
-      <outputDirectory>plugins</outputDirectory>
-      <destName>android-reflect.jar</destName>
-      <fileMode>0644</fileMode>
-    </file>
-    <file>
-      <source>target/dependency/libplugins-0.1.jar</source>
-      <outputDirectory>lib</outputDirectory>
-      <destName>libplugins.jar</destName>
-      <fileMode>0644</fileMode>
-    </file>
-    <file>
-      <source>target/dependency/cppwriter-0.1.jar</source>
-      <outputDirectory>lib</outputDirectory>
-      <destName>cppwriter.jar</destName>
-      <fileMode>0644</fileMode>
-    </file>
-    <file>
-      <source>target/dependency/libreflect-0.1.jar</source>
-      <outputDirectory>lib</outputDirectory>
-      <destName>libreflect.jar</destName>
-      <fileMode>0644</fileMode>
-    </file>
-    <file>
       <source>target/dependency/argparse4j-0.3.2.jar</source>
       <outputDirectory>lib</outputDirectory>
       <destName>argparse4j-0.3.2.jar</destName>
@@ -49,4 +25,30 @@
       <fileMode>0644</fileMode>
     </file>
   </files>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
+      <fileMode>0644</fileMode>
+      <includes>
+        <include>*:argparse4j-*</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <fileMode>0644</fileMode>
+      <includes>
+        <include>*:lib*</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>plugins</outputDirectory>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <fileMode>0644</fileMode>
+      <includes>
+        <include>*:plugin-*</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
 </assembly>

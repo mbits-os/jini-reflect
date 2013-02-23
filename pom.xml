@@ -29,13 +29,18 @@
 
   <modules>
     <module>application</module>
-    <module>cppwriter</module>
+    <module>libcppwriter</module>
     <module>libreflect</module>
-    <module>android-reflect</module>
     <module>libplugins</module>
+    <module>plugin-android-reflect</module>
   </modules>
 
   <dependencies>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>application</artifactId>
+      <version>0.1</version>
+    </dependency>
     <dependency>
       <groupId>com.mbits.os</groupId>
       <artifactId>libreflect</artifactId>
@@ -43,22 +48,17 @@
     </dependency>
     <dependency>
       <groupId>com.mbits.os</groupId>
-      <artifactId>cppwriter</artifactId>
-      <version>0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.mbits.os</groupId>
-      <artifactId>android-reflect</artifactId>
-      <version>0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.mbits.os</groupId>
-      <artifactId>application</artifactId>
+      <artifactId>libcppwriter</artifactId>
       <version>0.1</version>
     </dependency>
     <dependency>
       <groupId>com.mbits.os.plugins</groupId>
       <artifactId>libplugins</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>plugin-android-reflect</artifactId>
       <version>0.1</version>
     </dependency>
   </dependencies>
