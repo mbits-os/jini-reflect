@@ -13,31 +13,31 @@
 
   <files>
     <file>
-      <source>target/android-reflect-0.1.jar</source>
+      <source>target/dependency/android-reflect-0.1.jar</source>
       <outputDirectory>plugins</outputDirectory>
       <destName>android-reflect.jar</destName>
       <fileMode>0644</fileMode>
     </file>
     <file>
-      <source>target/cppwriter-0.1.jar</source>
+      <source>target/dependency/cppwriter-0.1.jar</source>
       <outputDirectory>lib</outputDirectory>
       <destName>cppwriter.jar</destName>
       <fileMode>0644</fileMode>
     </file>
     <file>
-      <source>target/libreflect-0.1.jar</source>
+      <source>target/dependency/libreflect-0.1.jar</source>
       <outputDirectory>lib</outputDirectory>
       <destName>libreflect.jar</destName>
       <fileMode>0644</fileMode>
     </file>
     <file>
-      <source>target/argparse4j-0.3.2.jar</source>
+      <source>target/dependency/argparse4j-0.3.2.jar</source>
       <outputDirectory>lib</outputDirectory>
       <destName>argparse4j-0.3.2.jar</destName>
       <fileMode>0644</fileMode>
     </file>
     <file>
-      <source>target/application-0.1.jar</source>
+      <source>target/dependency/application-0.1.jar</source>
       <outputDirectory>.</outputDirectory>
       <destName>reflect.jar</destName>
       <fileMode>0644</fileMode>
