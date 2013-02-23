@@ -131,7 +131,7 @@ public class Reflect {
 
 		Plugins.loadPlugins(new File(appDir, "plugins"));
 
-		CodeExceptions.readExceptions(appDir);
+		//CodeExceptions.readExceptions(appDir);
 
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("Reflect")
 				.defaultHelp(true)
