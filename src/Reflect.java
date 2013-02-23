@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Reflect {
 	private File m_src;
 	private boolean m_utf8;
 	private List<String> m_classes;
+	private List<File> m_files = new LinkedList<File>();
 
 	public Reflect(File inc, File src, boolean utf8) {
 		m_inc = inc;
@@ -61,8 +63,41 @@ public class Reflect {
 		}
 		System.out.println(" (" + curr + "/" + max + ")");
 		CppWriter writer = new CppWriter(klazz, m_classes, m_utf8);
-		writer.printHeader(m_inc);
+
+		writer.printHeader(m_inc, m_files);
 		writer.printSource(m_src);
+	}
+
+	private static String relative(File dir, File path) {
+		final String regexp = File.separator.replace("\\", "\\\\").replace(".", "\\.");
+		String[] src = dir.toString().split(regexp);
+		String[] dst = path.toString().split(regexp);
+		int pos = 0;
+		while (pos < src.length && pos < dst.length - 1 && src[pos].equals(dst[pos]))
+			++pos;
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = pos; i < src.length; ++i)
+			sb.append("../");
+		for (int i = pos; i < dst.length - 1; ++i)
+			sb.append(dst[i] + "/");
+		sb.append(dst[dst.length-1]);
+		return sb.toString();
+		
+	}
+	public void fileList(File output) {
+		PrintStream out = null;
+		try {
+			final File dir = output.getCanonicalFile().getParentFile();
+
+			out = new PrintStream(output, "UTF-8");
+			for (File f: m_files)
+				out.println(relative(dir, f));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			out.close();
+		}
 	}
 
 	public static void main(String[] args)
@@ -75,7 +110,7 @@ public class Reflect {
 				.description("Create JINI bindings for given class(es). CLASS can be in form java.lang.Class to generate binding for one class only or java.lang.* to generate it for all java.lang classes (but not java.class.reflect classes). When a subclass is provided ($ is present), it will be changed to the outer-most class.")
 				.epilog("Either --all or at least one class is needed.");
 		parser.addArgument("-a", "--android")
-				.metavar("api")
+				.metavar("API")
 				.type(Integer.class)
 				.dest("targetAPI")
 				.required(true)
@@ -83,32 +118,32 @@ public class Reflect {
 		parser.addArgument("-8", "--utf8")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
-				.help("In generated interfaces the java.lang.String will be replaced by const char*");
+				.help("replace java.lang.String with const char*");
 		parser.addArgument("--dest")
-				.metavar("dir")
+				.metavar("DIR")
 				.type(File.class)
 				.setDefault(new File("./code"))
 				.dest("dest")
-				.help("The output directory");
+				.help("the output directory");
 		parser.addArgument("--inc")
-				.metavar("dir")
+				.metavar("DIR")
 				.type(File.class)
 				.dest("inc")
-				.help("The output dir for .hpp files (default: $dest" + File.separator + "inc)");
+				.help("the output dir for .hpp files (default: $dest" + File.separator + "inc)");
 		parser.addArgument("--src")
-				.metavar("dir")
+				.metavar("DIR")
 				.type(File.class)
 				.dest("src")
-				.help("The output dir for .cpp files (default: $dest" + File.separator + "src)");
+				.help("the output dir for .cpp files (default: $dest" + File.separator + "src)");
 		parser.addArgument("--preserve-refs")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
 				.dest("refs")
-				.help("If set, will preserve methods and properties, whose types are not builtin, in java.lang package nor on the list of classes");
+				.help("preserve methods and properties, whose types are not builtin, in java.lang package nor on the list of classes");
 		parser.addArgument("--parents")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
-				.help("Generate classes for the superclass and interfaces classes");
+				.help("generate classes for the superclass and interfaces classes");
 		parser.addArgument("--all-deps")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
@@ -116,17 +151,21 @@ public class Reflect {
 		parser.addArgument("--all")
 				.action(Arguments.storeTrue())
 				.setDefault(false)
-				.help("Generates bindings for all the classes in the API; implies --all-deps, --parent and --preserve-refs");
-		parser.addArgument("files")
+				.help("Generate bindings for all the classes in the API; implies --all-deps, --parent and --preserve-refs");
+		parser.addArgument("--file-list")
+				.metavar("FILE")
+				.type(File.class)
+				.help("output list of generated files for further processing");
+		parser.addArgument("classes")
 				.metavar("CLASS")
 				.type(String.class)
 				.nargs("*")
-				.help("Class to generate binding for");
+				.help("class and/or package to generate bindings for");
 
 		Namespace ns = null;
 		try {
 			ns = parser.parseArgs(args);
-			if (!ns.getBoolean("all") && ns.getList("files").size() == 0)
+			if (!ns.getBoolean("all") && ns.getList("classes").size() == 0)
 				throw new ArgumentParserException("Either --all or at least one class is needed.", parser);
 		} catch (ArgumentParserException e) {
 			parser.handleError(e);
@@ -135,12 +174,13 @@ public class Reflect {
 		File inc = (File)ns.get("inc");
 		File src = (File)ns.get("src");
 		File dest = (File)ns.get("dest");
+		File files = (File)ns.get("file_list");
 		boolean utf8 = ns.getBoolean("utf8");
 		boolean all = ns.getBoolean("all");
 		boolean deps = ns.getBoolean("all_deps");
 		boolean parents = ns.getBoolean("parents");
 		boolean refs = ns.getBoolean("refs");
-		final List<String> list = ns.getList("files");
+		final List<String> list = ns.getList("classes");
 		List<String> classes = new LinkedList<String>();
 
 		if (inc == null) inc = new File(dest, "inc");
@@ -205,6 +245,9 @@ public class Reflect {
 			{
 				reflect.printClass(s, ++curr, classes.size());
 			}
+
+			if (files != null)
+				reflect.fileList(files);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

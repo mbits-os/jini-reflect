@@ -51,7 +51,7 @@ public class CppWriter extends TypeUtils {
 		*/
 	}
 
-	public void printHeader(File inc) {
+	public void printHeader(File inc, List<File> fileList) {
 		final File out = new File(inc, m_class.getName().replace(".", "/") + ".hpp");
 
 		try {
@@ -60,6 +60,7 @@ public class CppWriter extends TypeUtils {
 			dir.mkdirs();
 			m_out = new PrintStream(out, "UTF-8");
 			doPrintHeader();
+			fileList.add(abs);
 		} catch (FileNotFoundException e) {
 		} catch (UnsupportedEncodingException e) {
 		} catch (IOException e) {
@@ -301,10 +302,8 @@ public class CppWriter extends TypeUtils {
 
 	private class TypePrinter {
 		Class m_clazz;
-		String m_dummy;
 		TypePrinter(Class clazz) {
 			m_clazz = clazz;
-			m_dummy = clazz.getPackage() + ".?";
 		}
 		public void printObjectProps() {
 			PropWriter.print(m_out, "\t", m_clazz, new PropWriter() {
