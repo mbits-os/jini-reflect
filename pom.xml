@@ -17,6 +17,7 @@
     <module>libreflect</module>
     <module>reflect</module>
     <module>android-reflect</module>
+    <module>cppwriter</module>
   </modules>
 
   <build>

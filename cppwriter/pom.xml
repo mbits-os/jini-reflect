@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+           http://maven.apache.org/POM/4.0.0
+           http://maven.apache.org/xsd/maven-4.0.0.xsd
+         ">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.mbits.os</groupId>
+  <artifactId>cppwriter</artifactId>
+  <version>0.1</version>
+  <name>cppwriter</name>
+  <description>C++ writer for the reflect.</description>
+  <inceptionYear>2013</inceptionYear>
+  <url>https://github.com/mbits-os/jini</url>
+  <organization>
+    <name>midnightBITS</name>
+    <url>https://github.com/mbits-os</url>
+  </organization>
+
+  <parent>
+    <groupId>com.mbits.os</groupId>
+    <artifactId>reflect-parent</artifactId>
+    <version>1.0</version>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://raw.github.com/tatsuhiro-t/argparse4j/master/LICENSE.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>mzdun</id>
+      <name>Marcin Zdun</name>
+    </developer>
+  </developers>
+
+  <issueManagement>
+    <system>github.com</system>
+    <url>https://github.com/mbits-os/jini/issues</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:git:https://github.com/mbits-os/jini.git</connection>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.mbits.os</groupId>
+      <artifactId>libreflect</artifactId>
+      <version>0.1</version>
+    </dependency>
+  </dependencies>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.4</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>summary</report>
+              <report>dependencies</report>
+              <report>project-team</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>scm</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <outputDirectory>${project.build.directory}</outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>bin</descriptorRef>
+            <descriptorRef>src</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>Reflect</mainClass>
+            </manifest>
+            <manifestEntries>
+              <url>${project.url}</url>
+              <Class-Path>argparse4j-0.3.2.jar libreflect-0.1.jar</Class-Path>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
