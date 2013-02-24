@@ -11,12 +11,16 @@
   <packaging>pom</packaging>
   <version>0.1</version>
   <name>Maven Base</name>
-  <url>http://mbits-os.github.com/jini/Reflect/</url>
+  <url>http://mbits-os.github.com/jini-reflect/</url>
+  <organization>
+    <name>midnightBITS</name>
+    <url>https://github.com/mbits-os/</url>
+  </organization>
 
   <licenses>
     <license>
       <name>MIT</name>
-      <url>https://raw.github.com/mbits-os/jini/master/tools/Reflect/LICENSE.txt</url>
+      <url>https://raw.github.com/mbits-os/jini-reflect/master/LICENSE.txt</url>
     </license>
   </licenses>
 
@@ -33,13 +37,13 @@
 
   <issueManagement>
     <system>github.com</system>
-    <url>https://github.com/mbits-os/jini/issues</url>
+    <url>https://github.com/mbits-os/jini-reflect/issues</url>
   </issueManagement>
 
   <scm>
-    <connection>scm:git:https://github.com/mbits-os/jini.git</connection>
-    <developerConnection>scm:git:git@github.com:mbits-os/jini.git</developerConnection>
-    <url>https://github.com/mbits-os/jini</url>
+    <connection>scm:git:https://github.com/mbits-os/jini-reflect.git</connection>
+    <developerConnection>scm:git:git@github.com:mbits-os/jini-reflect.git</developerConnection>
+    <url>https://github.com/mbits-os/jini-reflect</url>
   </scm>
 
   <reporting>
@@ -61,13 +65,6 @@
           </reportSet>
         </reportSets>
       </plugin>
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
-      </plugin>
-      -->
     </plugins>
   </reporting>
 
@@ -113,6 +110,37 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <docletArtifact>
+            <groupId>com.google.doclava</groupId>
+            <artifactId>doclava</artifactId>
+            <version>1.0.5</version>
+          </docletArtifact>
+          <doclet>com.google.doclava.Doclava</doclet>
+          <bootclasspath>${sun.boot.class.path}</bootclasspath>
+          <additionalparam>
+            -federate JDK http://download.oracle.com/javase/6/docs/api/index.html?
+            -federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml
+            -hdf project.name "Reflect API"
+            -d ${project.build.directory}/site/apidocs
+            -proofread ${project.build.directory}/proofread.txt
+          </additionalparam>
+          <!-- 
+            -templatedir doclava.tmplt
+            -group "Core" "reflect:reflect.api:reflect.java:reflect.utils"
+            -group "C++ Writer" "reflect.cpp:reflect.patches"
+            -group "Plugin Engine" "com.mbits.plugins"
+            -group "Android Plugin" "reflect.android:reflect.android.*"
+          -->
+          <useStandardDocletOptions>false</useStandardDocletOptions>
+          <additionalJOption>-J-Xmx1024m</additionalJOption>
+        </configuration>
       </plugin>
     </plugins>
   </build>
