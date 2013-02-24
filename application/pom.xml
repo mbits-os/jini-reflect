@@ -7,11 +7,25 @@
          ">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.mbits.os</groupId>
+  <groupId>com.mbits.os.reflect</groupId>
   <artifactId>application</artifactId>
   <version>0.1</version>
-  <name>reflect</name>
+  <name>application</name>
   <description>Create JINI bindings for given class(es).</description>
+
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://raw.github.com/mbits-os/jini/master/tools/Reflect/LICENSE.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>mzdun</id>
+      <name>Marcin Zdun</name>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,7 +42,7 @@
   
   <dependencies>
     <dependency>
-      <groupId>com.mbits.os</groupId>
+      <groupId>com.mbits.os.reflect</groupId>
       <artifactId>libcppwriter</artifactId>
       <version>0.1</version>
     </dependency>
