@@ -7,38 +7,19 @@
          ">
 
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.mbits.os.reflect</groupId>
+    <artifactId>reflect-base</artifactId>
+    <version>0.1</version>
+    <relativePath>../reflect-base/pom.xml</relativePath>
+  </parent>
+
   <groupId>com.mbits.os.reflect</groupId>
   <artifactId>libcppwriter</artifactId>
   <version>0.1</version>
-  <name>libcppwriter</name>
+  <name>C++ Writer</name>
   <description>C++ writer for the reflect.</description>
-
-  <licenses>
-    <license>
-      <name>MIT</name>
-      <url>https://raw.github.com/mbits-os/jini/master/tools/Reflect/LICENSE.txt</url>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <id>mzdun</id>
-      <name>Marcin Zdun</name>
-    </developer>
-  </developers>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <issueManagement>
-    <system>github.com</system>
-    <url>https://github.com/mbits-os/jini/issues</url>
-  </issueManagement>
-
-  <scm>
-    <connection>scm:git:https://github.com/mbits-os/jini.git</connection>
-  </scm>
 
   <dependencies>
     <dependency>
@@ -47,56 +28,4 @@
       <version>0.1</version>
     </dependency>
   </dependencies>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.4</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>summary</report>
-              <report>dependencies</report>
-              <report>project-team</report>
-              <report>issue-tracking</report>
-              <report>license</report>
-              <report>scm</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>bin</descriptorRef>
-            <descriptorRef>src</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
-  </build>
-
 </project>
