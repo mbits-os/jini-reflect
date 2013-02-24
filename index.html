@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>JINI Reflect by mbits-os</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/mbits-os/jini-reflect">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/mbits-os/jini-reflect/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/mbits-os/jini-reflect/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>JINI Reflect</h1>
+          <p></p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/mbits-os">mbits-os</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h2>What is Reflect?</h2>
+
+<p>Reflect is a companion tool for the <a href="http://github.com/mbits-os/jini">JINI Library</a> used to automatically generate the binding between Java and C++. The tool can create JINI bindings for given class or classes. It accepts the classes in <code>java.lang.Class</code> form to generate binding for that one class only or <code>java.lang.*</code> to generate it for all <code>java.lang</code> classes (but not <code>java.class.reflect</code> classes). When an internal class is provided (that is, when <code>$</code> is present), it will be replaced with the outer-most class.</p>
+
+<h2>Synopsis</h2>
+
+<pre><code>java -jar reflect.jar [-h] -a API [-8] [--dest DIR] [--inc DIR] [--src DIR]
+                      [--preserve-refs] [--parents] [--all-deps] [--all]
+                      [--file-list FILE] [CLASS [CLASS ...]]
+</code></pre>
+
+<h4>Positional arguments:</h4>
+
+<ul>
+<li>
+<strong><em>CLASS</em></strong> : class and/or package to generate bindings for.</li>
+</ul><h4>Android API Arguments:</h4>
+
+<ul>
+<li>
+<strong>-a <em>API</em></strong>, <strong>--android <em>API</em></strong> : Android API Level (e.g. <code>-a 17</code> for Android 4.2).</li>
+</ul><h4>Optional arguments:</h4>
+
+<ul>
+<li>
+<strong>-h</strong>, <strong>--help</strong> : show the help message and exit</li>
+<li>
+<strong>-8</strong>, <strong>--utf8</strong> : replace <code>java.lang.String</code> with <code>const char*</code> (default: <code>false</code>)</li>
+<li>
+<strong>--dest <em>DIR</em></strong> : the output directory (default: <code>.\code</code>)</li>
+<li>
+<strong>--inc <em>DIR</em></strong> : the output directory for <code>.hpp</code> files (default: <code>$dest\inc</code>)</li>
+<li>
+<strong>--src <em>DIR</em></strong> : the output directory for <code>.cpp</code> files (default: <code>$dest\src</code>)</li>
+<li>
+<strong>--preserve-refs</strong> : when Reflect encounters a type it shouldn't know about, it removes the declaration the type is in from the binding; the list of types Reflect should know about consists of builtin types, members of the <code>java.lang</code> package and the classes given as positional arguments; this turns this behaviour off (default: <code>false</code>)</li>
+<li>
+<strong>--parents</strong> : generate bindings for the super class and interfaces classes (default: <code>false</code>)</li>
+<li>
+<strong>--all-deps</strong> : generate bindings for the super class, interfaces, field and parameter classes; implies <code>--parent</code> and <code>--preserve-refs</code> (default: <code>false</code>)</li>
+<li>
+<strong>--all</strong> : Generate bindings for all the classes in the API; implies <code>--all-deps</code>, <code>--parent</code> and <code>--preserve-refs</code> (default: <code>false</code>)</li>
+<li>
+<strong>--file-list <em>FILE</em></strong> : output list of generated files for further processing</li>
+</ul><h2>Examples</h2>
+
+<h4>Help</h4>
+
+<pre><code>$ java -jar path/to/reflect.jar --help
+</code></pre>
+
+<h4>Minimal Bitmap binding</h4>
+
+<p>To generate Android bindings big enough to manipulate bitmap's pixmap and blend it on the canvas:</p>
+
+<pre><code>$ java -jar path/to/reflect.jar -a 17 \
+&gt; --parents \
+&gt; android.graphics.Bitmap \
+&gt; android.graphics.Canvas \
+&gt; android.graphics.Paint
+</code></pre>
+
+<p>This will create headers and code for both <code>Bitmap</code> and <code>Canvas</code> and for their super classes up to and including <code>Object</code>. It will generate binding for the <a href="http://developer.android.com/reference/android/graphics/Canvas.html#drawBitmap%28android.graphics.Bitmap,%20float,%20float,%20android.graphics.Paint%29">drawBitmap(Bitmap,float,float,Paint)</a> to be able to blend the bitmap. This will not, however, generate binding for <a href="http://developer.android.com/reference/android/graphics/Bitmap.html#getScaledHeight%28android.util.DisplayMetrics%29">getScaledHeight(DisplayMetrics)</a>, as neither <code>android.util.DisplayMetrics</code>, <code>--preserve-refs</code> nor <code>--all-deps</code> was given as an argument.</p>
+
+<p>To generate <code>java.lang</code> package for the JINI project:</p>
+
+<pre><code>$ java -jar path/to/reflect.jar -a 17 \
+&gt; -8 --all-deps java.lang.*
+</code></pre>
+
+<h2>API Documentation</h2>
+
+<p>You can create Javadocs with <code>javadoc:aggregate</code> mojo after cloning the repository:</p>
+
+<pre><code>$ mvn javadoc:aggregate
+</code></pre>
+
+<p>This will generate entire javadoc in <code>./target/site/apidocs</code>. Alternatively, you can go to <a href="./apidocs">online docs</a>.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
