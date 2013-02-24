@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class PluginClassLoader extends ClassLoader {
+class PluginClassLoader extends ClassLoader {
 	
 	private File m_zip;
 	PluginClassLoader(File zip) {

@@ -19,6 +19,9 @@ import reflect.patches.Patches;
 import reflect.patches.StringPatch;
 import reflect.plugin.ReflectPlugins;
 
+/**
+ * @hide
+ */
 public class Reflect {
 
 	private File m_inc;

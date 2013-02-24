@@ -9,7 +9,30 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 
+/**
+ * Base class for the Plugin Engine. Classes implementing the engine should
+ * provide their own plugin interface based on {@link Plugin} and extend
+ * the {@link Plugins.Impl} with implementation of their own operations.
+ * 
+ * <p>Plugins of such engines should implement that interface and must put
+ * <code>Plugin-Class</code> entry into the manifest file, e.g.:
+ * 
+ * <pre>Plugin-Class: {@link reflect.android.plugin.AndroidPlugin reflect.android.plugin.AndroidPlugin}</pre>
+ * 
+ * <p>Plugin object is created only, if the Jar file is placed in the directory
+ * expected by the Plugins Engine, manifest entry is present and the class
+ * pointed by this entry implements the interface of this particular Plugins Engine.
+ * 
+ * <p>If Jar placed in the plugins directory is not a plugin, it is treated as an exceptional
+ * situation.
+ */
 public class Plugins {
+
+	/**
+	 * @hide
+	 */
+	public Plugins() {}
+
 	private static final Attributes.Name PLUGIN_CLASS = new Attributes.Name("Plugin-Class");
 
 	private static String pluginClass(File file) throws IOException {
@@ -21,7 +44,7 @@ public class Plugins {
 			jar = new JarInputStream(in);
 			final Attributes main = jar.getManifest().getMainAttributes();
 			if (!main.containsKey(PLUGIN_CLASS))
-				throw new PluginJarException(PLUGIN_CLASS + " entry int the menifest is missing");
+				throw new PluginJarException(PLUGIN_CLASS + " entry int the manifest is missing");
 			return (String)main.get(PLUGIN_CLASS);
 		} finally {
 			try { 
@@ -30,9 +53,39 @@ public class Plugins {
 		}
 	}
 
+	/**
+	 * The Impl loads the plugins and keeps them for later reference. 
+	 * 
+	 * @param <T> The expected interface of the plugin. 
+	 */
 	protected static class Impl<T extends Plugin> {
+		/**
+		 * Holds the list of loaded plugins.
+		 */
 		protected List<T> m_plugins = new LinkedList<T>();
 	
+		/**
+		 * @hide
+		 */
+		protected Impl() {}
+
+		/**
+		 * Loads the plugin into {@link #m_plugins}. Enumerates the Jar files,
+		 * first looking for the manifest entry called <code>Plugin-Class</code>,
+		 * then tries to load the specified class, but only if the class is
+		 * implementing the <code>clazz</code> interface.
+		 * 
+		 * <p><b>Warning!</b> Current implementation does not set any
+		 * security manager.
+		 * 
+		 * <p>The code will throw {@link PluginJarException} if the entry is missing,
+		 * <tt>ClassNotFoundException</tt> if the class cannot be located and
+		 * {@link InterfaceNotFound} if the class does not have the plugin interface
+		 * as it's direct ancestor.
+		 * 
+		 * @param dir The directory for the plugins
+		 * @param clazz The class object of the interface
+		 */
 		public void loadPlugins(File dir, Class<T> clazz) {
 			if (!dir.exists() || !dir.isDirectory())
 				return;
