@@ -1,1 +1,5 @@
 code/
+target/
+
+.classpath
+.project

@@ -21,8 +21,6 @@
     <module>libreflect</module>
     <module>libplugins</module>
     <module>plugin-android-reflect</module>
-    <module>reflect-base</module>
-    <module>reflect-site</module>
   </modules>
 
   <dependencies>
@@ -67,7 +65,7 @@
             </goals>
             <configuration>
               <descriptors>
-                <descriptor>assembly/dev.xml</descriptor>
+                <descriptor>assembly/bundle.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
