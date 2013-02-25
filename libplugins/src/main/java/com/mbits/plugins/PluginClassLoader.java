@@ -32,6 +32,9 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * ClassLoader for Plugins.Impl
+ */
 class PluginClassLoader extends ClassLoader {
 	
 	private File m_zip;

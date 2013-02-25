@@ -59,7 +59,11 @@ public class ReflectPlugins extends Plugins {
 
 	public static void loadPlugins(File file) {
 		if (!hasImpl()) return;
-		impl.loadPlugins(file, ReflectPlugin.class);
+		try {
+			impl.loadPlugins(file, ReflectPlugin.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void onAddArguments(ArgumentParser parser) {

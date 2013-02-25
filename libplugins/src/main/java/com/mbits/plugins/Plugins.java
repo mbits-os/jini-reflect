@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
  
- package com.mbits.plugins;
+package com.mbits.plugins;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,8 +68,12 @@ public class Plugins {
 			jar = new JarInputStream(in);
 			final Attributes main = jar.getManifest().getMainAttributes();
 			if (!main.containsKey(PLUGIN_CLASS))
-				throw new PluginJarException(PLUGIN_CLASS + " entry int the manifest is missing");
-			return (String)main.get(PLUGIN_CLASS);
+				throw new PluginJarException(PLUGIN_CLASS + " entry in the manifest is missing");
+
+			final String className = (String)main.get(PLUGIN_CLASS);
+			if (className == null || className.isEmpty())
+				throw new PluginJarException(PLUGIN_CLASS + " entry in the manifest is empty");
+			return className;
 		} finally {
 			try { 
 				if (jar != null) jar.close();
@@ -94,50 +98,54 @@ public class Plugins {
 		protected Impl() {}
 
 		/**
-		 * Loads the plugin into {@link #m_plugins}. Enumerates the Jar files,
-		 * first looking for the manifest entry called <code>Plugin-Class</code>,
-		 * then tries to load the specified class, but only if the class is
-		 * implementing the <code>clazz</code> interface.
-		 * 
-		 * <p><b>Warning!</b> Current implementation does not set any
-		 * security manager.
+		 * Loads single plugin. Performs actual checking for the <code>Plugin-Class</code>,
+		 * locating the plugin class and examining its interfaces on behalf of
+		 * {@link #loadPlugins(File, Class) loadPlugins}.
 		 * 
 		 * <p>The code will throw {@link PluginJarException} if the entry is missing,
 		 * <tt>ClassNotFoundException</tt> if the class cannot be located and
 		 * {@link InterfaceNotFound} if the class does not have the plugin interface
 		 * as it's direct ancestor.
 		 * 
-		 * @param dir The directory for the plugins
+		 * @param file The .jar file with the plugin
 		 * @param clazz The class object of the interface
+		 * @throws Exception The problem reported by the class matching algorithm
 		 */
-		public void loadPlugins(File dir, Class<T> clazz) {
-			if (!dir.exists() || !dir.isDirectory())
-				return;
+		protected final void loadPlugin(File file, Class<T> clazz) throws Exception {
+			final String className = pluginClass(file);
+			Class<?> c = Class.forName(className, true, new PluginClassLoader(file));
+			Class<?>[] ifaces = c.getInterfaces();
+			boolean found = false;
+			for (Class<?> iface: ifaces) {
+				if (iface.equals(clazz)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				throw new InterfaceNotFound(clazz.getName() + " in " + className + " missing");
 
-			File[] files = dir.listFiles();
-			for (File file: files) {
-				if (!file.isFile() || !file.toString().endsWith(".jar"))
-					continue;
+			final T plugin = clazz.cast(c.newInstance());
+			if (plugin != null);
+				m_plugins.add(plugin);
+		}
 
+		/**
+		 * Wrapper for {@link #loadPlugin(File, Class) loadPlugin}. Catches most
+		 * of the exceptions <tt>loadPlugin</tt> might have thrown. This way problem
+		 * with one faulty plugin will not prevent other plugins to load. Implementers
+		 * of the Plugin Engine might decide to handle this in other way, they should,
+		 * however, call the <tt>loadPlugin</tt> with the arguments provided, or no
+		 * plugins will be loaded.
+		 * 
+		 * @param file The .jar file with the plugin
+		 * @param clazz The class object of the interface
+		 * @throws Exception In overriden methods: the problem reported by the
+		 *                   class matching algorithm.
+		 */
+		protected void loadPluginWrapper(File file, Class<T> clazz) throws Exception {
 				try {
-					final String className = pluginClass(file);
-					if (className == null) continue;
-					Class<?> c = Class.forName(className, true, new PluginClassLoader(file));
-					Class<?>[] ifaces = c.getInterfaces();
-					boolean found = false;
-					for (Class<?> iface: ifaces) {
-						if (iface.equals(clazz)) {
-							found = true;
-							break;
-						}
-					}
-					if (!found)
-						throw new InterfaceNotFound(clazz.getName() + " in " + className + " missing");
-
-					final T plugin = clazz.cast(c.newInstance());
-					if (plugin != null);
-						m_plugins.add(plugin);
-
+					loadPlugin(file, clazz);
 				} catch (IOException e) {
 					System.err.println("While reading " + file + ":");
 					e.printStackTrace();
@@ -145,6 +153,33 @@ public class Plugins {
 					System.err.println("While reading " + file + ":");
 					e.printStackTrace();
 				}
+			
+		}
+
+		/**
+		 * Loads the plugin into {@link #m_plugins}. Enumerates the Jar files,
+		 * first looking for the manifest entry called <code>Plugin-Class</code>,
+		 * then tries to load the specified class, but only if the class is
+		 * implementing the <code>clazz</code> interface. The work is performed by
+		 * {@link #loadPlugin(File, Class) loadPlugin} called through
+		 * {@link #loadPluginWrapper(File, Class) loadPluginWrapper}.
+		 * 
+		 * <p><b>Warning!</b> Current implementation does not set any
+		 * security manager.
+		 * 
+		 * @param dir The directory for the plugins
+		 * @param clazz The class object of the interface
+		 * @throws Exception Could throw an exception with overriden {@link #loadPluginWrapper(File, Class) loadPluginWrapper}.
+		 */
+		public void loadPlugins(File dir, Class<T> clazz) throws Exception {
+			if (!dir.exists() || !dir.isDirectory())
+				return;
+
+			File[] files = dir.listFiles();
+			for (File file: files) {
+				if (!file.isFile() || !file.toString().endsWith(".jar"))
+					continue;
+				loadPluginWrapper(file, clazz);
 			}
 		}
 	}

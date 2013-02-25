@@ -24,23 +24,21 @@
  
 package com.mbits.plugins;
 
+/**
+ * <code>InterfaceNotFound</code> is thrown, if the Plugin Engine cannot
+ * find requested interface among direct ancestors.
+ */
 public class InterfaceNotFound extends ReflectiveOperationException {
 
 	private static final long serialVersionUID = -317885433077735424L;
 
-	public InterfaceNotFound() {
-	}
-
+	/**
+	 * Constructs a new instance of <code>InterfaceNotFound</code> with
+	 * the given message.
+	 * 
+	 * @param message the detail message for the exception.
+	 */
 	public InterfaceNotFound(String message) {
 		super(message);
 	}
-
-	public InterfaceNotFound(Throwable cause) {
-		super(cause);
-	}
-
-	public InterfaceNotFound(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 }

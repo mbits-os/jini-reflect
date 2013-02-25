@@ -26,23 +26,22 @@ package com.mbits.plugins;
 
 import java.io.IOException;
 
+/**
+ * <code>PluginJarException</code> is thrown, if the Plugin Engine cannot
+ * find the <code>Plugin-Class</code> entry in the manifest file.
+ */
 public class PluginJarException extends IOException {
 
 	private static final long serialVersionUID = -5796810570566068244L;
 
-	public PluginJarException() {
-	}
-
+	/**
+	 * Constructs a new instance of <code>PluginJarException</code> with
+	 * the given message.
+	 * 
+	 * @param message the detail message for the exception.
+	 */
 	public PluginJarException(String message) {
 		super(message);
-	}
-
-	public PluginJarException(Throwable cause) {
-		super(cause);
-	}
-
-	public PluginJarException(String message, Throwable cause) {
-		super(message, cause);
 	}
 
 }
