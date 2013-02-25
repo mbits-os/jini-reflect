@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
  
-/**
- * Provides patch for the java.lang.String code binding.
- */
 package reflect;
 
 import java.io.PrintStream;
