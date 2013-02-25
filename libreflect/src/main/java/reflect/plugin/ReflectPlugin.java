@@ -29,8 +29,35 @@ import net.sourceforge.argparse4j.inf.Namespace;
 
 import com.mbits.plugins.Plugin;
 
+/**
+ * Plugin interface for the Reflect. Provides interface for attaching
+ * arguments to the <code>ArgumentParser</code>.
+ */
 public interface ReflectPlugin extends Plugin {
+
+	/**
+	 * Determines whether the plugins wants {@link #onAddArguments(ArgumentGroup)}
+	 * and {@link #onReadArguments(Namespace)} to be called.
+	 * 
+	 * @return true, if your plugin wants to have it's own parameters. 
+	 */
 	boolean wantsArguments();
+
+	/**
+	 * Allows plugins to add their own parameters. The group name is
+	 * created by adding word <tt>"arguments"</tt> to the name of the
+	 * plugin.
+	 * 
+	 * @param group The destination for the argument definitions.
+	 * @see com.mbits.plugins.Plugin#getName() Plugin.getName()
+	 */
 	void onAddArguments(ArgumentGroup group);
+
+	/**
+	 * Called after the parameters have been successfully parsed.
+	 * 
+	 * @param ns The container with the parameters.
+	 * @throws Exception If thrown, will cause the <code>main</code> method to exit.
+	 */
 	void onReadArguments(Namespace ns) throws Exception;
 }

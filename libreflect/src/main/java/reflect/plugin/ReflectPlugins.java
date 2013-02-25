@@ -32,7 +32,15 @@ import net.sourceforge.argparse4j.inf.Namespace;
 
 import com.mbits.plugins.Plugins;
 
+/**
+ * Provides implementation of the <code>Plugins.Impl</code>, that uses <code>ReflectPlugin</code>.
+ */
 public class ReflectPlugins extends Plugins {
+	/**
+	 * @hide
+	 */
+	public ReflectPlugins() {}
+
 	private static class Impl extends Plugins.Impl<ReflectPlugin> {
 		public void onAddArguments(ArgumentParser parser) {
 			for (ReflectPlugin plug: m_plugins) {
@@ -57,20 +65,38 @@ public class ReflectPlugins extends Plugins {
 		return impl != null;
 	}
 
-	public static void loadPlugins(File file) {
+	/**
+	 * Loads plugins from specified directory.
+	 * 
+	 * @param dir the directory for the plugins
+	 */
+	public static void loadPlugins(File dir) {
 		if (!hasImpl()) return;
 		try {
-			impl.loadPlugins(file, ReflectPlugin.class);
+			impl.loadPlugins(dir, ReflectPlugin.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Called before program arguments are parsed. Allows to
+	 * enhance the argument parser with additional parameters.
+	 * 
+	 * @param parser the parser for the program arguments
+	 */
 	public static void onAddArguments(ArgumentParser parser) {
 		if (!hasImpl()) return;
 		impl.onAddArguments(parser);
 	}
 
+	/**
+	 * Called after arguments have been parsed and builtin
+	 * parameters have been extracted.
+	 * 
+	 * @param ns The container with the parameters.
+	 * @throws Exception
+	 */
 	public static void onReadArguments(Namespace ns) throws Exception {
 		if (!hasImpl()) return;
 		impl.onReadArguments(ns);
