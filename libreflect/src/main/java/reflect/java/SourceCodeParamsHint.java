@@ -31,8 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import reflect.CodeExceptions;
-
 class StringPair {
 	String value;
 	String nextToken;
@@ -279,7 +277,6 @@ public abstract class SourceCodeParamsHint {
 			if (cand == null) cand = tryClassName(m_package + "." + typeName.replace(".", "$"));
 			if (cand == null) cand = tryClassName("java.lang." + typeName.replace(".", "$"));
 			if (cand == null) cand = tryImport(typeName);
-			if (cand == null) cand = CodeExceptions.get(m_type, typeName);
 			if (cand == null) cand = tryInterface(typeName);
 
 			if (cand == null)
