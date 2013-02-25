@@ -150,6 +150,7 @@
           <additionalparam>
             -federate JDK http://download.oracle.com/javase/6/docs/api/index.html?
             -federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml
+            -templatedir ${project.build.directory}/../reflect-base/template
             -hdf project.name "Reflect API"
             -d ${project.build.directory}/site/apidocs
             -proofread ${project.build.directory}/proofread.txt
