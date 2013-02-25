@@ -45,9 +45,9 @@
  * <h3>FooPlugins.java</h3>
  * 
  * <p>Here you prepare the entire environment for the Plugin Engine.
- * First, you implement your own {@link Plugins.Impl} providing
+ * First, you implement your own <code>Plugins.Impl</code> providing
  * any pass-through methods from you application code to the plugins.
- * Then, you may think about providing your version of loadPlugins
+ * Then, you may think about providing your version of <code>loadPlugins</code>
  * hiding the interface class from the rest of the application.
  * You may also provide code locating the plugins directory here.
  * 

@@ -22,11 +22,15 @@
  * SOFTWARE.
  */
  
-package reflect.patches;
+/**
+ * Provides patch for the java.lang.String code binding.
+ */
+package reflect;
 
 import java.io.PrintStream;
 
 import reflect.api.Class;
+import reflect.patches.Patch;
 
 /**
  * Adds <code>const char*</code> and <code>std::string</code> conversion
