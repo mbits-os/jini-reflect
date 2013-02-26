@@ -1,6 +1,20 @@
+#doc-content {
+  position: relative;
+  min-width: 600px;
+  float: rigth;
+  margin-left: 290px;
+  padding-left: 10px;
+  border-left: solid 2px #333333;
+}
+
 #side-nav {
   padding:0 6px 0 0;
   font-size:12px;
+  position: relative;
+  min-width: 280px;
+  float: left;
+  padding-right: 10px;
+  border-right: solid 2px #333333;
 }
 
 #resize-packages-nav {
@@ -21,6 +35,7 @@
 #devdoc-nav {
   overflow:auto;
   position:relative;
+  border-top: solid 2px #333333;
 }
 
 #side-nav ul {
