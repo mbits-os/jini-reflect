@@ -716,6 +716,12 @@ dt {
   padding: 0 10px;
   margin: 6px auto;
 }
+
+#header nav h1 {
+  margin: 0px;
+  padding: 6px;
+}
+
 #header nav li {
   font-family: 'OpenSansLight', "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: normal;

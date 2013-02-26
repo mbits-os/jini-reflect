@@ -49,6 +49,7 @@
 #devdoc-nav {
   overflow:auto;
   position:relative;
+  border-top: solid 2px #333333;
 }
 
 #side-nav ul {
