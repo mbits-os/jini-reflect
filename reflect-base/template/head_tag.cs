@@ -14,6 +14,21 @@
 | <?cs var:project.name ?>
 <?cs /if ?>
 </title>
+
+<link rel="stylesheet" href="<?cs var:toassets ?>gh_pages/stylesheets/styles.css">
+<link rel="stylesheet" href="<?cs var:toassets ?>gh_pages/stylesheets/pygment_trac.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="<?cs var:toassets ?>gh_pages/javascripts/respond.js"></script>
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--[if lt IE 8]>
+<link rel="stylesheet" href="<?cs var:toassets ?>gh_pages/stylesheets/ie.css">
+<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="<?cs var:toassets ?>doclava-developer-docs.css">
+
 <script src="<?cs var:toassets ?>search_autocomplete.js" type="text/javascript"></script>
 <script src="<?cs var:toassets ?>jquery-resizable.min.js" type="text/javascript"></script>
 <script src="<?cs var:toassets ?>prettify.js" type="text/javascript"></script>
@@ -25,19 +40,6 @@ if:reference ?>
 <script src="<?cs var:toassets ?>navtree_data.js" type="text/javascript"></script><?cs 
 /if ?>
 <script src="<?cs var:toassets ?>customizations.js" type="text/javascript"></script>
-
-<link rel="stylesheet" href="<?cs var:toassets ?>gh_pages/stylesheets/styles.css">
-<link rel="stylesheet" href="<?cs var:toassets ?>gh_pages/stylesheets/pygment_trac.css">
-<link rel="stylesheet" href="<?cs var:toassets ?>doclava.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="<?cs var:toassets ?>gh_pages/javascripts/respond.js"></script>
-<!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<!--[if lt IE 8]>
-<link rel="stylesheet" href="<?cs var:toassets ?>gh_pages/stylesheets/ie.css">
-<![endif]-->
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 <noscript>
   <style type="text/css">
