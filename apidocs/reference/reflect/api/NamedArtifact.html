@@ -63,19 +63,9 @@
 | Reflect API
 
 </title>
-<script src="../../../assets/search_autocomplete.js" type="text/javascript"></script>
-<script src="../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
-<script src="../../../assets/prettify.js" type="text/javascript"></script>
-<script type="text/javascript">
-  setToRoot("../../", "../../../assets/");
-</script>
-<script src="../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
-<script src="../../../assets/navtree_data.js" type="text/javascript"></script>
-<script src="../../../assets/customizations.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../../assets/gh_pages/stylesheets/styles.css">
 <link rel="stylesheet" href="../../../assets/gh_pages/stylesheets/pygment_trac.css">
-<link rel="stylesheet" href="../../../assets/doclava.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="../../../assets/gh_pages/javascripts/respond.js"></script>
 <!--[if lt IE 9]>
@@ -85,6 +75,18 @@
 <link rel="stylesheet" href="../../../assets/gh_pages/stylesheets/ie.css">
 <![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+<link href="../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../assets/customizations.css" rel="stylesheet" type="text/css" />
+<script src="../../../assets/search_autocomplete.js" type="text/javascript"></script>
+<script src="../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
+<script src="../../../assets/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+  setToRoot("../../", "../../../assets/");
+</script>
+<script src="../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
+<script src="../../../assets/navtree_data.js" type="text/javascript"></script>
+<script src="../../../assets/customizations.js" type="text/javascript"></script>
 
 <noscript>
   <style type="text/css">
@@ -103,9 +105,7 @@
 <div id="header">
     <nav>
         
-        <li id="masthead-title">
-            <h1>Reflect API</h1>
-        </li>
+        <h1>Reflect API</h1>
         
     </nav>
 </div><!-- header -->
@@ -190,9 +190,8 @@
       </div><!-- end swapper -->
     </div> <!-- end side-nav -->
     <script>
+      swapNav(); // tree view should be used on mobile
       if (!isMobile) {
-        $("<a href='#' id='nav-swap' onclick='swapNav();return false;' style='font-size:10px;line-height:9px;margin-left:1em;text-decoration:none;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>").appendTo("#side-nav");
-        chooseDefaultNav();
         if ($("#nav-tree").is(':visible')) {
           init_default_navtree("../../");
         } else {
@@ -201,9 +200,6 @@
             scrollIntoView("classes-nav");
           });
         }
-        $("#swapper").css({borderBottom:"2px solid #aaa"});
-      } else {
-        swapNav(); // tree view should be used on mobile
       }
     </script>
 

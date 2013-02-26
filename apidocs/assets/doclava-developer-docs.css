@@ -5,12 +5,10 @@
 @import url("doclava-developer-core.css");
 
 #title {
-  border-bottom: 4px solid #ccc;
   display:none;
 }
 
 #title h1 {
-  color:#336666;
   margin:0;
   padding: 5px 10px;
   font-size: 1em;
@@ -28,19 +26,15 @@
 
 #side-nav {
   padding:0 6px 0 0;
-  background-color: #fff;
   font-size:12px;
+  position: relative;
+  min-width: 243px;
+  float: left;
+  padding-right: 10px;
 }
 
 #side-nav.not-resizable {
   background:url('images/sidenav-rule.png') no-repeat 243px 0;
-}
-
-#resize-packages-nav {
-/* keeps the resize handle below the h-scroll handle */
-  height:270px;
-  overflow:hidden;
-  max-height:100%;
 }
 
 #packages-nav {
@@ -54,6 +48,7 @@
 #devdoc-nav {
   overflow:auto;
   position:relative;
+  border-top: solid 2px #333333;
 }
 
 #side-nav ul {
@@ -234,10 +229,15 @@
 
 #doc-content {
   overflow:auto;
+  position: absolute;
+  min-width: 675px; /*675*/
+  float: right;
+  margin-left: 253px;
+  border-left: solid 2px #333333;
 }
 
 #jd-header {
-  background-color: #E2E2E2;
+  background-color: RGBA(28, 28, 28, 0.3);
   padding: 7px 15px;
 }
 
@@ -249,13 +249,13 @@
 #jd-header .crumb {
   font-size:.9em;
   line-height:1em;
-  color:#777;
+  color:#999;
 }
 
 #jd-header .crumb a,
 #jd-header .crumb a:visited {
   text-decoration:none;
-  color:#777;
+  color:#999;
 }
 
 #jd-header .crumb a:hover {
@@ -274,7 +274,7 @@
 }
 
 #jd-header.guide-header {
-  background-color:#fff;
+  background-color:#000;
   color:#435a6e;
   height:50px;
 }
@@ -343,7 +343,7 @@ links to summary tables) */
   font-weight:normal;
   float:right;
   text-align:right;
-  color:#999;
+  color:#777;
   max-width:70%;
 }
 
@@ -354,13 +354,13 @@ links to summary tables) */
 }
 
 #api-level-toggle label.disabled {
-  color:#999;
+  color:#777;
 }
 
 div.api-level {
   font-size:.8em;
   font-weight:normal;
-  color:#999;
+  color:#777;
   float:right;
   padding:0 7px 0;
   margin-top:-25px;
@@ -370,43 +370,20 @@ div.api-level {
   font-size:1.3em;
   font-weight:bold;
   float:none;
-  color:#444;
+  color:#BBB;
   padding:0;
   margin:0;
 }
 
 /* Force link colors for IE6 */
 div.api-level a {
-  color:#999;
+  color:#777;
 }
 #api-info-block div.api-level a:link {
-  color:#444;
+  color:#BBB;
 }
 #api-level-toggle a {
-  color:#999;
-}
-
-div#naMessage {
-  display:none;
-  width:555px;
-  height:0;
-  margin:0 auto;
-}
-
-div#naMessage div {
-  width:450px;
-  position:fixed;
-  margin:50px 0;
-  padding:4em 4em 3em;
-  background:#FFF;
-  background:rgba(255,255,255,0.7);
-  border:1px solid #dddd00;
-}
-/* IE6 can't position fixed */
-* html div#naMessage div { position:absolute; }
-
-div#naMessage strong {
-  font-size:1.1em;
+  color:#777;
 }
 
 .absent,
@@ -414,7 +391,7 @@ div#naMessage strong {
 .absent a:visited,
 .absent a:hover,
 .absent * {
-  color:#bbb !important;
+  color:#444 !important;
   cursor:default !important;
   text-decoration:none !important;
 }
@@ -436,7 +413,7 @@ div#naMessage strong {
 #side-nav li.absent.selected *,
 #side-nav div.label.absent.selected,
 #side-nav div.label.absent.selected * {
-  background-color:#eaeaea !important;
+  background-color:#141414 !important;
 }
 /* IE6 quirk (won't chain classes, so just keep background blue) */
 * html #side-nav li.selected,
@@ -449,7 +426,7 @@ div#naMessage strong {
 
 .absent h4.jd-details-title,
 .absent h4.jd-details-title * {
-  background-color:#f6f6f6 !important;
+  background-color:#040404 !important;
 }
 
 .absent img {
@@ -499,8 +476,8 @@ div#naMessage strong {
 }
 
 hr {
-  background-color:#ccc;
-  border-color:#fff;
+  background-color:#333;
+  border-color:#000;
   margin:2em 0 1em;
 }
 
@@ -509,21 +486,19 @@ hr {
 #jd-content h1 {
 /*sdk page*/
   font-size:1.6em;
-  color:#336666;
+  color:#66cccc;
   margin:0 0 .5em;
 }
 
 #jd-content h2 {
   font-size:1.45em;
-  color:#111;
-  border-top:2px solid #ccc;
+  border-top:2px solid #333;
   padding: .5em 0 0;
   margin: 2em 0 1em 0;
 }
 
 #jd-content h3 {
   font-size:1.2em;
-  color:#222;
   padding: .75em 0 .65em 0;
   margin:0;
 }
@@ -531,12 +506,10 @@ hr {
 #jd-content h4 {
   font-size:1.1em;
   margin-bottom:.5em;
-  color:#222;
 }
 
 #jd-content .small-header {
   font-size:1em;
-  color:#000;
   font-weight:bold;
   border:none;
   padding:0;
@@ -641,7 +614,7 @@ the details section for constants,
 attrs, methods, etc. */
 h4.jd-details-title {
   font-size:1.15em;
-  background-color: #E2E2E2;
+  background-color: #1D1D1D;
   margin:1.5em 0 .6em;
   padding:3px 95px 3px 3px; /* room for api-level */
 }
@@ -664,7 +637,6 @@ h5.jd-tagtitle {
 .jd-tagtable td,
 .jd-tagtable th {
   border:none;
-  background-color:#fff;
   vertical-align:top;
   font-weight:normal;
   padding:2px 10px;
@@ -675,7 +647,7 @@ h5.jd-tagtitle {
 }
 
 #jd-content table h2 {
-  background-color: #d6d6d6;
+  background-color: #2A2A2A;
   font-size: 1.1em;
   margin:0 0 10px;
   padding:5px;
@@ -686,8 +658,8 @@ h5.jd-tagtitle {
 div.special {
   padding: .5em 1em 1em 1em;
   margin: 0 0 1em;
-  background-color: #DAF3FC;
-  border:1px solid #d3ecf5;
+  background-color: #020203;
+  border:1px solid #090a0a;
   border-radius:5px;
   -moz-border-radius:5px;
   -webkit-border-radius:5px;
@@ -724,7 +696,7 @@ div.special ol li {
 
 #jd-content div.special h2,
 #jd-content div.special h3 {
-  color:#669999;
+  color:#446666;
   font-size:1.2em;
   border:none;
   margin:0 0 .5em;
@@ -738,21 +710,21 @@ p.note, p.caution, p.warning {
 }
 
 p.special-note {
-  background-color:#EBF3DB;
+  background-color:#0c0d0b;
   padding:10px 20px;
   margin:0 0 1em;
 }
 
 p.note {
- border-color: #99aacc;
+ border-color: #262a33;
 }
 
 p.warning {
-  border-color: #aa0033;
+  border-color: #540019;
 }
 
 p.caution {
-  border-color: #ffcf00;
+  border-color: #917600;
 }
 
 p.warning b, p.warning strong {
@@ -795,7 +767,7 @@ ul.no-style {
 .new {
   font-size: .78em;
   font-weight: bold;
-  color: #ff3d3d;
+  color: #1a6d6a;
   text-decoration: none;
   vertical-align:top;
   line-height:.9em;
@@ -816,7 +788,7 @@ div.figure {
   clear:right;
   margin:1em 0 0 3em;
   padding:0;
-  background-color:#fff;
+  background-color:#000;
   /* width must be defined w/ an inline style matching the image width */
 }
 
@@ -839,14 +811,14 @@ p.table-caption {
   float:right;
   clear:right;
   width:310px; /* +35px padding */
-  background-color:#fff;
+  background-color:#000;
   margin:0;
   padding:0 0 20px 35px;
 }
 
 .sidebox {
   border-left:1px solid #dee8f1;
-  background-color:#ffffee;
+  background-color:#001;
   margin:0;
   padding:8px 12px;
   font-size:0.9em;
@@ -883,7 +855,7 @@ padding:0 0 0 0em;
 }
 
 .sidebox hr {
-  background-color:#ccc;
+  background-color:#333;
   border:none;
 }
 
@@ -942,7 +914,6 @@ table ol.toc {
   border:none;
 }
 .jd-linktable tr {
-  background-color: #fff;
 }
 .jd-linktable td {
   border-top: 1px solid #888;
@@ -970,7 +941,7 @@ table ol.toc {
 }
 
 tr.alt-color {
-  background-color: #f6f6f6;
+  background-color: #242526;
 }
 
 /* expando trigger */
@@ -985,21 +956,21 @@ tr.alt-color {
 
 /* SDK PAGE */
 table.download tr {
-  background-color:#d9d9d9;
+  background-color:#262626;
 }
 
 table.download tr.alt-color {
-  background-color:#ededed;
+  background-color:#121212;
 }
 
 table.download td,
 table.download th {
-  border:2px solid #fff;
+  border:2px solid #000;
   padding:10px 5px;
 }
 
 table.download th {
-  background-color:#6d8293;
+  background-color:#4f5f6b;
   color:#fff;
 }
 

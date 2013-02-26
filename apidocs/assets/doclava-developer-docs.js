@@ -154,8 +154,8 @@ function init() {
   var cookiePath = getSection() + "_";
 
   if (!isMobile) {
-    $("#resize-packages-nav").resizable({handles: "s", resize: function(e, ui) { resizePackagesHeight(); } });
-    $(".side-nav-resizable").resizable({handles: "e", resize: function(e, ui) { resizeWidth(); } });
+    //$("#resize-packages-nav").resizable({handles: "s", resize: function(e, ui) { resizePackagesHeight(); } });
+    //$(".side-nav-resizable").resizable({handles: "e", resize: function(e, ui) { resizeWidth(); } });
     var cookieWidth = readCookie(cookiePath+'width');
     var cookieHeight = readCookie(cookiePath+'height');
     if (cookieWidth) {
@@ -276,6 +276,7 @@ function resizeHeight() {
   } else {
     $("a[href='#top']").css({'display':'inline'});
   }
+  $("body").css({'min-height':$(window).height() + "px" });
 }
 
 /* Resize the width of the "side-nav" and the left margin of the "doc-content" div,
