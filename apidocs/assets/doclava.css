@@ -1,0 +1,429 @@
+#doc-content {
+  position: relative;
+  min-width: 600px;
+  float: rigth;
+  margin-left: 290px;
+  padding-left: 10px;
+  border-left: solid 2px #333333;
+}
+
+#side-nav {
+  padding:0 6px 0 0;
+  font-size:12px;
+  position: relative;
+  min-width: 280px;
+  float: left;
+  padding-right: 10px;
+  border-right: solid 2px #333333;
+}
+
+#resize-packages-nav {
+/* keeps the resize handle below the h-scroll handle */
+  height:270px;
+  overflow:hidden;
+  max-height:100%;
+}
+
+#packages-nav {
+  height:270px;
+  max-height:inherit;
+  position:relative;
+  overflow:auto;
+}
+
+#classes-nav,
+#devdoc-nav {
+  overflow:auto;
+  position:relative;
+  border-top: solid 2px #333333;
+}
+
+#side-nav ul {
+  list-style: none;
+  margin: 0;
+  padding:5px 0;
+}
+
+#side-nav ul ul {
+  margin: .35em 0 0 0;
+  padding: 0;
+}
+
+#side-nav li {
+  padding:0;
+  line-height:16px;
+  white-space:nowrap;
+  zoom:1;
+}
+
+#side-nav li h2 {
+  font-size:12px;
+  font-weight: bold;
+  margin:.5em 0 0 0;
+  padding: 3px 0 1px 9px;
+}
+
+#side-nav li a {
+  text-decoration:none;
+  padding: 0 0 0 18px;
+  zoom:1;
+}
+
+#side-nav li a span+span {
+  display:none;
+}
+
+#side-nav li a:hover {
+  text-decoration:underline;
+}
+
+#side-nav li a+a {
+  padding: 0;
+}
+/*second level (nested) list*/
+#side-nav li li li a {
+  padding: 0 0 0 28px;
+}
+/*third level (nested) list*/
+#side-nav li li li li a {
+  padding: 0 0 0 38px;
+}
+
+#side-nav .selected {
+  background-color: #435a6e;
+  color: #fff;
+  font-weight:bold;
+}
+
+#side-nav .selected a {
+  color: #fff;
+  text-decoration:none;
+}
+
+#side-nav strong {
+  display:block;
+}
+
+#side-nav .toggle-list .toggle-img {
+  margin:0;
+  padding:0;
+  position:absolute;
+  top:0;
+  left:0;
+  height:16px;
+  width:15px;
+  outline-style:none;
+}
+/* second-level toggle */
+#side-nav .toggle-list .toggle-list .toggle-img {
+  left:10px;
+}
+
+#side-nav .closed .toggle-img,
+#side-nav .open .closed .toggle-img {
+  background:url('images/triangle-closed-small.png') 7px 4px no-repeat;
+}
+#side-nav .open .toggle-img {
+  background:url('images/triangle-opened-small.png') 7px 4px no-repeat;
+}
+
+#side-nav .toggle-list {
+  position:relative;
+}
+
+#side-nav .toggle-list ul {
+  margin:0;
+  display:none;
+}
+
+#side-nav .toggle-list div {
+  display:block;
+}
+
+#wrapper h3 {
+  font-size:1.25em;
+  margin: 0em 0em 0em 0em;
+  padding-bottom:.5em;
+}
+
+#wrapper h2 {
+  font-size:1.25em;
+  margin: 0;
+  padding-bottom:.5em;
+}
+
+#wrapper h1 {
+  font-size:1.7em;
+  margin: 1em 0;
+}
+
+div.indent {
+  margin-left: 40px;
+  margin-right: 70px;
+}
+
+/* inheritance table */
+.jd-inheritance-table {
+  border-spacing:0;
+  margin:0;
+  padding:0;
+  font-size:.9em;
+}
+.jd-inheritance-table td {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.jd-inheritance-table .jd-inheritance-space {
+  font-weight:bold;
+  width:1em;
+}
+.jd-inheritance-table .jd-inheritance-interface-cell {
+  padding-left: 17px;
+}
+
+#jd-content {
+  padding: 18px 15px;
+}
+
+hr {
+  background-color:#ccc;
+  border-color:#fff;
+  margin:2em 0 1em;
+}
+
+/* link table */
+.jd-linktable {
+  margin: 0 0 1em;
+  border-bottom: 1px solid #888;
+}
+.jd-linktable th,
+.jd-linktable td {
+  padding: 3px 5px;
+  vertical-align: top;
+  text-align: left;
+  border:none;
+}
+.jd-linktable tr {
+  background-color: inherit;
+}
+.jd-linktable td {
+  border-top: 1px solid #888;
+  background-color: inherit;
+}
+.jd-linktable td  p {
+  padding: 0 0 5px;
+}
+.jd-linktable .jd-linkcol {
+}
+.jd-linktable .jd-descrcol {
+}
+.jd-linktable .jd-typecol {
+  text-align:right;
+}
+.jd-linktable .jd-valcol {
+}
+.jd-linktable .jd-commentrow {
+  border-top:none;
+  padding-left:25px;
+}
+.jd-deprecated-warning {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+tr.alt-color {
+  background-color: #1A1A1A;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* DOC CLASSES */
+
+#jd-content h1 {
+/*sdk page*/
+  font-size:1.6em;
+  color:#99cccc;
+  margin:0 0 .5em;
+}
+
+#jd-content h2 {
+  font-size:1.45em;
+  color:#eee;
+  border-top:2px solid #333;
+  padding: .5em 0 0;
+  margin: 2em 0 1em 0;
+}
+
+#jd-content h3 {
+  font-size:1.2em;
+  color:#ddd;
+  padding: .75em 0 .65em 0;
+  margin:0;
+}
+
+#jd-content h4 {
+  font-size:1.1em;
+  margin-bottom:.5em;
+  color:#ddd;
+}
+
+#jd-content .small-header {
+  font-size:1em;
+  font-weight:bold;
+  border:none;
+  padding:0;
+  margin:1em 0 .5em;
+  position:inherit;
+}
+
+#jd-content table {
+  margin: 0 0 1em 1em;
+}
+
+#jd-content img {
+  margin: 0 0 1em 1em;
+}
+
+#jd-content li img,
+#jd-content dd img {
+  margin:.5em 0 0 1em;
+}
+
+.nolist {
+  list-style:none;
+  padding:0;
+  margin:0 0 1em 1em;
+}
+
+.nolist li {
+  padding:0 0 2px;
+  margin:0;
+}
+
+h4 .normal {
+  font-size:.9em;
+  font-weight:normal;
+}
+
+.caps {
+  font-variant:small-caps;
+  font-size:1.2em;
+}
+
+dl.tag-list dl.atn-list {
+  padding:0 0 0 2em;
+}
+
+.jd-details {
+/*  border:1px solid #669999;
+  padding:4px; */
+  margin:0 0 1em;
+}
+
+/* API reference: a container for the
+.tagdata blocks that make up the detailed
+description */
+.jd-details-descr {
+  padding:0;
+  margin:.5em .25em;
+}
+
+/* API reference: a block containing
+a detailed description, a params table,
+seealso list, etc */
+.jd-tagdata {
+  margin:.5em 1em;
+}
+
+.jd-tagdata p {
+  margin:0 0 1em 1em;
+}
+
+/* API reference: adjustments to
+the detailed description block */
+.jd-tagdescr {
+  margin:.25em 0 .75em 0;
+  line-height:1em;
+}
+
+.jd-tagdescr p {
+  margin:.5em 0;
+  padding:0;
+
+}
+
+.jd-tagdescr ol,
+.jd-tagdescr ul {
+  margin:0 2.5em;
+  padding:0;
+}
+
+.jd-tagdescr table,
+.jd-tagdescr img {
+  margin:.25em 1em;
+}
+
+.jd-tagdescr li {
+margin:0 0 .25em 0;
+padding:0;
+}
+
+/* API reference: heading marking
+the details section for constants,
+attrs, methods, etc. */
+h4.jd-details-title {
+  font-size:1.15em;
+  background-color: #2E2E2E;
+  margin:1.5em 0 .6em;
+  padding:3px 95px 3px 3px; /* room for api-level */
+}
+
+h4.jd-tagtitle {
+  margin:0;
+}
+
+/* API reference: heading for "Parameters", "See Also", etc.,
+in details sections */
+h5.jd-tagtitle {
+  margin:0 0 .25em 0;
+  font-size:1em;
+}
+
+.jd-tagtable {
+  margin:0;
+}
+
+.jd-tagtable td,
+.jd-tagtable th {
+  border:none;
+  vertical-align:top;
+  font-weight:normal;
+  padding:2px 10px;
+}
+
+.jd-tagtable th {
+  font-style:italic;
+}
+
+#jd-content table h2 {
+  background-color: #292929;
+  font-size: 1.1em;
+  margin:0 0 10px;
+  padding:5px;
+  left:0;
+  width:auto;
+}
+

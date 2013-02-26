@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for Reflect API." />
+
+<link rel="shortcut icon" type="image/x-icon" href="../../../favicon.ico" />
+<title>
+
+  BitmapPatch
+
+
+| Reflect API
+
+</title>
+<script src="../../../../assets/search_autocomplete.js" type="text/javascript"></script>
+<script src="../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../../../../assets/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+  setToRoot("../../../", "../../../../assets/");
+</script>
+<script src="../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../assets/navtree_data.js" type="text/javascript"></script>
+<script src="../../../../assets/customizations.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../../../assets/gh_pages/stylesheets/styles.css">
+<link rel="stylesheet" href="../../../../assets/gh_pages/stylesheets/pygment_trac.css">
+<link rel="stylesheet" href="../../../../assets/doclava.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="../../../../assets/gh_pages/javascripts/respond.js"></script>
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--[if lt IE 8]>
+<link rel="stylesheet" href="../../../../assets/gh_pages/stylesheets/ie.css">
+<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+<noscript>
+  <style type="text/css">
+    html,body{overflow:auto;}
+    #body-content{position:relative; top:0;}
+    #doc-content{overflow:visible;border-left:3px solid #666;}
+    #side-nav{padding:0;}
+    #side-nav .toggle-list ul {display:block;}
+    #resize-packages-nav{border-bottom:3px solid #666;}
+  </style>
+</noscript>
+</head>
+
+<body class="">
+
+<div id="header">
+    <nav>
+        
+        <li id="masthead-title">
+            <h1>Reflect API</h1>
+        </li>
+        
+    </nav>
+</div><!-- header -->
+
+<div class="wrapper">
+
+    <section>
+
+
+  <div class="g-section g-tpl-240" id="body-content">
+    <div class="g-unit g-first side-nav-resizable" id="side-nav">
+      <div id="swapper">
+        <div id="nav-panels">
+          <div id="resize-packages-nav">
+            <div id="packages-nav">
+              <div id="index-links"><nobr>
+                <a href="../../../packages.html"  >Package Index</a> | 
+                <a href="../../../classes.html" >Class Index</a></nobr>
+              </div>
+              <ul>
+                
+    <li class="api apilevel-">
+  <a href="../../../com/mbits/plugins/package-summary.html">com.mbits.plugins</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/package-summary.html">reflect</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/android/package-summary.html">reflect.android</a></li>
+    <li class="selected api apilevel-">
+  <a href="../../../reflect/android/patches/package-summary.html">reflect.android.patches</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/android/plugin/package-summary.html">reflect.android.plugin</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/api/package-summary.html">reflect.api</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/cpp/package-summary.html">reflect.cpp</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/java/package-summary.html">reflect.java</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/patches/package-summary.html">reflect.patches</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/plugin/package-summary.html">reflect.plugin</a></li>
+    <li class="api apilevel-">
+  <a href="../../../reflect/utils/package-summary.html">reflect.utils</a></li>
+              </ul><br/>
+            </div> <!-- end packages -->
+          </div> <!-- end resize-packages -->
+          <div id="classes-nav">
+            <ul>
+              
+              
+    <li><h2>Classes</h2>
+      <ul>
+          <li class="selected api apilevel-"><a href="../../../reflect/android/patches/BitmapPatch.html">BitmapPatch</a></li>
+      </ul>
+    </li>
+              
+              
+              
+              
+            </ul><br/>
+          </div><!-- end classes -->
+        </div><!-- end nav-panels -->
+        <div id="nav-tree" style="display:none">
+          <div id="index-links"><nobr>
+            <a href="../../../packages.html"  >Package Index</a> | 
+            <a href="../../../classes.html" >Class Index</a></nobr>
+          </div>
+        </div><!-- end nav-tree -->
+      </div><!-- end swapper -->
+    </div> <!-- end side-nav -->
+    <script>
+      if (!isMobile) {
+        $("<a href='#' id='nav-swap' onclick='swapNav();return false;' style='font-size:10px;line-height:9px;margin-left:1em;text-decoration:none;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>").appendTo("#side-nav");
+        chooseDefaultNav();
+        if ($("#nav-tree").is(':visible')) {
+          init_default_navtree("../../../");
+        } else {
+          addLoadEvent(function() {
+            scrollIntoView("packages-nav");
+            scrollIntoView("classes-nav");
+          });
+        }
+        $("#swapper").css({borderBottom:"2px solid #aaa"});
+      } else {
+        swapNav(); // tree view should be used on mobile
+      }
+    </script>
+
+
+
+<div class="g-unit" id="doc-content">
+
+<div id="api-info-block">
+
+
+
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
+
+<div class="sum-details-links">
+
+
+Summary:
+
+
+
+
+
+
+
+
+
+
+
+  <a href="#pubmethods">Methods</a>
+  
+
+
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
+
+&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
+
+</div><!-- end sum-details-links -->
+<div class="api-level">
+  
+
+
+  
+  
+
+</div>
+</div><!-- end api-info-block -->
+
+
+<!-- ======== START OF CLASS DATA ======== -->
+
+<div id="jd-header">
+    public
+     
+     
+    
+    class
+<h1>BitmapPatch</h1>
+
+
+
+  
+  
+  
+
+  
+    extends <a href="../../../reflect/patches/Patch.html">Patch</a><br/>
+  
+  
+  
+
+  
+  
+  
+
+
+</div><!-- end header -->
+
+<div id="naMessage"></div>
+
+<div id="jd-content" class="api apilevel-">
+<table class="jd-inheritance-table">
+
+
+    <tr>
+         	
+        <td colspan="3" class="jd-inheritance-class-cell"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">java.lang.Object</a></td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../reflect/patches/Patch.html">reflect.patches.Patch</a></td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">reflect.android.patches.BitmapPatch</td>
+    </tr>
+    
+
+</table>
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Class Overview</h2>
+<p>Adds support for the Android NDK's <code>AndroidBitmapInfo</code> and API
+ to lock and unlock pixmap inside the Bitmap.
+ 
+ <p>To lock/unlock and access the pixmap and info:
+ 
+ <pre class="prettyprint">
+ Bitmap bm = ...
+ BitmapLockInfo bmi = bm.lock();
+ if (bmi.m_pixels != NULL) {
+     ... = bmi.m_info.width;
+     //...
+     bm.unlock();
+ }
+ </pre>
+</p>
+
+
+
+
+
+</div><!-- jd-descr -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Summary</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/android/patches/BitmapPatch.html#onIncludes(java.io.PrintStream)">onIncludes</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</nobr>
+        
+        <div class="jd-descrdiv">Adds <code>&lt;android/bitmap&gt;</code> to the list of includes.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/android/patches/BitmapPatch.html#onNamespaceStart(java.io.PrintStream)">onNamespaceStart</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</nobr>
+        
+        <div class="jd-descrdiv">Introduces <code>BitmapLockInfo</code>, a structure holding
+ the information to lock/unlock the pixmap.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/android/patches/BitmapPatch.html#onObjectMembers(java.io.PrintStream, java.lang.String, reflect.api.Class)">onObjectMembers</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> indent, <a href="../../../reflect/api/Class.html">Class</a> clazz)</nobr>
+        
+        <div class="jd-descrdiv">Introduces <code>android::graphics::Bitmap::lock()</code> and
+ <code>android::graphics::Bitmap::unlock()</code> - two methods
+ to acquire and release the pixmap data.</div>
+  
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-reflect.patches.Patch" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-reflect.patches.Patch-trigger"
+          src="../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  <a href="../../../reflect/patches/Patch.html">reflect.patches.Patch</a>
+
+<div id="inherited-methods-reflect.patches.Patch">
+  <div id="inherited-methods-reflect.patches.Patch-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-reflect.patches.Patch-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/patches/Patch.html#onConstructors(java.io.PrintStream, java.lang.String, reflect.api.Class)">onConstructors</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> indent, <a href="../../../reflect/api/Class.html">Class</a> clazz)</nobr>
+        
+        <div class="jd-descrdiv">Called after printing the basic constructor.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/patches/Patch.html#onIncludes(java.io.PrintStream)">onIncludes</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</nobr>
+        
+        <div class="jd-descrdiv">Called after printing the JINI includes and before
+ entering the namespace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/patches/Patch.html#onNamespaceEnd(java.io.PrintStream)">onNamespaceEnd</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</nobr>
+        
+        <div class="jd-descrdiv">Called at the last exit from the namespace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/patches/Patch.html#onNamespaceStart(java.io.PrintStream)">onNamespaceStart</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</nobr>
+        
+        <div class="jd-descrdiv">Called at the first entry into the namespace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../reflect/patches/Patch.html#onObjectMembers(java.io.PrintStream, java.lang.String, reflect.api.Class)">onObjectMembers</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> indent, <a href="../../../reflect/api/Class.html">Class</a> clazz)</nobr>
+        
+        <div class="jd-descrdiv">Called after all member functions for the Java bindings.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Object-trigger"
+          src="../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">java.lang.Object</a>
+
+<div id="inherited-methods-java.lang.Object">
+  <div id="inherited-methods-java.lang.Object-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">clone</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">equals</span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">finalize</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a>&lt;?&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getClass</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">hashCode</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">notify</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">notifyAll</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">toString</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">wait</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">wait</span>(long arg0, int arg1)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">wait</span>(long arg0)</nobr>
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
+
+
+</div><!-- jd-descr (summary) -->
+
+<!-- Details -->
+
+
+
+
+
+
+
+
+<!-- XML Attributes -->
+
+
+<!-- Enum Values -->
+
+
+<!-- Constants -->
+
+
+<!-- Fields -->
+
+
+<!-- Public ctors -->
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<A NAME="onIncludes(java.io.PrintStream)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onIncludes</span>
+      <span class="normal">(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds <code>&lt;android/bitmap&gt;</code> to the list of includes.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>out</td>
+          <td>The output to write to
+</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../reflect/patches/Patch.html#onIncludes(java.io.PrintStream)">onIncludes(PrintStream)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="onNamespaceStart(java.io.PrintStream)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onNamespaceStart</span>
+      <span class="normal">(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Introduces <code>BitmapLockInfo</code>, a structure holding
+ the information to lock/unlock the pixmap.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>out</td>
+          <td>The output to write to
+</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../reflect/patches/Patch.html#onNamespaceStart(java.io.PrintStream)">onNamespaceStart(PrintStream)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="onObjectMembers(java.io.PrintStream, java.lang.String, reflect.api.Class)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onObjectMembers</span>
+      <span class="normal">(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> indent, <a href="../../../reflect/api/Class.html">Class</a> clazz)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Introduces <code>android::graphics::Bitmap::lock()</code> and
+ <code>android::graphics::Bitmap::unlock()</code> - two methods
+ to acquire and release the pixmap data.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>out</td>
+          <td>The output to write to</td>
+        </tr>
+        <tr>
+          <th>indent</td>
+          <td>The indentation used for lines inside the class definition</td>
+        </tr>
+        <tr>
+          <th>clazz</td>
+          <td>The class this callback is called for. Be aware, that if a class
+              has internal classes, this patch will be called for them as well
+</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../reflect/patches/Patch.html#onObjectMembers(java.io.PrintStream, java.lang.String, reflect.api.Class)">onObjectMembers(PrintStream, String, Class)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+
+
+
+<!-- ========= END OF CLASS DATA ========= -->
+<A NAME="navbar_top"></A>
+
+<div id="footer">
+Copyright &copy; 2013 <a href="https://github.com/mbits-os/">midnightBITS</a>. Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
+</div> <!-- end footer -->
+
+</div> <!-- jd-content -->
+
+</div><!-- end doc-content -->
+
+</section>
+</div> <!-- end wrapper -->
+
+<script type="text/javascript">
+init(); /* initialize doclava-developer-docs.js */
+</script>
+
+</body>
+</html>
