@@ -25,7 +25,6 @@
 /* SIDE NAVIGATION */
 
 #side-nav {
-  border-right: solid 2px #333333;
   padding:0 6px 0 0;
   font-size:12px;
   position: relative;
@@ -238,7 +237,7 @@
 }
 
 #jd-header {
-  background-color: #1c1c1c;
+  background-color: RGBA(28, 28, 28, 0.3);
   padding: 7px 15px;
 }
 

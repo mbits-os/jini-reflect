@@ -14,9 +14,17 @@ embed,object,applet {
 }
 
 /* BASICS */
+html, body {
+  overflow:hidden; /* keeps scrollbar off IE */
+} 
+
+html {
+  background-color:#f00;
+}
 
 body {
   font-size:13px;
+  min-height: 100%;
 }
 
 input, select,
@@ -534,21 +542,22 @@ td.gsc-search-button {
 
 /* Pretty printing styles. Used with prettify.js. */
 
-.str { color: #080; }
-.kwd { color: #008; }
-.com { color: #800; }
-.typ { color: #606; }
-.lit { color: #066; }
-.pun { color: #660; }
-.pln { color: #000; }
+.str { color: #8e8; }
+.kwd { color: #88e; }
+.com { color: #aaa; }
+.typ { color: #b7b; }
+.lit { color: #7bb; }
+.pun { color: #fc7; }
+.pln { color: #eed; }
 dl.tag-list dt code,
-.tag { color: #008; }
+.tag { color: #88e; }
 dl.atn-list dt code,
-.atn { color: #828; }
-.atv { color: #080; }
-.dec { color: #606; }
+.atn { color: #e7e; }
+.atv { color: #8e8; }
+.dec { color: #b7b; }
 
 @media print {
+  body, code, tt, h1, h2, h3, h4, h5, pre { color: #000; background: #fff; }
   .str { color: #060; }
   .kwd { color: #006; font-weight: bold; }
   .com { color: #600; font-style: italic; }
