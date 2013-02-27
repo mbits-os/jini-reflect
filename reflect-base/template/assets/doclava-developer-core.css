@@ -191,6 +191,32 @@ blockquote {
   padding:0;
 }
 
+#headerTools {
+  position:relative;
+  float:right;
+  right:0;
+  top: -37px;
+  bottom:3px;
+  padding:0;
+  text-align:right;
+}
+
+#linkHome {
+    width: 26px;
+    height: 26px;
+    background: url("images/home.png") no-repeat;
+    background-position: left top;
+    float: left;
+}
+#linkHome:hover {
+    background-position: left bottom;
+}
+
+#linkHome span 
+{
+    display: none;
+}
+
 #language {
   margin:0 10px 0 4px;
 }
@@ -372,21 +398,20 @@ div.indent {
   position:absolute;
   margin-top:-1px;
   z-index:101;
-  border:1px solid #BCCDF0;
-  background-color:#fff;
+  border:1px solid #0c0d0f;
+  background-color:#1c1c1c;
 }
 
 #search_filtered {
   min-width:100%;
 }
 #search_filtered td{
-  background-color:#fff;
-  border-bottom: 1px solid #669999;
+  border-bottom: 1px solid #446666;
   line-height:1.5em;
 }
 
 #search_filtered .jd-selected {
-  background-color: #94b922;
+  background-color: #37450d;
   cursor:pointer;
 }
 #search_filtered .jd-selected,
