@@ -358,11 +358,11 @@ div.indent {
 /* FOOTER */
 
 #footer {
-  float: left;
-  width:90%;
-  margin: 20px;
-  color: inherited;
+  width: 100%;
+  margin: 20px 0;
+  color: inherit;
   font-size: 11px;
+  text-align: right;
 }
 
 #footer a {
