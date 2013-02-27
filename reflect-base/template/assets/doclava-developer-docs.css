@@ -1094,11 +1094,6 @@ body .ui-resizable-autohide .ui-resizable-handle { display: none; }
     padding:15px 0 0;
   }
 
-  #footer {
-    float:none;
-    margin:2em 0 0;
-  }
-
   h4.jd-details-title {
     border-bottom:1px solid #666;
   }
