@@ -31,9 +31,46 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Simple template engine. Using the map of values and actions, it builds parameterized strings.
+ * The expected forms of the macros are: <code>$macro</code>, <code>${macro}</code> and (only for
+ * actions) <code>${macro: argument}</code>.
+ *  
+ * <pre class="prettyprint">Template tmplt = new Template();
+ *tmplt.put("first", "Hello");
+ *tmplt.put("second", "World");
+ *tmplt.put("to_upper", new Template.Action() {
+ *    &#x40;Override
+ *    public void onCall(Object host, StringBuilder sb, String arg) {
+ *        sb.append(arg.toUpperCase());
+ *    }
+ *    &#x40;Override
+ *    public void onCall(Object host, StringBuilder sb) {}
+ *});
+ *System.out.println(tmplt.eval("${to_upper: $first}, $second!"));</pre>
+ *<p>would produce
+ *<pre class="nopretty">HELLO, World!</pre>
+ */
 public class Template {
+
+	/**
+	 * Action called to get a replacement for a <code>$macro</code>.
+	 */
 	public static interface Action {
+		/**
+		 * Called for argument-less macros (<code>$macro</code> and <code>${macro}</code>).
+		 * 
+		 * @param host the host recently set by {@link reflect.cpp.Template#setHost(java.lang.Object) setHost}.
+		 * @param sb the destination for the replacement.
+		 */
 		void onCall(Object host, StringBuilder sb);
+		/**
+		 * Called for macros with an argument (<code>${macro: arg}</code>).
+		 * 
+		 * @param host the host recently set by {@link reflect.cpp.Template#setHost(java.lang.Object) setHost}.
+		 * @param sb the destination for the replacement.
+		 * @param arg the argument of the macro.
+		 */
 		void onCall(Object host, StringBuilder sb, String arg);
 	}
 
@@ -53,14 +90,39 @@ public class Template {
 	private StreamTokenizer m_st = null;
 	private Object m_host = null;
 
+	/**
+	 * Constructs a new instance of <code>Template</code>.
+	 */
+	public Template() {}
+
+	/**
+	 * Clears the current contents of the macro map.
+	 */
 	public void clear() { m_actions.clear(); }
 
+	/**
+	 * Sets the host for the macro expansion. This object will be provided
+	 * to all actions called for the template.
+	 * 
+	 * @param host the host for the actions.
+	 */
 	public void setHost(Object host) { m_host  = host; }
 
+	/**
+	 * Adds value macro.
+	 * 
+	 * @param key the macro name
+	 * @param replacement the value of the macro
+	 */
 	public void put(String key, String replacement) {
 		m_actions.put(key, new StringAction(replacement));
 	}
 
+	/**
+	 * Adds action macro.
+	 * @param key the macro name
+	 * @param action the macro replacement action.
+	 */
 	public void put(String key, Action action) {
 		m_actions.put(key, action);
 	}
@@ -158,6 +220,14 @@ public class Template {
 			tok = nextToken();
 		}
 	}
+
+	/**
+	 * Evaluates macros in the given template and adds the result
+	 * to the <code>StringBuilder</code>.
+	 * 
+	 * @param sb the result of the operation
+	 * @param tmplt the template to evaluate
+	 */
 	public void eval(StringBuilder sb, String tmplt) {
 		StreamTokenizer st = m_st;
 		StringReader rd = new StringReader(tmplt);
@@ -174,11 +244,24 @@ public class Template {
 	    	m_st = st;
 	    }
 	}
+
+	/**
+	 * Evaluates macros in the given template and returns it as a string.
+	 * 
+	 * @param tmplt the template to evaluate
+	 * @returns evaluated template
+	 */
 	public String eval(String tmplt) {
 		StringBuilder sb = new StringBuilder();
 		eval(sb, tmplt);
 		return sb.toString();
 	}
+	/**
+	 * Prints the evaluated template. Shortcut for <code>out.println(template.eval(tmplt))</code>.
+	 * 
+	 * @param out the stream to print to
+	 * @param tmplt the template to evaluate
+	 */
 	public void println(PrintStream out, String tmplt) {
 	    out.println(eval(tmplt));
 	}

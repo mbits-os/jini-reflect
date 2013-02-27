@@ -30,16 +30,36 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+/**
+ * Allows to add a Jar file in run time.
+ */
 @SuppressWarnings("rawtypes")
 public class ClassPathHack {
 	private static final Class[] parameters = new Class[] {URL.class};
 
-    public static boolean addFile(String s) throws IOException
+	/**
+	 * @hide
+	 */
+	public ClassPathHack() {}
+
+	/**
+	 * Adds a Jar file by its path.
+	 * 
+	 * @param s the path of the Jar file
+	 * @throws IOException
+	 */
+	public static boolean addFile(String s) throws IOException
     {
         File f = new File(s);
         return addFile(f);
     }
 
+	/**
+	 * Adds a Jar file by its path.
+	 * 
+	 * @param f the path of the Jar file
+	 * @throws IOException
+	 */
     public static boolean addFile(File f) throws IOException
     {
     	boolean ret = true;
@@ -51,6 +71,12 @@ public class ClassPathHack {
         return ret;
     }
 
+	/**
+	 * Adds a Jar file by its URL.
+	 * 
+	 * @param u the url of the Jar file
+	 * @throws IOException
+	 */
 	public static void addURL(URL u) throws IOException
     {
         try {
