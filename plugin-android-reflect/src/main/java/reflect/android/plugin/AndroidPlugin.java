@@ -32,14 +32,41 @@ import reflect.api.Classes;
 import reflect.patches.Patches;
 import reflect.plugin.ReflectPlugin;
 
+/**
+ * Android API Plugin. Adds the API and sources to the {@link reflect.api.Classes}
+ * and the {@link reflect.android.patches.BitmapPatch} to the
+ * {@link reflect.patches.Patches}. 
+ */
 public class AndroidPlugin implements ReflectPlugin {
+	/**
+	 * Constructs a new instance of <code>AndroidPlugin</code>.
+	 * Called by the Plugin Manager. 
+	 */
 	public AndroidPlugin() {
 		Patches.put("android.graphics.Bitmap", new BitmapPatch());
 	}
 
+	/**
+	 * Plugin name
+	 * @return "Android API"
+	 * @see com.mbits.plugins.Plugin#getName()
+	 */
 	@Override public String getName() { return "Android API"; }
 
+	/**
+	 * Reports the need for the program arguments.
+	 * 
+	 * @return true
+	 * @see reflect.plugin.ReflectPlugin#wantsArguments()
+	 */
+
 	@Override public boolean wantsArguments() { return true; }
+
+	/**
+	 * Adds <tt>-a <em>API</em></tt> and <tt>--android <em>API</em></tt> arguments.
+	 * @param group the group provided by the Plugin Manager.
+	 * @see reflect.plugin.ReflectPlugin#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup) ReflectPlugin.onAddArguments(...)
+	 */
 	@Override public void onAddArguments(ArgumentGroup group) {
 		group.addArgument("-a", "--android").metavar("API")
 			.dest("targetAPI")
@@ -48,6 +75,12 @@ public class AndroidPlugin implements ReflectPlugin {
 			.help("Android API Level (e.g. -a 17 for Android 4.2)");
 	}
 
+	/**
+	 * Reads the arguments defined in {@link #onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup) onAddArguments(...)}
+	 * and sets the Android API Level. 
+	 * @see reflect.plugin.ReflectPlugin#onReadArguments(net.sourceforge.argparse4j.inf.Namespace) ReflectPlugin.onReadArguments(...)
+	 * @see reflect.android.API
+	 */
 	@Override
 	public void onReadArguments(Namespace ns) throws Exception {
 		int sdk = ns.getInt("targetAPI");
