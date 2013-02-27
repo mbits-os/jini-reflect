@@ -366,6 +366,27 @@ Summary:
 <div class="jd-descr">
 
 
+<h2>Class Overview</h2>
+<p>Simple template engine. Using the map of values and actions, it builds parameterized strings.
+ The expected forms of the macros are: <code>$macro</code>, <code>${macro}</code> and (only for
+ actions) <code>${macro: argument}</code>.
+  
+ <pre class="prettyprint">Template tmplt = new Template();
+tmplt.put("first", "Hello");
+tmplt.put("second", "World");
+tmplt.put("to_upper", new Template.Action() {
+    &#x40;Override
+    public void onCall(Object host, StringBuilder sb, String arg) {
+        sb.append(arg.toUpperCase());
+    }
+    &#x40;Override
+    public void onCall(Object host, StringBuilder sb) {}
+});
+System.out.println(tmplt.eval("${to_upper: $first}, $second!"));</pre>
+<p>would produce
+<pre class="nopretty">HELLO, World!</pre>
+</p>
+
 
 
 
@@ -407,7 +428,7 @@ Summary:
         
         interface</nobr></td>
       <td class="jd-linkcol"><a href="../../reflect/cpp/Template.Action.html">Template.Action</a></td>
-      <td class="jd-descrcol" width="100%">&nbsp;</td>
+      <td class="jd-descrcol" width="100%">Action called to get a replacement for a <code>$macro</code>.&nbsp;</td>
     </tr>
     
     
@@ -452,6 +473,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#Template()">Template</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Constructs a new instance of <code>Template</code>.</div>
+  
   </td></tr>
 
 
@@ -481,6 +504,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#clear()">clear</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Clears the current contents of the macro map.</div>
+  
   </td></tr>
 
 
@@ -497,6 +522,9 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#eval(java.lang.StringBuilder, java.lang.String)">eval</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/StringBuilder.html">StringBuilder</a> sb, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> tmplt)</nobr>
         
+        <div class="jd-descrdiv">Evaluates macros in the given template and adds the result
+ to the <code>StringBuilder</code>.</div>
+  
   </td></tr>
 
 
@@ -513,6 +541,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#eval(java.lang.String)">eval</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> tmplt)</nobr>
         
+        <div class="jd-descrdiv">Evaluates macros in the given template and returns it as a string.</div>
+  
   </td></tr>
 
 
@@ -529,6 +559,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#println(java.io.PrintStream, java.lang.String)">println</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/io/PrintStream.html">PrintStream</a> out, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> tmplt)</nobr>
         
+        <div class="jd-descrdiv">Prints the evaluated template.</div>
+  
   </td></tr>
 
 
@@ -545,6 +577,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#put(java.lang.String, reflect.cpp.Template.Action)">put</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> key, <a href="../../reflect/cpp/Template.Action.html">Template.Action</a> action)</nobr>
         
+        <div class="jd-descrdiv">Adds action macro.</div>
+  
   </td></tr>
 
 
@@ -561,6 +595,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#put(java.lang.String, java.lang.String)">put</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> key, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> replacement)</nobr>
         
+        <div class="jd-descrdiv">Adds value macro.</div>
+  
   </td></tr>
 
 
@@ -577,6 +613,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.html#setHost(java.lang.Object)">setHost</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> host)</nobr>
         
+        <div class="jd-descrdiv">Sets the host for the macro expansion.</div>
+  
   </td></tr>
 
 
@@ -857,7 +895,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a new instance of <code>Template</code>.
+</p></div>
 
     </div>
 </div>
@@ -905,7 +944,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Clears the current contents of the macro map.
+</p></div>
 
     </div>
 </div>
@@ -938,7 +978,22 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Evaluates macros in the given template and adds the result
+ to the <code>StringBuilder</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>sb</td>
+          <td>the result of the operation</td>
+        </tr>
+        <tr>
+          <th>tmplt</td>
+          <td>the template to evaluate
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -971,7 +1026,16 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Evaluates macros in the given template and returns it as a string.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>tmplt</td>
+          <td>the template to evaluate</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -1004,7 +1068,21 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Prints the evaluated template. Shortcut for <code>out.println(template.eval(tmplt))</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>out</td>
+          <td>the stream to print to</td>
+        </tr>
+        <tr>
+          <th>tmplt</td>
+          <td>the template to evaluate
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -1037,7 +1115,21 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Adds action macro.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>key</td>
+          <td>the macro name</td>
+        </tr>
+        <tr>
+          <th>action</td>
+          <td>the macro replacement action.
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -1070,7 +1162,21 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Adds value macro.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>key</td>
+          <td>the macro name</td>
+        </tr>
+        <tr>
+          <th>replacement</td>
+          <td>the value of the macro
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -1103,7 +1209,18 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the host for the macro expansion. This object will be provided
+ to all actions called for the template.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>host</td>
+          <td>the host for the actions.
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>

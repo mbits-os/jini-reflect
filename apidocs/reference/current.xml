@@ -2567,14 +2567,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ClassPathHack"
- type="reflect.utils.ClassPathHack"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="addFile"
  return="boolean"
  abstract="false"

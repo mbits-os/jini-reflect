@@ -318,6 +318,10 @@
 <div class="jd-descr">
 
 
+<h2>Class Overview</h2>
+<p>Action called to get a replacement for a <code>$macro</code>.
+</p>
+
 
 
 
@@ -388,6 +392,8 @@
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.Action.html#onCall(java.lang.Object, java.lang.StringBuilder)">onCall</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> host, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/StringBuilder.html">StringBuilder</a> sb)</nobr>
         
+        <div class="jd-descrdiv">Called for argument-less macros (<code>$macro</code> and <code>${macro}</code>).</div>
+  
   </td></tr>
 
 
@@ -404,6 +410,8 @@
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../reflect/cpp/Template.Action.html#onCall(java.lang.Object, java.lang.StringBuilder, java.lang.String)">onCall</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> host, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/StringBuilder.html">StringBuilder</a> sb, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> arg)</nobr>
         
+        <div class="jd-descrdiv">Called for macros with an argument (<code>${macro: arg}</code>).</div>
+  
   </td></tr>
 
 
@@ -482,7 +490,21 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called for argument-less macros (<code>$macro</code> and <code>${macro}</code>).</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>host</td>
+          <td>the host recently set by <code><a href="../../reflect/cpp/Template.html#setHost(java.lang.Object)">setHost</a></code>.</td>
+        </tr>
+        <tr>
+          <th>sb</td>
+          <td>the destination for the replacement.
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -515,7 +537,25 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Called for macros with an argument (<code>${macro: arg}</code>).</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>host</td>
+          <td>the host recently set by <code><a href="../../reflect/cpp/Template.html#setHost(java.lang.Object)">setHost</a></code>.</td>
+        </tr>
+        <tr>
+          <th>sb</td>
+          <td>the destination for the replacement.</td>
+        </tr>
+        <tr>
+          <th>arg</td>
+          <td>the argument of the macro.
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
