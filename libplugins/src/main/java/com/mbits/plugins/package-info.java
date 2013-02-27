@@ -23,7 +23,7 @@
  */
 
 /**
- * Plugins Engine base. If you want to use it in your project, you
+ * Plugins Manager base. If you want to use it in your project, you
  * should provide your plugins vendors with the plugin interface
  * and the location, where the jars should be placed.
  * For an example, let's see a plugin system allowing to perform
@@ -44,7 +44,7 @@
  * 
  * <h3>FooPlugins.java</h3>
  * 
- * <p>Here you prepare the entire environment for the Plugin Engine.
+ * <p>Here you prepare the entire environment for the Plugin Manager.
  * First, you implement your own <code>Plugins.Impl</code> providing
  * any pass-through methods from you application code to the plugins.
  * Then, you may think about providing your version of <code>loadPlugins</code>
@@ -111,7 +111,7 @@
  *    }
  *}</pre>
  * 
- * <p>This class must be packed into a Jar file. For the Engine to
+ * <p>This class must be packed into a Jar file. For the Manager to
  * find your plugin, you must add <code>Plugin-Class</code> entry
  * to the manifest file:
  * 

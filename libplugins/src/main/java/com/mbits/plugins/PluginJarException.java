@@ -27,7 +27,7 @@ package com.mbits.plugins;
 import java.io.IOException;
 
 /**
- * <code>PluginJarException</code> is thrown, if the Plugin Engine cannot
+ * <code>PluginJarException</code> is thrown, if the Plugin Manager cannot
  * find the <code>Plugin-Class</code> entry in the manifest file.
  */
 public class PluginJarException extends IOException {

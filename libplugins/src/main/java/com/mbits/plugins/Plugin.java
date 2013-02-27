@@ -25,7 +25,7 @@
 package com.mbits.plugins;
 
 /**
- * Base class for the plugins managed by the Plugin Engine implementation. The only operation this plugin requires, is the name of the plugin.
+ * Base class for the plugins managed by the Plugin Manager implementation. The only operation this plugin requires, is the name of the plugin.
  */
 public interface Plugin {
 	/**

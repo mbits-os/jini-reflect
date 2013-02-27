@@ -34,7 +34,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 
 /**
- * Base class for the Plugin Engine. Classes implementing the engine should
+ * Base class for the Plugin Manager. Classes implementing the engine should
  * provide their own plugin interface based on {@link Plugin} and extend
  * the {@link Plugins.Impl} with implementation of their own operations.
  * 
@@ -44,8 +44,8 @@ import java.util.jar.JarInputStream;
  * <pre>Plugin-Class: {@link reflect.android.plugin.AndroidPlugin reflect.android.plugin.AndroidPlugin}</pre>
  * 
  * <p>Plugin object is created only, if the Jar file is placed in the directory
- * expected by the Plugins Engine, manifest entry is present and the class
- * pointed by this entry implements the interface of this particular Plugins Engine.
+ * expected by the Plugins Manager, manifest entry is present and the class
+ * pointed by this entry implements the interface of this particular Plugins Manager.
  * 
  * <p>If Jar placed in the plugins directory is not a plugin, it is treated as an exceptional
  * situation.
@@ -134,7 +134,7 @@ public class Plugins {
 		 * Wrapper for {@link #loadPlugin(File, Class) loadPlugin}. Catches most
 		 * of the exceptions <tt>loadPlugin</tt> might have thrown. This way problem
 		 * with one faulty plugin will not prevent other plugins to load. Implementers
-		 * of the Plugin Engine might decide to handle this in other way, they should,
+		 * of the Plugin Manager might decide to handle this in other way, they should,
 		 * however, call the <tt>loadPlugin</tt> with the arguments provided, or no
 		 * plugins will be loaded.
 		 * 

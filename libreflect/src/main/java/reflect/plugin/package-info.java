@@ -23,6 +23,6 @@
  */
  
 /**
- * Plugin Engine for the Reflect.
+ * Plugin Manager for the Reflect.
  */
 package reflect.plugin;

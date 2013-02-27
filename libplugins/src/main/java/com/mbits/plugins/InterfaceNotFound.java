@@ -25,7 +25,7 @@
 package com.mbits.plugins;
 
 /**
- * <code>InterfaceNotFound</code> is thrown, if the Plugin Engine cannot
+ * <code>InterfaceNotFound</code> is thrown, if the Plugin Manager cannot
  * find requested interface among direct ancestors.
  */
 public class InterfaceNotFound extends ReflectiveOperationException {
