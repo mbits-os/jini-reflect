@@ -100,6 +100,7 @@ function restoreHeight(packageHeight) {
   $("#packages-nav").css({height:parseInt(packageHeight) - 6 + "px"}); //move 6px to give space for the resize handle
   devdocNav.css({height:sidenav.css("height")});
   $("#nav-tree").css({height:swapperHeight + "px"});
+  $("body").css({'min-height':$(window).height() + "px" });
 }
 
 function readCookie(cookie) {
