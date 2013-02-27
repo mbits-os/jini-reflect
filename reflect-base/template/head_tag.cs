@@ -27,10 +27,9 @@
 <![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-<link rel="stylesheet" href="<?cs var:toassets ?>doclava-developer-docs.css">
-
+<link href="<?cs var:toassets ?>doclava-developer-docs.css" rel="stylesheet" type="text/css" />
 <script src="<?cs var:toassets ?>search_autocomplete.js" type="text/javascript"></script>
-<script src="<?cs var:toassets ?>jquery-resizable.min.js" type="text/javascript"></script>
+<script src="<?cs var:toassets ?>doclava-developer-docs.js" type="text/javascript"></script>
 <script src="<?cs var:toassets ?>prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
   setToRoot("<?cs var:toroot ?>", "<?cs var:toassets ?>");
