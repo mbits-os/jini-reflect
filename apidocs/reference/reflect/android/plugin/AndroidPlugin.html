@@ -372,6 +372,12 @@ Summary:
 <div class="jd-descr">
 
 
+<h2>Class Overview</h2>
+<p>Android API Plugin. Adds the API and sources to the <code><a href="../../../reflect/api/Classes.html">Classes</a></code>
+ and the <code><a href="../../../reflect/android/patches/BitmapPatch.html">BitmapPatch</a></code> to the
+ <code><a href="../../../reflect/patches/Patches.html">Patches</a></code>. 
+</p>
+
 
 
 
@@ -438,6 +444,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../reflect/android/plugin/AndroidPlugin.html#AndroidPlugin()">AndroidPlugin</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Constructs a new instance of <code>AndroidPlugin</code>.</div>
+  
   </td></tr>
 
 
@@ -467,7 +475,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../reflect/android/plugin/AndroidPlugin.html#getName()">getName</a></span>()</nobr>
         
-        <div class="jd-descrdiv">Name of the loaded plugin.</div>
+        <div class="jd-descrdiv">Plugin name</div>
   
   </td></tr>
 
@@ -485,7 +493,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../reflect/android/plugin/AndroidPlugin.html#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup)">onAddArguments</a></span>(ArgumentGroup group)</nobr>
         
-        <div class="jd-descrdiv">Allows plugins to add their own parameters.</div>
+        <div class="jd-descrdiv">Adds <tt>-a <em>API</em></tt> and <tt>--android <em>API</em></tt> arguments.</div>
   
   </td></tr>
 
@@ -503,7 +511,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../reflect/android/plugin/AndroidPlugin.html#onReadArguments(net.sourceforge.argparse4j.inf.Namespace)">onReadArguments</a></span>(Namespace ns)</nobr>
         
-        <div class="jd-descrdiv">Called after the parameters have been successfully parsed.</div>
+        <div class="jd-descrdiv">Reads the arguments defined in <code><a href="../../../reflect/android/plugin/AndroidPlugin.html#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup)">onAddArguments(...)</a></code>
+ and sets the Android API Level.</div>
   
   </td></tr>
 
@@ -521,8 +530,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../reflect/android/plugin/AndroidPlugin.html#wantsArguments()">wantsArguments</a></span>()</nobr>
         
-        <div class="jd-descrdiv">Determines whether the plugins wants <code><a href="../../../reflect/plugin/ReflectPlugin.html#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup)">onAddArguments(ArgumentGroup)</a></code>
- and <code><a href="../../../reflect/plugin/ReflectPlugin.html#onReadArguments(net.sourceforge.argparse4j.inf.Namespace)">onReadArguments(Namespace)</a></code> to be called.</div>
+        <div class="jd-descrdiv">Reports the need for the program arguments.</div>
   
   </td></tr>
 
@@ -929,7 +937,9 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a new instance of <code>AndroidPlugin</code>.
+ Called by the Plugin Manager. 
+</p></div>
 
     </div>
 </div>
@@ -977,11 +987,15 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Name of the loaded plugin.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Plugin name</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>name of the plugin
-</li></ul>
+      <ul class="nolist"><li>"Android API"</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../com/mbits/plugins/Plugin.html#getName()">getName()</a></code></li>
+      </ul>
   </div>
 
     </div>
@@ -1015,17 +1029,21 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Allows plugins to add their own parameters. The group name is
- created by adding word <tt>"arguments"</tt> to the name of the
- plugin.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Adds <tt>-a <em>API</em></tt> and <tt>--android <em>API</em></tt> arguments.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>group</td>
-          <td>The destination for the argument definitions.</td>
+          <td>the group provided by the Plugin Manager.</td>
         </tr>
       </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../reflect/plugin/ReflectPlugin.html#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup)">ReflectPlugin.onAddArguments(...)
+</a></code></li>
+      </ul>
   </div>
 
     </div>
@@ -1059,7 +1077,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called after the parameters have been successfully parsed.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Reads the arguments defined in <code><a href="../../../reflect/android/plugin/AndroidPlugin.html#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup)">onAddArguments(...)</a></code>
+ and sets the Android API Level. </p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1077,6 +1096,11 @@ From interface
             <td></td>
         </tr>
       </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../reflect/plugin/ReflectPlugin.html#onReadArguments(net.sourceforge.argparse4j.inf.Namespace)">ReflectPlugin.onReadArguments(...)</a></code></li><li><code><a href="../../../reflect/android/API.html">API</a></code></li>
+      </ul>
   </div>
 
     </div>
@@ -1110,12 +1134,15 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Determines whether the plugins wants <code><a href="../../../reflect/plugin/ReflectPlugin.html#onAddArguments(net.sourceforge.argparse4j.inf.ArgumentGroup)">onAddArguments(ArgumentGroup)</a></code>
- and <code><a href="../../../reflect/plugin/ReflectPlugin.html#onReadArguments(net.sourceforge.argparse4j.inf.Namespace)">onReadArguments(Namespace)</a></code> to be called.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Reports the need for the program arguments.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true, if your plugin wants to have it's own parameters. 
-</li></ul>
+      <ul class="nolist"><li>true</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../reflect/plugin/ReflectPlugin.html#wantsArguments()">wantsArguments()</a></code></li>
+      </ul>
   </div>
 
     </div>

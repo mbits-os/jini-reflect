@@ -394,7 +394,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Base class for the Plugin Engine. Classes implementing the engine should
+<p>Base class for the Plugin Manager. Classes implementing the engine should
  provide their own plugin interface based on <code><a href="../../../com/mbits/plugins/Plugin.html">Plugin</a></code> and extend
  the <code><a href="../../../com/mbits/plugins/Plugins.Impl.html">Plugins.Impl</a></code> with implementation of their own operations.
  
@@ -404,8 +404,8 @@ Summary:
  <pre>Plugin-Class: <code><a href="../../../reflect/android/plugin/AndroidPlugin.html">reflect.android.plugin.AndroidPlugin</a></code></pre>
  
  <p>Plugin object is created only, if the Jar file is placed in the directory
- expected by the Plugins Engine, manifest entry is present and the class
- pointed by this entry implements the interface of this particular Plugins Engine.
+ expected by the Plugins Manager, manifest entry is present and the class
+ pointed by this entry implements the interface of this particular Plugins Manager.
  
  <p>If Jar placed in the plugins directory is not a plugin, it is treated as an exceptional
  situation.

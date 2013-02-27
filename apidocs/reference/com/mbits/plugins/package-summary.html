@@ -280,7 +280,7 @@
 
 
   <div class="jd-descr">
-    Plugins Engine base. If you want to use it in your project, you
+    Plugins Manager base. If you want to use it in your project, you
  should provide your plugins vendors with the plugin interface
  and the location, where the jars should be placed.
  For an example, let's see a plugin system allowing to perform
@@ -301,7 +301,7 @@ public interface FooPlugin extends Plugin {
  
  <h3>FooPlugins.java</h3>
  
- <p>Here you prepare the entire environment for the Plugin Engine.
+ <p>Here you prepare the entire environment for the Plugin Manager.
  First, you implement your own <code>Plugins.Impl</code> providing
  any pass-through methods from you application code to the plugins.
  Then, you may think about providing your version of <code>loadPlugins</code>
@@ -368,7 +368,7 @@ public class SuperFooPlugin implements FooPlugin {
     }
 }</pre>
  
- <p>This class must be packed into a Jar file. For the Engine to
+ <p>This class must be packed into a Jar file. For the Manager to
  find your plugin, you must add <code>Plugin-Class</code> entry
  to the manifest file:
  
@@ -388,7 +388,7 @@ public class SuperFooPlugin implements FooPlugin {
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-1" >
               <td class="jd-linkcol"><a href="../../../com/mbits/plugins/Plugin.html">Plugin</a></td>
-              <td class="jd-descrcol" width="100%">Base class for the plugins managed by the Plugin Engine implementation.&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Base class for the plugins managed by the Plugin Manager implementation.&nbsp;</td>
           </tr>
   </table>
     </div>
@@ -402,7 +402,7 @@ public class SuperFooPlugin implements FooPlugin {
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-1" >
               <td class="jd-linkcol"><a href="../../../com/mbits/plugins/Plugins.html">Plugins</a></td>
-              <td class="jd-descrcol" width="100%">Base class for the Plugin Engine.&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Base class for the Plugin Manager.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-1" >
               <td class="jd-linkcol"><a href="../../../com/mbits/plugins/Plugins.Impl.html">Plugins.Impl</a>&lt;T&nbsp;extends&nbsp;<a href="../../../com/mbits/plugins/Plugin.html">Plugin</a>&gt;</td>
@@ -423,12 +423,12 @@ public class SuperFooPlugin implements FooPlugin {
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-1" >
               <td class="jd-linkcol"><a href="../../../com/mbits/plugins/InterfaceNotFound.html">InterfaceNotFound</a></td>
-              <td class="jd-descrcol" width="100%"><code>InterfaceNotFound</code> is thrown, if the Plugin Engine cannot
+              <td class="jd-descrcol" width="100%"><code>InterfaceNotFound</code> is thrown, if the Plugin Manager cannot
  find requested interface among direct ancestors.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-1" >
               <td class="jd-linkcol"><a href="../../../com/mbits/plugins/PluginJarException.html">PluginJarException</a></td>
-              <td class="jd-descrcol" width="100%"><code>PluginJarException</code> is thrown, if the Plugin Engine cannot
+              <td class="jd-descrcol" width="100%"><code>PluginJarException</code> is thrown, if the Plugin Manager cannot
  find the <code>Plugin-Class</code> entry in the manifest file.&nbsp;</td>
           </tr>
   </table>
