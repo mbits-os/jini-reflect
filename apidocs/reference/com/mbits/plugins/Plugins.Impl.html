@@ -77,7 +77,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 <link href="../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
-<link href="../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
 <script src="../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../assets/prettify.js" type="text/javascript"></script>
@@ -100,13 +99,65 @@
 </noscript>
 </head>
 
-<body class="">
+<body class="1">
 
 <div id="header">
     <nav>
         
-        <h1>Reflect API</h1>
+        <h1><a id="linkHome" href="../../../../.."><span>Home</span></a>&nbsp;&raquo; Reflect API</h1>
         
+	<div id="headerTools">
+            
+  <div id="search" >
+      <div id="searchForm">
+          <form accept-charset="utf-8" class="gsc-search-box" 
+                onsubmit="return submit_search()">
+            <table class="gsc-search-box" cellpadding="0" cellspacing="0"><tbody>
+                <tr>
+                  <td class="gsc-input">
+                    <input id="search_autocomplete" class="gsc-input" type="text" size="33" autocomplete="off"
+                      title="search developer docs" name="q"
+                      value="search developer docs"
+                      onFocus="search_focus_changed(this, true)"
+                      onBlur="search_focus_changed(this, false)"
+                      onkeydown="return search_changed(event, true, '../../../')"
+                      onkeyup="return search_changed(event, false, '../../../')" />
+                  <div id="search_filtered_div" class="no-display">
+                      <table id="search_filtered" cellspacing=0>
+                      </table>
+                  </div>
+                  </td>
+                  <td class="gsc-search-button">
+                    <input type="submit" value="Search" title="search" id="search-button" class="gsc-search-button" />
+                  </td>
+                  <td class="gsc-clear-button">
+                    <div title="clear results" class="gsc-clear-button">&nbsp;</div>
+                  </td>
+                </tr></tbody>
+              </table>
+          </form>
+      </div><!-- searchForm -->
+  </div><!-- search -->
+            
+                
+  <div id="api-level-toggle">
+    <input type="checkbox" id="apiLevelCheckbox" onclick="toggleApiLevelSelector(this)" />
+    <label for="apiLevelCheckbox" class="disabled">Filter by API Level: </label>
+    <select id="apiLevelSelector">
+      <!-- option elements added by buildApiLevelSelector() -->
+    </select>
+  </div>
+  <script>
+   var SINCE_DATA = [ '1' ];
+    
+    var SINCE_LABELS = [ '1' ];
+    buildApiLevelSelector();
+    addLoadEvent(changeApiLevel);
+  </script>
+
+
+            
+	</div>
     </nav>
 </div><!-- header -->
 
@@ -127,27 +178,27 @@
               </div>
               <ul>
                 
-    <li class="selected api apilevel-">
+    <li class="selected api apilevel-1">
   <a href="../../../com/mbits/plugins/package-summary.html">com.mbits.plugins</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/package-summary.html">reflect</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/android/package-summary.html">reflect.android</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/android/patches/package-summary.html">reflect.android.patches</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/android/plugin/package-summary.html">reflect.android.plugin</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/api/package-summary.html">reflect.api</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/cpp/package-summary.html">reflect.cpp</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/java/package-summary.html">reflect.java</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/patches/package-summary.html">reflect.patches</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/plugin/package-summary.html">reflect.plugin</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="../../../reflect/utils/package-summary.html">reflect.utils</a></li>
               </ul><br/>
             </div> <!-- end packages -->
@@ -157,14 +208,14 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../com/mbits/plugins/Plugin.html">Plugin</a></li>
+          <li class="api apilevel-1"><a href="../../../com/mbits/plugins/Plugin.html">Plugin</a></li>
       </ul>
     </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../com/mbits/plugins/Plugins.html">Plugins</a></li>
-          <li class="selected api apilevel-"><a href="../../../com/mbits/plugins/Plugins.Impl.html">Plugins.Impl</a>&lt;T&nbsp;extends&nbsp;<a href="../../../com/mbits/plugins/Plugin.html">Plugin</a>&gt;</li>
+          <li class="api apilevel-1"><a href="../../../com/mbits/plugins/Plugins.html">Plugins</a></li>
+          <li class="selected api apilevel-1"><a href="../../../com/mbits/plugins/Plugins.Impl.html">Plugins.Impl</a>&lt;T&nbsp;extends&nbsp;<a href="../../../com/mbits/plugins/Plugin.html">Plugin</a>&gt;</li>
       </ul>
     </li>
               
@@ -172,8 +223,8 @@
               
     <li><h2>Exceptions</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../com/mbits/plugins/InterfaceNotFound.html">InterfaceNotFound</a></li>
-          <li class="api apilevel-"><a href="../../../com/mbits/plugins/PluginJarException.html">PluginJarException</a></li>
+          <li class="api apilevel-1"><a href="../../../com/mbits/plugins/InterfaceNotFound.html">InterfaceNotFound</a></li>
+          <li class="api apilevel-1"><a href="../../../com/mbits/plugins/PluginJarException.html">PluginJarException</a></li>
       </ul>
     </li>
               
@@ -189,7 +240,6 @@
       </div><!-- end swapper -->
     </div> <!-- end side-nav -->
     <script>
-      swapNav(); // tree view should be used on mobile
       if (!isMobile) {
         if ($("#nav-tree").is(':visible')) {
           init_default_navtree("../../../");
@@ -252,6 +302,8 @@ Summary:
 <div class="api-level">
   
 
+  Since: <a href="../../../guide/appendix/api-levels.html#level1">API Level 1</a>
+
 
   
   
@@ -287,7 +339,7 @@ Summary:
 
 <div id="naMessage"></div>
 
-<div id="jd-content" class="api apilevel-">
+<div id="jd-content" class="api apilevel-1">
 <table class="jd-inheritance-table">
 
 
@@ -367,7 +419,7 @@ Summary:
 
 
     
-      <tr class="alt-color api apilevel-" >
+      <tr class="alt-color api apilevel-1" >
           <td class="jd-typecol"><nobr>
           protected
           
@@ -397,7 +449,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class="alt-color api apilevel-1" >
         <td class="jd-typecol"><nobr>
             
             
@@ -426,7 +478,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class="alt-color api apilevel-1" >
         <td class="jd-typecol"><nobr>
             
             
@@ -444,7 +496,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class=" api apilevel-1" >
         <td class="jd-typecol"><nobr>
             
             
@@ -709,7 +761,7 @@ From class
 
 <A NAME="m_plugins"></A>
 
-<div class="jd-details api apilevel-"> 
+<div class="jd-details api apilevel-1"> 
     <h4 class="jd-details-title">
       <span class="normal">
         protected 
@@ -721,6 +773,8 @@ From class
     </h4>
       <div class="api-level">
         
+
+  Since: <a href="../../../guide/appendix/api-levels.html#level1">API Level 1</a>
 
 
         
@@ -757,7 +811,7 @@ From class
 
 <A NAME="loadPlugins(java.io.File, java.lang.Class<T>)"></A>
 
-<div class="jd-details api apilevel-"> 
+<div class="jd-details api apilevel-1"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
@@ -772,6 +826,8 @@ From class
     </h4>
       <div class="api-level">
         <div>
+
+  Since: <a href="../../../guide/appendix/api-levels.html#level1">API Level 1</a>
 
 </div>
         
@@ -828,7 +884,7 @@ From class
 
 <A NAME="loadPlugin(java.io.File, java.lang.Class<T>)"></A>
 
-<div class="jd-details api apilevel-"> 
+<div class="jd-details api apilevel-1"> 
     <h4 class="jd-details-title">
       <span class="normal">
         protected 
@@ -843,6 +899,8 @@ From class
     </h4>
       <div class="api-level">
         <div>
+
+  Since: <a href="../../../guide/appendix/api-levels.html#level1">API Level 1</a>
 
 </div>
         
@@ -889,7 +947,7 @@ From class
 
 <A NAME="loadPluginWrapper(java.io.File, java.lang.Class<T>)"></A>
 
-<div class="jd-details api apilevel-"> 
+<div class="jd-details api apilevel-1"> 
     <h4 class="jd-details-title">
       <span class="normal">
         protected 
@@ -904,6 +962,8 @@ From class
     </h4>
       <div class="api-level">
         <div>
+
+  Since: <a href="../../../guide/appendix/api-levels.html#level1">API Level 1</a>
 
 </div>
         

@@ -2466,6 +2466,17 @@
 >
 <implements name="com.mbits.plugins.Plugin">
 </implements>
+<method name="dummy"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="onAddArguments"
  return="void"
  abstract="true"

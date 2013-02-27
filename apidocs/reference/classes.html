@@ -77,7 +77,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 <link href="./../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
-<link href="./../assets/customizations.css" rel="stylesheet" type="text/css" />
 <script src="./../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="./../assets/doclava-developer-docs.js" type="text/javascript"></script>
 <script src="./../assets/prettify.js" type="text/javascript"></script>
@@ -104,8 +103,60 @@
 <div id="header">
     <nav>
         
-        <h1>Reflect API</h1>
+        <h1><a id="linkHome" href="./../.."><span>Home</span></a>&nbsp;&raquo; Reflect API</h1>
         
+	<div id="headerTools">
+            
+  <div id="search" >
+      <div id="searchForm">
+          <form accept-charset="utf-8" class="gsc-search-box" 
+                onsubmit="return submit_search()">
+            <table class="gsc-search-box" cellpadding="0" cellspacing="0"><tbody>
+                <tr>
+                  <td class="gsc-input">
+                    <input id="search_autocomplete" class="gsc-input" type="text" size="33" autocomplete="off"
+                      title="search developer docs" name="q"
+                      value="search developer docs"
+                      onFocus="search_focus_changed(this, true)"
+                      onBlur="search_focus_changed(this, false)"
+                      onkeydown="return search_changed(event, true, './')"
+                      onkeyup="return search_changed(event, false, './')" />
+                  <div id="search_filtered_div" class="no-display">
+                      <table id="search_filtered" cellspacing=0>
+                      </table>
+                  </div>
+                  </td>
+                  <td class="gsc-search-button">
+                    <input type="submit" value="Search" title="search" id="search-button" class="gsc-search-button" />
+                  </td>
+                  <td class="gsc-clear-button">
+                    <div title="clear results" class="gsc-clear-button">&nbsp;</div>
+                  </td>
+                </tr></tbody>
+              </table>
+          </form>
+      </div><!-- searchForm -->
+  </div><!-- search -->
+            
+                
+  <div id="api-level-toggle">
+    <input type="checkbox" id="apiLevelCheckbox" onclick="toggleApiLevelSelector(this)" />
+    <label for="apiLevelCheckbox" class="disabled">Filter by API Level: </label>
+    <select id="apiLevelSelector">
+      <!-- option elements added by buildApiLevelSelector() -->
+    </select>
+  </div>
+  <script>
+   var SINCE_DATA = [ '1' ];
+    
+    var SINCE_LABELS = [ '1' ];
+    buildApiLevelSelector();
+    addLoadEvent(changeApiLevel);
+  </script>
+
+
+            
+	</div>
     </nav>
 </div><!-- header -->
 
@@ -126,27 +177,27 @@
               </div>
               <ul>
                 
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./com/mbits/plugins/package-summary.html">com.mbits.plugins</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/package-summary.html">reflect</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/android/package-summary.html">reflect.android</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/android/patches/package-summary.html">reflect.android.patches</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/android/plugin/package-summary.html">reflect.android.plugin</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/api/package-summary.html">reflect.api</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/cpp/package-summary.html">reflect.cpp</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/java/package-summary.html">reflect.java</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/patches/package-summary.html">reflect.patches</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/plugin/package-summary.html">reflect.plugin</a></li>
-    <li class="api apilevel-">
+    <li class="api apilevel-1">
   <a href="./reflect/utils/package-summary.html">reflect.utils</a></li>
               </ul><br/>
             </div> <!-- end packages -->
@@ -167,7 +218,6 @@
       </div><!-- end swapper -->
     </div> <!-- end side-nav -->
     <script>
-      swapNav(); // tree view should be used on mobile
       if (!isMobile) {
         if ($("#nav-tree").is(':visible')) {
           init_default_navtree("./");
@@ -209,49 +259,49 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/AndroidClassHinter.html">AndroidClassHinter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/AndroidMethodGroupHinter.html">AndroidMethodGroupHinter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/AndroidMethodHinter.html">AndroidMethodHinter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/AndroidParamsHint.html">AndroidParamsHint</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/plugin/AndroidPlugin.html">AndroidPlugin</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/API.html">API</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/APIBase.html">APIBase</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Artifact.html">Artifact</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -264,7 +314,7 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/android/patches/BitmapPatch.html">BitmapPatch</a></td>
             <td class="jd-descrcol" width="100%">Adds support for the Android NDK's <code>AndroidBitmapInfo</code> and API
  to lock and unlock pixmap inside the Bitmap.&nbsp;</td>
@@ -278,37 +328,37 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Class.html">Class</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Class.MethodGroup.html">Class.MethodGroup</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Classes.html">Classes</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/java/ClassHinter.html">ClassHinter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/utils/ClassPathHack.html">ClassPathHack</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/CppWriter.html">CppWriter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -321,7 +371,7 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./com/mbits/plugins/InterfaceNotFound.html">InterfaceNotFound</a></td>
             <td class="jd-descrcol" width="100%"><code>InterfaceNotFound</code> is thrown, if the Plugin Engine cannot
  find requested interface among direct ancestors.&nbsp;</td>
@@ -335,31 +385,31 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Method.html">Method</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Method.Type.html">Method.Type</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/java/MethodGroupHinter.html">MethodGroupHinter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/java/MethodHinter.html">MethodHinter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/MethodWriter.html">MethodWriter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -372,7 +422,7 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/NamedArtifact.html">NamedArtifact</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -385,63 +435,63 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Param.html">Param</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/ParamWriter.html">ParamWriter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/patches/Patch.html">Patch</a></td>
             <td class="jd-descrcol" width="100%">The Patch represents the code changes introduced during
  the code generation.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/patches/Patches.html">Patches</a></td>
             <td class="jd-descrcol" width="100%">The repository for patches.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./com/mbits/plugins/Plugin.html">Plugin</a></td>
             <td class="jd-descrcol" width="100%">Base class for the plugins managed by the Plugin Engine implementation.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./com/mbits/plugins/PluginJarException.html">PluginJarException</a></td>
             <td class="jd-descrcol" width="100%"><code>PluginJarException</code> is thrown, if the Plugin Engine cannot
  find the <code>Plugin-Class</code> entry in the manifest file.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./com/mbits/plugins/Plugins.html">Plugins</a></td>
             <td class="jd-descrcol" width="100%">Base class for the Plugin Engine.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./com/mbits/plugins/Plugins.Impl.html">Plugins.Impl</a>&lt;T&nbsp;extends&nbsp;<a href="./com/mbits/plugins/Plugin.html">Plugin</a>&gt;</td>
             <td class="jd-descrcol" width="100%">The Impl loads the plugins and keeps them for later reference.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/api/Property.html">Property</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/PropWriter.html">PropWriter</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
@@ -454,13 +504,13 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/plugin/ReflectPlugin.html">ReflectPlugin</a></td>
             <td class="jd-descrcol" width="100%">Plugin interface for the Reflect.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/plugin/ReflectPlugins.html">ReflectPlugins</a></td>
             <td class="jd-descrcol" width="100%">Provides implementation of the <code>Plugins.Impl</code>, that uses <code>ReflectPlugin</code>.&nbsp;</td>
         </tr>
@@ -473,13 +523,13 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/java/SourceCodeParamsHint.html">SourceCodeParamsHint</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/StringPatch.html">StringPatch</a></td>
             <td class="jd-descrcol" width="100%">Adds <code>const char*</code> and <code>std::string</code> conversion
  constructors.&nbsp;</td>
@@ -493,19 +543,19 @@
 <table class="jd-sumtable">
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/Template.html">Template</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class=" api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/Template.Action.html">Template.Action</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class="alt-color api apilevel-1" >
             <td class="jd-linkcol"><a href="./reflect/cpp/TypeUtils.html">TypeUtils</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
