@@ -154,9 +154,10 @@
             -hdf project.name "Reflect API"
             -d ${project.build.directory}/site/apidocs
             -proofread ${project.build.directory}/proofread.txt
+            -since ${project.build.directory}/../reflect-base/cached.xml 1
           </additionalparam>
           <!-- 
-            -templatedir doclava.tmplt
+            -apiversion 1
             -group "Core" "reflect:reflect.api:reflect.java:reflect.utils"
             -group "C++ Writer" "reflect.cpp:reflect.patches"
             -group "Plugin Engine" "com.mbits.plugins"

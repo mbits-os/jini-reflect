@@ -1,0 +1,2625 @@
+<api>
+<package name="com.mbits.plugins"
+>
+<class name="InterfaceNotFound"
+ extends="java.lang.ReflectiveOperationException"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="InterfaceNotFound"
+ type="com.mbits.plugins.InterfaceNotFound"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+</constructor>
+</class>
+<interface name="Plugin"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getName"
+ return="java.lang.String"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</interface>
+<class name="PluginJarException"
+ extends="java.io.IOException"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="PluginJarException"
+ type="com.mbits.plugins.PluginJarException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+</constructor>
+</class>
+<class name="Plugins"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</class>
+<class name="Plugins.Impl"
+ extends="java.lang.Object"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<method name="loadPlugin"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="file" type="java.io.File">
+</parameter>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
+<method name="loadPluginWrapper"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="file" type="java.io.File">
+</parameter>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
+<method name="loadPlugins"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="dir" type="java.io.File">
+</parameter>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
+<field name="m_plugins"
+ type="java.util.List"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+</class>
+</package>
+<package name="reflect"
+>
+<class name="StringPatch"
+ extends="reflect.patches.Patch"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</class>
+</package>
+<package name="reflect.android"
+>
+<class name="API"
+ extends="reflect.api.APIBase"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="API"
+ type="reflect.android.API"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="getHints"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="read"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<exception name="RuntimeException" type="java.lang.RuntimeException">
+</exception>
+</method>
+<method name="read"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="android_sdk" type="java.io.File">
+</parameter>
+</method>
+<method name="setTargetApi"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="targetAPI" type="int">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+</class>
+<class name="AndroidClassHinter"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="reflect.java.ClassHinter">
+</implements>
+<constructor name="AndroidClassHinter"
+ type="reflect.android.AndroidClassHinter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+</constructor>
+<method name="finished"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getMethodGroup"
+ return="reflect.java.MethodGroupHinter"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methodName" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<class name="AndroidMethodGroupHinter"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="reflect.java.MethodGroupHinter">
+</implements>
+<constructor name="AndroidMethodGroupHinter"
+ type="reflect.android.AndroidMethodGroupHinter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="group" type="reflect.api.Class.MethodGroup">
+</parameter>
+</constructor>
+<method name="find"
+ return="reflect.java.MethodHinter"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="retType" type="java.lang.String">
+</parameter>
+<parameter name="types" type="java.util.Vector&lt;java.lang.String&gt;">
+</parameter>
+</method>
+</class>
+<class name="AndroidMethodHinter"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="reflect.java.MethodHinter">
+</implements>
+<constructor name="AndroidMethodHinter"
+ type="reflect.android.AndroidMethodHinter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="method" type="reflect.api.Method">
+</parameter>
+</constructor>
+<method name="setHints"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="names" type="java.util.Vector&lt;java.lang.String&gt;">
+</parameter>
+</method>
+</class>
+<class name="AndroidParamsHint"
+ extends="reflect.java.SourceCodeParamsHint"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="AndroidParamsHint"
+ type="reflect.android.AndroidParamsHint"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sdk" type="java.io.File">
+</parameter>
+<parameter name="api" type="reflect.android.API">
+</parameter>
+<parameter name="targetAPI" type="int">
+</parameter>
+</constructor>
+<method name="getClass"
+ return="reflect.java.ClassHinter"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="getSourceRoot"
+ return="java.io.File"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="hasClass"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+</class>
+</package>
+<package name="reflect.android.patches"
+>
+<class name="BitmapPatch"
+ extends="reflect.patches.Patch"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</class>
+</package>
+<package name="reflect.android.plugin"
+>
+<class name="AndroidPlugin"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="reflect.plugin.ReflectPlugin">
+</implements>
+<constructor name="AndroidPlugin"
+ type="reflect.android.plugin.AndroidPlugin"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="getName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="onAddArguments"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="group" type="net.sourceforge.argparse4j.inf.ArgumentGroup">
+</parameter>
+</method>
+<method name="onReadArguments"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="ns" type="net.sourceforge.argparse4j.inf.Namespace">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
+<method name="wantsArguments"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+</package>
+<package name="reflect.api"
+>
+<class name="APIBase"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="APIBase"
+ type="reflect.api.APIBase"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="add"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+</method>
+<method name="filterOut"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="c" type="reflect.api.Class">
+</parameter>
+</method>
+<method name="find"
+ return="reflect.api.Class"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.String">
+</parameter>
+</method>
+<method name="find"
+ return="reflect.api.Class"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.String">
+</parameter>
+<parameter name="targetAPI" type="int">
+</parameter>
+</method>
+<method name="get"
+ return="reflect.api.Class"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.String">
+</parameter>
+</method>
+<method name="getClasses"
+ return="java.util.Vector&lt;java.lang.String&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getHints"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="getPackage"
+ return="java.lang.String[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="packageName" type="java.lang.String">
+</parameter>
+</method>
+<method name="read"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+</class>
+<class name="Artifact"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Artifact"
+ type="reflect.api.Artifact"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<constructor name="Artifact"
+ type="reflect.api.Artifact"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="Artifact"
+ type="reflect.api.Artifact"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="since" type="int">
+</parameter>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="availableSince"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getSignature"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setSignature"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sig" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<class name="Class"
+ extends="reflect.api.Artifact"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Class"
+ type="reflect.api.Class"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<constructor name="Class"
+ type="reflect.api.Class"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="since" type="int">
+</parameter>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="interfaces" type="java.lang.String[]">
+</parameter>
+</constructor>
+<constructor name="Class"
+ type="reflect.api.Class"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="since" type="int">
+</parameter>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="superClass" type="java.lang.String">
+</parameter>
+<parameter name="interfaces" type="java.lang.String[]">
+</parameter>
+</constructor>
+<method name="add"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="meth" type="reflect.api.Method">
+</parameter>
+</method>
+<method name="add"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="prop" type="reflect.api.Property">
+</parameter>
+</method>
+<method name="addInternalClass"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sub" type="java.lang.String">
+</parameter>
+</method>
+<method name="get"
+ return="reflect.api.Class.MethodGroup"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methName" type="java.lang.String">
+</parameter>
+</method>
+<method name="getClasses"
+ return="reflect.api.Class[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getGroups"
+ return="reflect.api.Class.MethodGroup[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getInterfaces"
+ return="java.lang.String[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getInternals"
+ return="java.lang.String[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getMethods"
+ return="reflect.api.Method[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getOuterName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getPackage"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getProperties"
+ return="reflect.api.Property[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getSimpleName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getSuper"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setHinted"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="hinted" type="boolean">
+</parameter>
+</method>
+</class>
+<class name="Class.MethodGroup"
+ extends="java.lang.Object"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="add"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="meth" type="reflect.api.Method">
+</parameter>
+</method>
+<method name="getName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<field name="m_methods"
+ type="java.util.List"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
+<class name="Classes"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Classes"
+ type="reflect.api.Classes"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="addApi"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="api" type="reflect.api.APIBase">
+</parameter>
+</method>
+<method name="classNames"
+ return="java.lang.String[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="forName"
+ return="reflect.api.Class"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="packageClasses"
+ return="java.lang.String[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="packageName" type="java.lang.String">
+</parameter>
+</method>
+<method name="readApis"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="Method"
+ extends="reflect.api.Artifact"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Method"
+ type="reflect.api.Method"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="since" type="int">
+</parameter>
+<parameter name="name" type="java.lang.String">
+</parameter>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="getName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getParameterTypes"
+ return="reflect.api.Param[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getReturnType"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getType"
+ return="reflect.api.Method.Type"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="type" type="reflect.api.Method.Type">
+</parameter>
+</method>
+</class>
+<class name="Method.Type"
+ extends="java.lang.Enum"
+ abstract="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="valueOf"
+ return="reflect.api.Method.Type"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</method>
+<method name="values"
+ return="reflect.api.Method.Type[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="NamedArtifact"
+ extends="reflect.api.Artifact"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NamedArtifact"
+ type="reflect.api.NamedArtifact"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="NamedArtifact"
+ type="reflect.api.NamedArtifact"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="since" type="int">
+</parameter>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="getName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setName"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="nameHint" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<class name="Param"
+ extends="reflect.api.NamedArtifact"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Param"
+ type="reflect.api.Param"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="position" type="int">
+</parameter>
+</constructor>
+<method name="proposeName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sig" type="java.lang.String">
+</parameter>
+<parameter name="position" type="int">
+</parameter>
+</method>
+</class>
+<class name="Property"
+ extends="reflect.api.NamedArtifact"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Property"
+ type="reflect.api.Property"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</constructor>
+<constructor name="Property"
+ type="reflect.api.Property"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="since" type="int">
+</parameter>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</constructor>
+<method name="isStatic"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setIsStatic"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="is_static" type="boolean">
+</parameter>
+</method>
+</class>
+</package>
+<package name="reflect.cpp"
+>
+<class name="CppWriter"
+ extends="reflect.cpp.TypeUtils"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="CppWriter"
+ type="reflect.cpp.CppWriter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="klazz" type="reflect.api.Class">
+</parameter>
+<parameter name="classes" type="java.util.List&lt;java.lang.String&gt;">
+</parameter>
+<parameter name="utf8" type="boolean">
+</parameter>
+</constructor>
+<method name="printHeader"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inc" type="java.io.File">
+</parameter>
+<parameter name="fileList" type="java.util.List&lt;java.io.File&gt;">
+</parameter>
+</method>
+<method name="printSource"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="src" type="java.io.File">
+</parameter>
+</method>
+</class>
+<class name="MethodWriter"
+ extends="reflect.cpp.TypeUtils"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="MethodWriter"
+ type="reflect.cpp.MethodWriter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="names"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+</method>
+<method name="names"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+</method>
+<method name="namesAndTypes"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+</method>
+<method name="namesAndTypes"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+</method>
+<method name="print"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="indent" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="cb" type="reflect.cpp.MethodWriter">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.String">
+</parameter>
+<parameter name="replacement" type="java.lang.String">
+</parameter>
+</method>
+<method name="types"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+</method>
+<method name="types"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+</method>
+<field name="isVoid"
+ type="boolean"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="type"
+ type="reflect.api.Method.Type"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+</class>
+<class name="ParamWriter"
+ extends="reflect.cpp.TypeUtils"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ParamWriter"
+ type="reflect.cpp.ParamWriter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="printName"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printName"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printName"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printName"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printNameAndType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printNameAndType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printNameAndType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printNameAndType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+<method name="printType"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="firstArg" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="pars" type="reflect.api.Param[]">
+</parameter>
+</method>
+</class>
+<class name="PropWriter"
+ extends="reflect.cpp.TypeUtils"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="PropWriter"
+ type="reflect.cpp.PropWriter"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="print"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="indent" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+<parameter name="cb" type="reflect.cpp.PropWriter">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.String">
+</parameter>
+<parameter name="replacement" type="java.lang.String">
+</parameter>
+</method>
+<field name="isStatic"
+ type="boolean"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+</class>
+<class name="Template"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Template"
+ type="reflect.cpp.Template"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="clear"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="eval"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="tmplt" type="java.lang.String">
+</parameter>
+</method>
+<method name="eval"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="tmplt" type="java.lang.String">
+</parameter>
+</method>
+<method name="println"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="tmplt" type="java.lang.String">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.String">
+</parameter>
+<parameter name="replacement" type="java.lang.String">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="java.lang.String">
+</parameter>
+<parameter name="action" type="reflect.cpp.Template.Action">
+</parameter>
+</method>
+<method name="setHost"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="host" type="java.lang.Object">
+</parameter>
+</method>
+</class>
+<interface name="Template.Action"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="onCall"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="host" type="java.lang.Object">
+</parameter>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+</method>
+<method name="onCall"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="host" type="java.lang.Object">
+</parameter>
+<parameter name="sb" type="java.lang.StringBuilder">
+</parameter>
+<parameter name="arg" type="java.lang.String">
+</parameter>
+</method>
+</interface>
+<class name="TypeUtils"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="TypeUtils"
+ type="reflect.cpp.TypeUtils"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="arrayed"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="arrays" type="int">
+</parameter>
+<parameter name="inner" type="java.lang.String">
+</parameter>
+</method>
+<method name="getClass"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="getClass"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="className" type="java.lang.String">
+</parameter>
+<parameter name="allowUtf8Conversion" type="boolean">
+</parameter>
+</method>
+<method name="getType"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="getType"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="className" type="java.lang.String">
+</parameter>
+<parameter name="allowUtf8Conversion" type="boolean">
+</parameter>
+</method>
+<method name="innerGetClass"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="signature" type="java.lang.String">
+</parameter>
+<parameter name="className" type="java.lang.String">
+</parameter>
+<parameter name="allowUtf8Conversion" type="boolean">
+</parameter>
+</method>
+<method name="isKnownClass"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="isKnownClassOrBuiltin"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="type" type="java.lang.String">
+</parameter>
+</method>
+<method name="j2c"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="j" type="java.lang.String">
+</parameter>
+</method>
+<method name="repeat"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+<parameter name="n" type="int">
+</parameter>
+</method>
+<field name="s_classes"
+ type="java.util.List"
+ transient="false"
+ volatile="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="s_utf8"
+ type="boolean"
+ transient="false"
+ volatile="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+</class>
+</package>
+<package name="reflect.java"
+>
+<interface name="ClassHinter"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="finished"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getMethodGroup"
+ return="reflect.java.MethodGroupHinter"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="string" type="java.lang.String">
+</parameter>
+</method>
+</interface>
+<interface name="MethodGroupHinter"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="find"
+ return="reflect.java.MethodHinter"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="retType" type="java.lang.String">
+</parameter>
+<parameter name="types" type="java.util.Vector&lt;java.lang.String&gt;">
+</parameter>
+</method>
+</interface>
+<interface name="MethodHinter"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="setHints"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="names" type="java.util.Vector&lt;java.lang.String&gt;">
+</parameter>
+</method>
+</interface>
+<class name="SourceCodeParamsHint"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="SourceCodeParamsHint"
+ type="reflect.java.SourceCodeParamsHint"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="builtin"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="typeName" type="java.lang.String">
+</parameter>
+</method>
+<method name="getClass"
+ return="reflect.java.ClassHinter"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="getHints"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="getSourceRoot"
+ return="java.io.File"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="hasClass"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="read"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="java" type="java.io.File">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+</class>
+</package>
+<package name="reflect.patches"
+>
+<class name="Patch"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="onConstructors"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="indent" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+</method>
+<method name="onIncludes"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+</method>
+<method name="onNamespaceEnd"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+</method>
+<method name="onNamespaceStart"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+</method>
+<method name="onObjectMembers"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="out" type="java.io.PrintStream">
+</parameter>
+<parameter name="indent" type="java.lang.String">
+</parameter>
+<parameter name="clazz" type="reflect.api.Class">
+</parameter>
+</method>
+</class>
+<class name="Patches"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getPatch"
+ return="reflect.patches.Patch"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="className" type="java.lang.String">
+</parameter>
+<parameter name="patch" type="reflect.patches.Patch">
+</parameter>
+</method>
+</class>
+</package>
+<package name="reflect.plugin"
+>
+<interface name="ReflectPlugin"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.mbits.plugins.Plugin">
+</implements>
+<method name="onAddArguments"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="group" type="net.sourceforge.argparse4j.inf.ArgumentGroup">
+</parameter>
+</method>
+<method name="onReadArguments"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="ns" type="net.sourceforge.argparse4j.inf.Namespace">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
+<method name="wantsArguments"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</interface>
+<class name="ReflectPlugins"
+ extends="com.mbits.plugins.Plugins"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="loadPlugins"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="dir" type="java.io.File">
+</parameter>
+</method>
+<method name="onAddArguments"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="parser" type="net.sourceforge.argparse4j.inf.ArgumentParser">
+</parameter>
+</method>
+<method name="onReadArguments"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="ns" type="net.sourceforge.argparse4j.inf.Namespace">
+</parameter>
+<exception name="Exception" type="java.lang.Exception">
+</exception>
+</method>
+</class>
+</package>
+<package name="reflect.utils"
+>
+<class name="ClassPathHack"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ClassPathHack"
+ type="reflect.utils.ClassPathHack"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="addFile"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="s" type="java.lang.String">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="addFile"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="f" type="java.io.File">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="addURL"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="u" type="java.net.URL">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+</class>
+</package>
+</api>

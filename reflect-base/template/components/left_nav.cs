@@ -51,7 +51,6 @@ def:custom_left_nav() ?>
       </div><!-- end swapper -->
     </div> <!-- end side-nav -->
     <script>
-      swapNav(); // tree view should be used on mobile
       if (!isMobile) {
         if ($("#nav-tree").is(':visible')) {
           init_default_navtree("<?cs var:toroot ?>");
