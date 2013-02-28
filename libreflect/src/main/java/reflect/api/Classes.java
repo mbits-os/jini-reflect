@@ -31,6 +31,11 @@ import java.util.Vector;
 
 import reflect.api.APIBase;
 
+/**
+ * Entry point for looking-up the classes. The <code>Classes</code> achieves
+ * that through collecting APIs and querying various bits of information
+ * from them.
+ */
 public class Classes {
 	static class Impl {
 		private List<APIBase> m_apis = new LinkedList<APIBase>();
@@ -98,6 +103,18 @@ public class Classes {
 			impl = new Impl();
 	}
 
+	private Classes() {}
+
+	/**
+	 * Looks up the class by its name. If found in one of the APIs, this method
+	 * updates the class object and then returns it. The update assumes the field
+	 * types are unknown and the <code>status</code> attribute is not applied.
+	 * It first tries the VM's {@link java.lang.Class} and then moves on the the APIs. 
+	 * 
+	 * @param className the name of the class to look-up.
+	 * @return object, if one exists in one of the APIs or <code>null</code> otherwise.
+	 * @see reflect.api.APIBase#getHints(java.lang.String) APIBase.getHints(String)
+	 */
 	public static Class forName(String className) {
 		ensureImpl();
 		if (impl == null)
@@ -105,12 +122,24 @@ public class Classes {
 		return impl.forName(className);
 	}
 
+	/**
+	 * Registers an API.
+	 * 
+	 * @param api the API to register
+	 */
 	public static void addApi(APIBase api) {
 		ensureImpl();
 		if (impl == null)
 			return;
 		impl.addApi(api);
 	}
+
+	/**
+	 * Reads the API configuration for every API.
+	 * 
+	 * @return <code>true</code> if all APIs return <code>true</code> from their {@link reflect.api.APIBase#read() read()}.
+	 * @throws IOException
+	 */
 	public static boolean readApis() {
 		try {
 			ensureImpl();
@@ -123,16 +152,33 @@ public class Classes {
 		return false;
 	}
 
+	/**
+	 * Applies information, that might be missing after the {@link #readApis()}. 
+	 * 
+	 * @param className the name of the class to be hinted.
+	 */
 	static void getHints(String className) {
 		if (impl != null)
 			impl.getHints(className);
 	}
 	
+	/**
+	 * Gets all classes in all APIs.
+	 * 
+	 * @return a vector of class names
+	 */
 	static public String[] classNames() {
 		if (impl == null) return new String[0];
 		return impl.getClasses();
 	}
 
+	/**
+	 * Finds all the classes inside the given package.
+	 * Queries all APIs until one returns a non-<code>null</code> value.
+	 * 
+	 * @param packageName the name of the package
+	 * @return the list of the class names
+	 */
 	static public String[] packageClasses(String packageName) {
 		if (impl == null) return new String[0];
 		return impl.getPackage(packageName);

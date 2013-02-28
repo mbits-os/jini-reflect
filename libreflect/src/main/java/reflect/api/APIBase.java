@@ -29,27 +29,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+/**
+ * Base class for the API plugins.
+ */
 public abstract class APIBase {
 	private Map<String, Class> m_classes = new HashMap<String, Class>();
 
+	/**
+	 * Constructs a new instance of <code>APIBase</code>.
+	 */
+	protected APIBase() {}
+
+	/**
+	 * Allows the API implementations add a class during the {@link #read()}.
+	 * 
+	 * @param clazz the class to add
+	 */
 	protected void add(Class clazz) {
 		m_classes.put(clazz.getName(), clazz);
 	}
 
-	public Class find(String clazz) {
-		if (!m_classes.containsKey(clazz))
-			return null;
-		return m_classes.get(clazz);
-	}
-
-	public Class find(String clazz, int targetAPI) {
-		final Class result = find(clazz);
-		if (result == null) return null;
-		if (result.availableSince() > targetAPI)
-			return null;
-		return result;
-	}
-
+	/**
+	 * Gets all classes in the API.
+	 * 
+	 * @return a vector of class names
+	 */
 	public Vector<String> getClasses()
 	{
 		Vector<String> classes = new Vector<String>();
@@ -62,6 +66,12 @@ public abstract class APIBase {
 		return classes;
 	}
 
+	/**
+	 * Finds all the classes inside the given package.
+	 * 
+	 * @param packageName the name of the package
+	 * @return the list of the class names
+	 */
 	public String[] getPackage(String packageName) {
 		Vector<String> classes = new Vector<String>();
 		for (Map.Entry<String, Class> e: m_classes.entrySet())
@@ -85,6 +95,12 @@ public abstract class APIBase {
 		return classes.toArray(items);
 	}
 
+	/**
+	 * Looks up the object representing the class.
+	 * 
+	 * @param clazz name of the class in <code>Lpackage.subpkg.Class;</code> form.
+	 * @return null if not found or derived class filtered this class out; class object otherwise.
+	 */
 	public Class get(String clazz) {
 		if (!m_classes.containsKey(clazz))
 			return null;
@@ -94,7 +110,27 @@ public abstract class APIBase {
 		return klazz;
 	}
 
+	/**
+	 * Reads the API configuration. Any class discovered should be added through {@link #add(reflect.api.Class) add(...)}
+	 * 
+	 * @return <code>true</code> if the read succeeded.
+	 * @throws IOException
+	 */
 	public abstract boolean read() throws IOException;
+
+	/**
+	 * Allows the API to choose whether the class should be included or not.
+	 * The default implementation disallows all classes.
+	 * 
+	 * @param c the class to test
+	 * @return <code>true</code> is the implementing class wants to filter the class out. 
+	 */
 	protected boolean filterOut(Class c) { return true; }
+
+	/**
+	 * Applies information, that might be missing after the {@link #read()}. 
+	 * 
+	 * @param className the name of the class to be hinted.
+	 */
 	public abstract void getHints(String className);
 }

@@ -249,7 +249,7 @@ public class Template {
 	 * Evaluates macros in the given template and returns it as a string.
 	 * 
 	 * @param tmplt the template to evaluate
-	 * @returns evaluated template
+	 * @return evaluated template
 	 */
 	public String eval(String tmplt) {
 		StringBuilder sb = new StringBuilder();
