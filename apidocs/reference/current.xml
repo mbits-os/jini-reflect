@@ -500,7 +500,7 @@
  static="false"
  final="false"
  deprecated="not deprecated"
- visibility="public"
+ visibility="protected"
 >
 </constructor>
 <method name="add"
@@ -527,34 +527,6 @@
  visibility="protected"
 >
 <parameter name="c" type="reflect.api.Class">
-</parameter>
-</method>
-<method name="find"
- return="reflect.api.Class"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="clazz" type="java.lang.String">
-</parameter>
-</method>
-<method name="find"
- return="reflect.api.Class"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="clazz" type="java.lang.String">
-</parameter>
-<parameter name="targetAPI" type="int">
 </parameter>
 </method>
 <method name="get"
@@ -979,14 +951,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Classes"
- type="reflect.api.Classes"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="addApi"
  return="void"
  abstract="false"
